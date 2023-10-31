@@ -6,8 +6,8 @@ from app.model.user import User
 
 class RegisterForm(FlaskForm):
     email = StringField('Email', [validators.DataRequired(), validators.Email(message="Please enter a valid email")])
-    fullname = StringField('Fullname', [validators.DataRequired()])
-    username = StringField('Username', [validators.DataRequired()])
+    fullname = StringField('Fullname', [validators.DataRequired(), validators.Length(min=5,message="Minumum of 5 Characters")])
+    username = StringField('Username', [validators.DataRequired(), validators.Length(min=5,message="Minumum of 5 Characters")])
     password = PasswordField('Password', [validators.InputRequired(),validators.EqualTo('password2', message='Password must match')])
     password2 = PasswordField('Repeat Password', [validators.InputRequired()]) 
     submit = SubmitField('Sign up')
