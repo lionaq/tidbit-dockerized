@@ -1,0 +1,38 @@
+{% include 'base.html' %}
+{% block title%} 
+<title>Register</title>
+{%endblock%}
+
+{% block content%}
+
+<style>
+    body {
+        background-image: url("{{ url_for('static', filename='img/food.jpg') }}");
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+</style>
+
+{% from "macros/formhelpers.html" import render_field %}
+    
+
+<div class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center min-vh-100">
+    <img src="{{ url_for('static', filename='img/Tidbit.png') }}" class="img" alt="tidbit logo">
+    <h1>Welcome to TidBit!</h1>
+    <form method="POST" novalidate class="w-50">
+        {{ form.hidden_tag() }}
+        {{ render_field(form.email) }}
+        {{ render_field(form.fullname) }}
+        {{ render_field(form.username) }}
+        {{ render_field(form.password) }}
+        {{ render_field(form.password2) }}
+        {{ form.submit(class="btn btn-dark w-75 rounded-pill") }}
+    </form>
+    <hr class="mt-3 w-50">
+    <p class="mt-3">
+        Already have an account? <a href="#" class="text-dark">Sign In</a>
+    </p>
+</div>
+
+{% endblock %}
