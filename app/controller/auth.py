@@ -18,15 +18,11 @@ def login():
         username = form.username.data
         user = User.check_username(username)
 
-        if user:
-            # User is found, so let's check the password
-            if user.check_password(form.password.data):
-                login_user(user)
-                return redirect('/loggedin')#You can change this so it redirects to wherever after login
-            else:
-                flash("Wrong password")
+        if user and user.check_password(form.password.data):
+            login_user(user)
+            return redirect('/loggedin')#You can change this so it redirects to wherever after login
         else:
-            flash("User not found")
+            flash("Invalid username or password", 'danger')
     return render_template('auth/login.html', form=form)
 
 
@@ -37,16 +33,10 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit() and request.method =='POST':
         user = User(email=form.email.data, fullname = form.fullname.data, username = form.username.data)
-        print(form.email.data)
-        print(form.fullname.data)
-        print(form.username.data)
-        print(form.password.data)
         user.set_password(form.password.data)
         user.add()
-        #############################
-        #message flash or smth??? idk to indicate register succesfully??
-        flash('Registration successful! You can now log in.')
-        return redirect(url_for('auth_bp.loggingin'))
+        flash('Registration successful! You can now log in.', 'success')
+        return redirect(url_for('auth_bp.login'))
     return render_template('auth/register.html', form=form)
 
 
@@ -54,5 +44,5 @@ def register():
 @login_required
 def logout():
     logout_user()
-    flash("You have been logged out!")
-    return redirect(url_for('index'))
+    flash("You have been logged out!", 'info')
+    return redirect(url_for('auth_bp.login'))

@@ -1,11 +1,11 @@
 {% macro render_field(field) %}
   <div class="form-floating mb-3">
-    {{ field(class="form-control rounded-pill px-3",placeholder=field.label.text,**kwargs)|safe }}
+    {{ field(class="form-control rounded-pill border-dark px-3",placeholder=field.label.text,**kwargs)|safe }}
     {{ field.label }}
     {% if field.errors %}
       <ul >
       {% for error in field.errors %}
-        <li class="text-danger">{{ error }}</li>
+        <p class="text-danger fw-bolder">{{ error }}</p>
       {% endfor %}
       </ul>
     {% endif %}
