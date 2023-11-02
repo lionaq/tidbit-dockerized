@@ -1,13 +1,10 @@
 {% include 'base.html' %}
-{% block title%} 
-<title>Register</title>
-{%endblock%}
 
 {% block content%}
 
 <style>
     body {
-        background-image: url("{{ url_for('static', filename='img/food.jpg') }}");
+        background-image: url("{{ url_for('static', filename='img/tidbit3.jpg') }}");
         background-size: 100% 100%;
         background-repeat: no-repeat;
         background-attachment: fixed;
@@ -15,12 +12,23 @@
 </style>
 
 {% from "macros/formhelpers.html" import render_field %}
-    
 
-<div class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center min-vh-100">
+
+<div
+    class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center min-vh-100 pe-5">
     <img src="{{ url_for('static', filename='img/Tidbit.png') }}" class="img" alt="tidbit logo">
-    <h1>Welcome to TidBit!</h1>
-    <form method="POST" novalidate class="w-50">
+    <h1 class="fw-bold">Welcome back to TidBit!</h1>
+    <p class="pb-3">Explore Flavor, Discover Tidbits</p>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{category}} w-50" role="alert">
+        {{message}}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+    <form method="POST" novalidate class="w-50 pb-5">
         {{ form.hidden_tag() }}
         {{ render_field(form.username) }}
         {{ render_field(form.password) }}
@@ -28,7 +36,7 @@
     </form>
     <hr class="mt-3 w-50">
     <p class="mt-3">
-        Don't have an account? <a href="/register" class="text-dark">Sign Up</a>
+        Don't have an account? <a href="{{url_for('auth_bp.register')}}" class="text-dark fw-bold" style="text-decoration: none;">Sign Up</a>
     </p>
 </div>
 
