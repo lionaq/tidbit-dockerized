@@ -20,3 +20,8 @@ class RegisterForm(FlaskForm):
         user = User.check_email(email.data)
         if user:
             raise validators.ValidationError('Email is already Taken')
+        
+class LoginForm(FlaskForm):
+    username = StringField('Username', [validators.DataRequired(), validators.Length(min=5,message="Minumum of 5 Characters")])
+    password = PasswordField('Password', [validators.InputRequired()])
+    submit = SubmitField('Sign in')
