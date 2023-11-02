@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask import render_template, request,redirect,url_for, flash
-from flask_login import login_user, logout_user, current_user ,login_required
-from app.forms.forms import RegisterForm
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from app.forms.forms import RegisterForm, LoginForm
 from app.model.user import User
 
 auth_bp = Blueprint(
@@ -11,25 +11,31 @@ auth_bp = Blueprint(
 
 @auth_bp.route('/login', methods=['GET','POST'])
 def login():
-    return None
+    if current_user.is_authenticated:
+        return redirect(url_for('loggedin'))
+    form = LoginForm()
+    if form.validate_on_submit() and request.method == 'POST':
+        username = form.username.data
+        user = User.check_username(username)
+
+        if user and user.check_password(form.password.data):
+            login_user(user)
+            return redirect('/loggedin')#You can change this so it redirects to wherever after login
+        else:
+            flash("Invalid username or password", 'danger')
+    return render_template('auth/login.html', form=form)
 
 
 @auth_bp.route('/register', methods=['GET','POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('loggedin'))
     form = RegisterForm()
     if form.validate_on_submit() and request.method =='POST':
         user = User(email=form.email.data, fullname = form.fullname.data, username = form.username.data)
-        print(form.email.data)
-        print(form.fullname.data)
-        print(form.username.data)
-        print(form.password.data)
         user.set_password(form.password.data)
         user.add()
-        #############################
-        #message flash or smth??? idk to indicate register succesfully??
-        flash('Registration successful! You can now log in.')
+        flash('Registration successful! You can now log in.', 'success')
         return redirect(url_for('auth_bp.login'))
     return render_template('auth/register.html', form=form)
 
@@ -38,4 +44,5 @@ def register():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    flash("You have been logged out!", 'info')
+    return redirect(url_for('auth_bp.login'))

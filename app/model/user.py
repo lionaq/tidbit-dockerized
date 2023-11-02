@@ -21,16 +21,28 @@ class User(UserMixin):
         self.password = generate_password_hash(password)
 
     def check_password(self, password):
-        return check_password_hash(self.password, password)
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT password FROM user where username = %s"
+        cursor.execute(sql, (self.username,))
+        user_data = cursor.fetchone()
+        cursor.close()
+
+        if user_data:
+            stored_password = user_data['password']
+            return check_password_hash(stored_password, password)
+        else:
+            return False
+
     
     @classmethod
-    def check_username(self, username):
+    def check_username(cls, username):
         cursor = mysql.connection.cursor(dictionary=True)
         sql = "SELECT * FROM user where username = %s"
         cursor.execute(sql, (username,))
-        user = cursor.fetchone()
+        user_data = cursor.fetchone()
         cursor.close()
-        return user is not None
+        return cls(**user_data) if user_data else None
+
     
     @classmethod
     def check_email(self, email):
