@@ -38,6 +38,8 @@ def create_app(test_config=None):
     
     #Blueprints
     from .controller import auth
+    from .controller import post
     app.register_blueprint(auth.auth_bp)
+    app.register_blueprint(post.post_bp)
 
     return app

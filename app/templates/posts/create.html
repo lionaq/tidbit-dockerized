@@ -1,0 +1,17 @@
+{% include 'base.html' %}
+
+{% block content%}
+
+        <form method="POST" novalidate class="w-50 pb-5" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <p>File</p><br>{{ form.content }}<br>
+            <p>Title:</p>{{ form.title }}<br>
+            <p>Caption:</p>{{ form.caption }}<br>
+            <p>Ingredients:</p>{{ form.ingredients }}<br>
+            <p>Instructions:</p>{{ form.instructions }}<br>
+            <div><p>tag</p>{{ form.tag }}</div>
+            {{ form.submit(class="btn btn-dark w-75 rounded-pill") }}
+        </form>
+
+
+{% endblock %}

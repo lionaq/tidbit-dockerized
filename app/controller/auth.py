@@ -1,6 +1,6 @@
 from flask import Blueprint
-from flask import render_template, request,redirect,url_for, flash
-from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from flask import render_template, request, redirect, url_for, flash
+from flask_login import  login_user,  login_required, logout_user, current_user
 from app.forms.forms import RegisterForm, LoginForm
 from app.model.user import User
 

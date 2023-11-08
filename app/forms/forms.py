@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
 
-from wtforms import validators,StringField,SubmitField,PasswordField
+from flask_wtf.file import FileField
+
+from wtforms import validators,StringField,SubmitField,PasswordField, SelectMultipleField, widgets
 
 from app.model.user import User 
 
@@ -25,3 +27,12 @@ class LoginForm(FlaskForm):
     username = StringField('Username', [validators.DataRequired()])
     password = PasswordField('Password', [validators.InputRequired()])
     submit = SubmitField('Sign in')
+
+class CreatePost(FlaskForm):
+    content = FileField('Content')
+    title = StringField('Title', [validators.DataRequired()])
+    caption = StringField('Caption', [validators.DataRequired()])
+    ingredients = StringField('Ingredients', [validators.DataRequired()])
+    instructions = StringField('Instructions', [validators.DataRequired()])
+    tag = SelectMultipleField('Tags', choices=[('breakfast', 'Breakfast'), ('lunch', 'Lunch'), ('snack', 'Snack'), ('dinner', 'Dinner'), ('dessert', 'Dessert')], option_widget=widgets.CheckboxInput(), widget=widgets.ListWidget(prefix_label=False))
+    submit = SubmitField('Create Post')
