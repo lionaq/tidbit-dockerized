@@ -12,3 +12,15 @@ CREATE TABLE IF NOT EXISTS user (
     profilepic VARCHAR(255),
     coverpic VARCHAR(255)
 );
+
+CREATE TABLE IF NOT EXISTS post (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    date DATE,
+    content LONGBLOB,
+    title VARCHAR(255),
+    caption TEXT,
+    ingredients TEXT,
+    instructions TEXT,
+    tag VARCHAR(99)
+);
