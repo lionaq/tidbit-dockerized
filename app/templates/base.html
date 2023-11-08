@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Dosis&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Dosis&display=swap" rel="stylesheet"> 
     <title>{% block title %}{% endblock %}</title>
   </head>
   <body>
@@ -27,7 +27,7 @@
               <img src="static/img/notifIcon.png" style="height: 26px; width: 26px;" id="img1">
             </button>
 
-            <script>
+            <script> <!--Temporary notif toggle script-->
               function changeNotifImg() {
                 var img = document.getElementById("img1");
                 if(img.getAttribute("src") == "static/img/notifIcon_toggled.png"){
@@ -54,7 +54,7 @@
         </div>
     </nav>
     
-    <style>
+    <style> <!--all items in dropdown lists will get affected by this-->
       .dropdown-item {
         color: #000;
         text-align: justified;
@@ -66,8 +66,6 @@
         letter-spacing: 0.5px;
       }
   </style>
-
-
 
     <div class="container">
         {% block content %}
