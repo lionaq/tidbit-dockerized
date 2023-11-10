@@ -36,6 +36,10 @@ def create_app(test_config=None):
     def loggedin():
         return render_template('loggedin.html' , name = current_user.username)
     
+    @app.route('/profile')
+    def user_profile():
+        return render_template('user_profile.html')
+    
     #Blueprints
     from .controller import auth
     app.register_blueprint(auth.auth_bp)
