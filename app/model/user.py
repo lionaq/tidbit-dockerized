@@ -14,8 +14,8 @@ class User(UserMixin):
         self.username = username
         self.password = password
         self.bio = bio
-        self.profilepic = profilepic
-        self.coverpic = coverpic
+        self.profilepic = profilepic if profilepic else 'static/img/default_profilepic.png'
+        self.coverpic = coverpic if coverpic else 'static/img/default_coverpic.jpg'
         
     def set_password(self, password):
         self.password = generate_password_hash(password)
