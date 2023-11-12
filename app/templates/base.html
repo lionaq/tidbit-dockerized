@@ -42,7 +42,7 @@
             </script>
 
             <div class="me-4">
-              <a href="/loggedin"><img class="img rounded-pill" src="static/img/PlaceholderIcon.jpg" style="height: 35px; width: 35px;"></a>
+              <a href="{{ url_for('profile_bp.profile', username=current_user.username) }}"><img class="img rounded-pill" src="static/img/PlaceholderIcon.jpg" style="height: 35px; width: 35px;"></a>
             </div>
 
             <div class="nav-item dropdown me-5">
