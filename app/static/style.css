@@ -46,6 +46,15 @@
     color: #D17A5E;
 }
 
+.d-flex a {
+    color: black;
+
+}
+
+a {
+    text-decoration: none;
+}
+
 /* Gallery: images */
 .img-container {
     margin-top: 2%;
