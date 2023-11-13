@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask import render_template, request, redirect, flash
 from datetime import date
-from flask_login import current_user
+from flask_login import current_user, login_required
 from app.forms.forms import CreatePost
 from app.model.posts import Post
 
@@ -11,6 +11,7 @@ post_bp = Blueprint(
 )
 
 @post_bp.route('/create-post', methods=['GET', 'POST'])
+@login_required
 def create():
     form = CreatePost()
     if form.validate_on_submit() and request.method == 'POST':
