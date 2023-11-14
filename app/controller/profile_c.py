@@ -11,9 +11,7 @@ profile_bp = Blueprint(
 
 @profile_bp.route('/<username>', methods=['GET'])
 def profile(username):
-    user = Profile.fetch_user_by_username(username)
+    user = Profile.fetch_user_data(username)
     if user:
-        return render_template('user_profile.html', user=user)
-    else:
-        flash('User not found', 'error')
-        return redirect(url_for('home')) 
+        posts = Profile.fetch_user_posts(user.id)
+        return render_template('user_profile.html', user=user, posts=posts)

@@ -13,7 +13,7 @@ class Profile(UserMixin):
         self.coverpic = coverpic
         
     @classmethod
-    def fetch_user_by_username(cls, username):
+    def fetch_user_data(cls, username):
         cursor = mysql.connection.cursor(dictionary=True)
         sql = "SELECT * FROM user WHERE username = %s"
         cursor.execute(sql, (username,))
@@ -33,3 +33,12 @@ class Profile(UserMixin):
             )
         else:
             return None
+        
+    @classmethod
+    def fetch_user_posts(cls, user_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT * FROM post WHERE user_id = %s"
+        cursor.execute(sql, (user_id,))
+        posts = cursor.fetchall()
+        cursor.close()
+        return posts
