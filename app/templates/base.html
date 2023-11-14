@@ -45,7 +45,7 @@
             <div class="nav-item dropdown me-5">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
               <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="#"><img class="img rounded-pill me-4" src="static/img/PlaceholderIcon.jpg" style="height: 30px; width: 30px;">Profile</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('profile_bp.profile', username=current_user.username) }}"><img class="img rounded-pill me-4" src="static/img/PlaceholderIcon.jpg" style="height: 30px; width: 30px;">Profile</a></li>
                 <li><a class="dropdown-item" href="#"> <img class="img rounded-pill me-3" src="static/img/settingIcon.png" style="height: 30px; width: 30px;">Settings</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="/logout"><img class="img me-1" src="static/img/logoutIcon.png" style="height: 50px; width: 50px;"><span style = "display: inline-block; vertical-align: middle; line-height: normal;">Log Out<span></a></li>
