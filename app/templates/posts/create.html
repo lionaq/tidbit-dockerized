@@ -19,6 +19,46 @@
     *{
         font-family:dosis;
     }
+
+    .postUpload {
+        position: relative;
+      }
+
+    .postUpload .btn {
+        position: absolute;
+        top:5%;
+        left: 95%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        font-size: 80px;  
+        color:#FF0000;
+        border: none;
+      }
+    
+    .postUpload #uploadIcon{
+        position: absolute;
+        top: 42%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        opacity:0.5
+    
+    
+    }
+    .postUpload #uploadCaption{
+        position: absolute;
+        top: 63%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        font-weight: bold;
+        opacity:0.5
+    }
+
+    .custom-control-input:focus ~ .custom-control-label::before {
+        box-shadow:none !important;
+    }
+    
 </style>
     <div class = "container-md my-4 p-4" style = "border-radius: 10px; border: 1px solid rgba(0, 0, 0, 0.20); background: #FFF;">
         <form method="POST" novalidate enctype="multipart/form-data">
@@ -27,16 +67,23 @@
                 <p style = "text-align: left; font-family: Dosis; font-size: 30px;  font-weight: bold; letter-spacing: 1.5px;">New Post</p>
                 <div class = "row">
                     <div class ="col">
-                        <br>{{ form.content }}<br>
+                        {{ form.content(style = "display:none;") }}
                         <!-- Add this inside the form element -->
                         <div class="form-group">
-                            <label for="filePreview">File Preview:</label>
-                            <img id="filePreview" src="" alt="File Preview" class="img-thumbnail" style="max-width: 200px; max-height: 200px;">
-                        </div>
-                        <br>
+                            <label class = "postUpload" for="{{form.content.id}}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer;">
+                                <img id="filePreview" src="static/img/UploadImg.png" alt="File Preview" class="img-thumbnail" style = "width:600px; height:350px; opacity:0.2; ">
+                                <button class="btn" type="button" id="clearFile" style = "visibility:hidden">&times;</button>
+                                <img id = "uploadIcon" src= "static/img/uploadIcon.png" style = "width:150px; height:150px;">
+                                <a id = "uploadCaption"> Click in this area to upload image </a>
+                            </label>
+                        </div>  
                         {{ form.title(class="form-control my-4 fs-4", style = "textFieldBorder", placeholder = "Add Title", style = "font-weight: 600;") }}
                         {{ form.caption(class="form-control my-4", style = "textFieldBorder", rows="5", placeholder = "A little something about your post") }}
-
+                    </div>
+                    <div class = "col ps-5">
+                        <p class = "postText">Ingredients:</p>{{ form.ingredients(class="form-control my-4", rows="5", style = "textFieldBorder", placeholder = "List the ingredients here") }}
+                        <p class = "postText">Instructions:</p>{{ form.instructions(class="form-control my-4", rows="10", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}
+                        <p class = "postText">Tags:</p>
                         <div class="form-row">
                             {% for subfield in form.tag %}
                               <div class="form-check form-check-inline col">
@@ -46,15 +93,12 @@
                             {% endfor %}
                           </div>
                     </div>
-                    <div class = "col ps-5">
-                        <p class = "postText">Ingredients:</p>{{ form.ingredients(class="form-control my-4", rows="5", style = "textFieldBorder", placeholder = "List the ingredients here") }}
-                        <p class = "postText">Instructions:</p>{{ form.instructions(class="form-control my-4", rows="10", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}
-                    </div>
                 </div>
 
                 <div class = "d-flex flex-row-reverse mt-2">
                     <a class = "btn  rounded-pill ms-3 fw-bold" style="background-color: rgba(210, 122, 94, 0.15); color: black;" href = "login">Cancel</a>
                     {{ form.submit(class="btn rounded-pill fw-bold", style="background-color: rgba(210, 122, 94, 0.15); color: black;") }}
+
                 </div>
 
             </div>
@@ -63,12 +107,32 @@
 
 
     <script>
+        var btn = document.getElementById("clearFile")
+        var defaultImg = document.getElementById("uploadIcon")
+        var img = document.getElementById("filePreview");
+        var uploadCaption = document.getElementById("uploadCaption");
+        $(document).ready(function () {
+            $("#clearFile").on("click", function (e) {
+              e.preventDefault();
+              $("#content").val('');  // Clear the file input field
+              var img = document.getElementById("filePreview");
+              img.src = "static/img/UploadImg.png"
+              btn.style.visibility = 'hidden';
+              img.style.opacity = 0.2;
+              defaultImg.style.visibility = 'visible';
+              uploadCaption.style.visibility = 'visible';
+            });
+          });
+
         document.getElementById("content").addEventListener("change", function (event) {
             var input = event.target;
             var reader = new FileReader();
     
             reader.onload = function () {
-                var img = document.getElementById("filePreview");
+                btn.style.visibility = 'visible';
+                defaultImg.style.visibility = 'hidden';
+                uploadCaption.style.visibility = 'hidden';
+                img.style.opacity = 1;
                 img.src = reader.result;
             };
     
