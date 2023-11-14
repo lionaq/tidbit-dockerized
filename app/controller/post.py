@@ -28,7 +28,7 @@ def create():
 
         post = Post(user_id=user_id, date=today, content=content, title=title, caption=caption, ingredients=ingredients, instructions=instructions, tag=selected_tags)
         post.add()
-        flash('Post created successfully!', 'success')
+        flash("Post created successfully!", 'info')
         return redirect('/')
     return render_template('posts/create.html', form=form)
 
