@@ -24,12 +24,15 @@ def create():
         caption = form.caption.data
         ingredients = form.ingredients.data
         instructions = form.instructions.data
-        selected_tags = ",".join(form.tag.data)
+        tag = ",".join(form.tag.data)
+        selected_tags = ",".join(form.subtag.data)
+        
+        print(selected_tags)
 
-        post = Post(user_id=user_id, date=today, content=content, title=title, caption=caption, ingredients=ingredients, instructions=instructions, tag=selected_tags)
+        post = Post(user_id=user_id, date=today, content=content, title=title, caption=caption, ingredients=ingredients, instructions=instructions, tag=tag, subtags=selected_tags)
         post.add()
         flash("Post created successfully!", 'info')
-        return redirect('/')
+        return redirect('/loggedin')
     return render_template('posts/create.html', form=form)
 
 

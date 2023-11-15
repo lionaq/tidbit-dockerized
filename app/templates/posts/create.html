@@ -82,16 +82,25 @@
                     </div>
                     <div class = "col ps-5">
                         <p class = "postText">Ingredients:</p>{{ form.ingredients(class="form-control my-4", rows="5", style = "textFieldBorder", placeholder = "List the ingredients here") }}
-                        <p class = "postText">Instructions:</p>{{ form.instructions(class="form-control my-4", rows="10", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}
-                        <p class = "postText">Tags:</p>
-                        <div class="form-row">
-                            {% for subfield in form.tag %}
-                              <div class="form-check form-check-inline col">
-                                <input class="form-check-input" type="checkbox" id="{{ subfield.id }}" value="{{ subfield.data }}" name="{{ subfield.name }}">
-                                <label class="form-check-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
-                              </div>
+                        <p class = "postText">Instructions:</p>{{ form.instructions(class="form-control my-4", rows="10", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}</p>
+                        <p class="postText">Tag:</p>
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <select class="form-control course" name="tag" style="display: inline-block; width: auto;">
+                                {% for subfield in form.tag %}
+                                <option value="{{subfield.data}}">{{subfield.label.text}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <p class="postText" style="margin-top: 1rem;">Subtags:</p>
+                        <div class="form-row" style="margin-bottom: 1rem;">
+                            {% for subfield in form.subtag %}
+                                <div class="form-check form-check-inline col">
+                                    <input class="form-check-input" type="checkbox" id="{{ subfield.id }}" value="{{ subfield.data }}" name="{{ subfield.name }}">
+                                    <label class="form-check-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                                </div>
                             {% endfor %}
-                          </div>
+                        </div>
+
                     </div>
                 </div>
 
