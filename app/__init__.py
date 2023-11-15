@@ -1,3 +1,4 @@
+import cloudinary
 from flask import Flask, render_template
 from flask_mysql_connector import MySQL
 from config import DB_USERNAME, DB_PASSWORD, DB_NAME, DB_HOST, SECRET_KEY
@@ -9,7 +10,6 @@ mysql = MySQL()
 login = LoginManager()
 csrf = CSRFProtect()
 
-
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
@@ -18,6 +18,13 @@ def create_app(test_config=None):
         MYSQL_PASSWORD=DB_PASSWORD,
         MYSQL_DATABASE=DB_NAME,
         MYSQL_HOST=DB_HOST
+    )
+
+    cloudinary.config(
+       cloud_name="dtf4aqron",
+       api_key="361678778467871",
+       api_secret="QrRmhhI-ch25j1wi9w5oq7WT12E",
+       secure=True,
     )
 
     mysql.init_app(app)

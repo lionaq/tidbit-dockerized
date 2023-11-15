@@ -17,10 +17,11 @@ CREATE TABLE IF NOT EXISTS post (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     date DATE,
-    content LONGBLOB,
+    content VARCHAR(255),
     title VARCHAR(255),
     caption TEXT,
     ingredients TEXT,
     instructions TEXT,
-    tag VARCHAR(99)
+    tag VARCHAR(99),
+    subtags VARCHAR(255)
 );

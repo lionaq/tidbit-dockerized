@@ -69,13 +69,19 @@
                     <div class ="col">
                         {{ form.content(class="form-control my-4 fs-4", style="display:none;") }}
                         <div class="form-group">
-                            <label class = "postUpload" for="{{form.content.id}}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer;">
-                                <img id="filePreview" src="static/img/UploadImg.png" alt="File Preview" class="img-thumbnail" style = "width:600px; height:350px; opacity:0.2; ">
-                                <button class="btn" type="button" id="clearFile" style = "visibility:hidden">&times;</button>
-                                <img id = "uploadIcon" src= "static/img/uploadIcon.png" style = "width:150px; height:150px;">
-                                <a id = "uploadCaption"> Click in this area to upload image </a>
+                            <label class="postUpload" for="{{ form.content.id }}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer;">
+                                <div id="filePreviewContainer">
+                                    <img id="imagePreview" src="static/img/UploadImg.png" alt="File Preview" class="img-thumbnail" style="width:600px; height:350px; opacity:0.2;">
+                                    <video id="videoPreview" width="600" height="350" style="display:none;" controls>
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                                <button class="btn" type="button" id="clearFile" style="visibility:hidden">&times;</button>
+                                <img id="uploadIcon" src="static/img/uploadIcon.png" style="width:150px; height:150px;">
+                                <a id="uploadCaption"> Click in this area to upload file </a>
                             </label>
-                        </div>  
+                        </div>
+  
                         {{ form.title(class="form-control my-4 fs-4", style = "textFieldBorder", placeholder = "Add Title", style = "font-weight: 600;") }}
                         {{ form.caption(class="form-control my-4", style = "textFieldBorder", rows="5", placeholder = "A little something about your post") }}
                     </div>
@@ -115,35 +121,47 @@
 
 
     <script>
-        var btn = document.getElementById("clearFile")
-        var defaultImg = document.getElementById("uploadIcon")
-        var img = document.getElementById("filePreview");
-        var uploadCaption = document.getElementById("uploadCaption");
+        var btn = document.getElementById("clearFile");
+        var defaultImg = document.getElementById("uploadIcon");
+        var imgPreview = document.getElementById("imagePreview");
+        var videoPreview = document.getElementById("videoPreview");
+        var filePreviewContainer = document.getElementById("filePreviewContainer");
+
         $(document).ready(function () {
             $("#clearFile").on("click", function (e) {
-              e.preventDefault();
-              $("#content").val('');  // Clear the file input field
-              var img = document.getElementById("filePreview");
-              img.src = "static/img/UploadImg.png"
-              btn.style.visibility = 'hidden';
-              img.style.opacity = 0.2;
-              defaultImg.style.visibility = 'visible';
-              uploadCaption.style.visibility = 'visible';
+                e.preventDefault();
+                $("#content").val('');  // Clear the file input field
+                imgPreview.src = "static/img/UploadImg.png";
+                videoPreview.src = "";
+                btn.style.visibility = 'hidden';
+                filePreviewContainer.style.display = 'block';
+                defaultImg.style.visibility = 'visible';
+                uploadCaption.style.visibility = 'visible';
             });
-          });
+        });
 
         document.getElementById("content").addEventListener("change", function (event) {
             var input = event.target;
             var reader = new FileReader();
-    
+
             reader.onload = function () {
                 btn.style.visibility = 'visible';
                 defaultImg.style.visibility = 'hidden';
                 uploadCaption.style.visibility = 'hidden';
-                img.style.opacity = 1;
-                img.src = reader.result;
+
+                if (input.files[0].type.startsWith('image/')) {
+                    imgPreview.src = reader.result;
+                    imgPreview.style.display = 'block';
+                    videoPreview.style.display = 'none';
+                } else if (input.files[0].type.startsWith('video/')) {
+                    videoPreview.src = reader.result;
+                    videoPreview.style.display = 'block';
+                    imgPreview.style.display = 'none';
+                }
+
+                filePreviewContainer.style.display = 'flex';
             };
-    
+
             reader.readAsDataURL(input.files[0]);
         });
     </script>
