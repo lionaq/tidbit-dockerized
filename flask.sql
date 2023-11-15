@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS post (
 
 CREATE TABLE IF NOT EXISTS post_url (
 	id INT auto_increment PRIMARY KEY,
-    post_url VARCHAR(255),
+    url VARCHAR(255),
     post_id INT,
     FOREIGN KEY (post_id) REFERENCES post(id)
 );
