@@ -121,49 +121,77 @@
 
 
     <script>
-        var btn = document.getElementById("clearFile");
+        var clearBtn = document.getElementById("clearFile");
         var defaultImg = document.getElementById("uploadIcon");
-        var imgPreview = document.getElementById("imagePreview");
-        var videoPreview = document.getElementById("videoPreview");
         var filePreviewContainer = document.getElementById("filePreviewContainer");
-
+    
         $(document).ready(function () {
             $("#clearFile").on("click", function (e) {
                 e.preventDefault();
                 $("#content").val('');  // Clear the file input field
-                imgPreview.src = "static/img/UploadImg.png";
-                videoPreview.src = "";
-                btn.style.visibility = 'hidden';
-                filePreviewContainer.style.display = 'block';
-                defaultImg.style.visibility = 'visible';
-                uploadCaption.style.visibility = 'visible';
+                clearFilePreview();
             });
         });
-
+    
         document.getElementById("content").addEventListener("change", function (event) {
             var input = event.target;
-            var reader = new FileReader();
-
-            reader.onload = function () {
-                btn.style.visibility = 'visible';
-                defaultImg.style.visibility = 'hidden';
-                uploadCaption.style.visibility = 'hidden';
-
-                if (input.files[0].type.startsWith('image/')) {
-                    imgPreview.src = reader.result;
-                    imgPreview.style.display = 'block';
-                    videoPreview.style.display = 'none';
-                } else if (input.files[0].type.startsWith('video/')) {
-                    videoPreview.src = reader.result;
-                    videoPreview.style.display = 'block';
-                    imgPreview.style.display = 'none';
-                }
-
-                filePreviewContainer.style.display = 'flex';
-            };
-
-            reader.readAsDataURL(input.files[0]);
+            clearFilePreview();
+    
+            Array.from(input.files).forEach(function (file) {
+                var reader = new FileReader();
+                var preview = document.createElement('div');
+                preview.className = 'thumbnail-container'; // Apply styling for the container
+                preview.style.width = '150px'; // Set a fixed width for the thumbnails
+                preview.style.height = '150px'; // Set a fixed height for the thumbnails
+                preview.style.overflow = 'hidden'; // Hide overflow to maintain consistent size
+    
+                reader.onload = function () {
+                    if (file.type.startsWith('image/')) {
+                        // For image files
+                        var img = document.createElement('img');
+                        img.className = 'img-thumbnail';
+                        img.style.width = '100%';
+                        img.style.height = '100%';
+                        img.style.objectFit = 'cover'; // Maintain aspect ratio for images
+                        img.src = reader.result;
+                        preview.appendChild(img);
+                    } else if (file.type.startsWith('video/')) {
+                        // For video files
+                        var video = document.createElement('video');
+                        video.className = 'img-thumbnail';
+                        video.style.width = '100%';
+                        video.style.height = '100%';
+                        video.style.objectFit = 'cover'; // Maintain aspect ratio for videos
+                        video.setAttribute('controls', 'false'); // Disable video controls
+                        video.setAttribute('disablePictureInPicture', 'true'); // Disable Picture-in-Picture mode
+                        var source = document.createElement('source');
+                        source.src = URL.createObjectURL(file);
+                        source.type = file.type;
+                        video.appendChild(source);
+                        preview.appendChild(video);
+                    }
+    
+                    filePreviewContainer.appendChild(preview);
+                };
+    
+                reader.readAsDataURL(file);
+            });
+    
+            clearBtn.style.visibility = 'visible';
+            filePreviewContainer.style.display = 'flex';
+            defaultImg.style.visibility = 'hidden';
+            uploadCaption.style.visibility = 'hidden';
         });
+    
+        function clearFilePreview() {
+            filePreviewContainer.innerHTML = ''; // Clear previous previews
+            clearBtn.style.visibility = 'hidden';
+            defaultImg.style.visibility = 'visible';
+            uploadCaption.style.visibility = 'visible';
+        }
     </script>
+    
+    
+    
     
 {% endblock %}

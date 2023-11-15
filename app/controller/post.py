@@ -19,9 +19,11 @@ def create():
         user_id = current_user.id
         today = date.today()
 
-        # Upload image to Cloudinary
-        content = form.content.data
-        upload_result = upload(content, folder="Tidbit-web")
+        # Upload images/videos to Cloudinary
+        content_urls = []
+        for file in form.content.data:
+            upload_result = upload(file, folder="Tidbit-web")
+            content_urls.append(upload_result['secure_url'])
 
         # Other form field data
         title = form.title.data
@@ -31,7 +33,17 @@ def create():
         tag = ",".join(form.tag.data)
         selected_tags = ",".join(form.subtag.data)
 
-        post = Post(user_id=user_id, date=today, content=upload_result['secure_url'], title=title, caption=caption, ingredients=ingredients, instructions=instructions, tag=tag, subtags=selected_tags)
+        post = Post(
+            user_id=user_id,
+            date=today,
+            content=content_urls,  # Save list of content URLs
+            title=title,
+            caption=caption,
+            ingredients=ingredients,
+            instructions=instructions,
+            tag=tag,
+            subtags=selected_tags
+        )
         post.add()
 
         flash("Post created successfully!", 'info')
