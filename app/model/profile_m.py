@@ -33,6 +33,14 @@ class Profile(UserMixin):
             )
         else:
             return None
+           
+    def fetch_post_content(user_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT post.id, post_url.url FROM user INNER JOIN post ON user.id = post.user_id INNER JOIN post_url ON post.id = post_url.post_id WHERE user.id = %s"
+        cursor.execute(sql, (user_id,))
+        content = cursor.fetchall()
+        cursor.close()
+        return content
         
     @classmethod
     def fetch_user_posts(cls, user_id):
@@ -42,3 +50,4 @@ class Profile(UserMixin):
         posts = cursor.fetchall()
         cursor.close()
         return posts
+    

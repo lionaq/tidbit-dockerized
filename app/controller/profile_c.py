@@ -14,4 +14,5 @@ def profile(username):
     user = Profile.fetch_user_data(username)
     if user:
         posts = Profile.fetch_user_posts(user.id)
-        return render_template('user_profile.html', user=user, posts=posts)
+        content = Profile.fetch_post_content(user.id)
+        return render_template('user_profile.html', user=user, posts=posts, content=content)
