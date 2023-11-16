@@ -60,7 +60,7 @@
     }
     
 </style>
-    <div class = "container-md my-4 p-4" style = "border-radius: 10px; border: 1px solid rgba(0, 0, 0, 0.20); background: #FFF;">
+    <div class = "container-md my-4 p-3" style = "border-radius: 10px; border: 1px solid rgba(0, 0, 0, 0.20); background: #FFF;">
         <form method="POST" novalidate enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <div class = "container p-4">
@@ -82,31 +82,34 @@
                         {{ form.title(class="form-control my-4 fs-4", style = "textFieldBorder", placeholder = "Add Title", style = "font-weight: 600;") }}
                         {{ form.caption(class="form-control my-4", style = "textFieldBorder", rows="5", placeholder = "A little something about your post") }}
                     </div>
-                    <div class = "col ps-5">
+                    <div class = "col ps-3">
                         <p class = "postText">Ingredients:</p>{{ form.ingredients(class="form-control my-4", rows="5", style = "textFieldBorder", placeholder = "List the ingredients here") }}
                         <p class = "postText">Instructions:</p>{{ form.instructions(class="form-control my-4", rows="10", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}</p>
-                        <p class="postText">Tag:</p>
-                        <div class="form-group" style="margin-bottom: 1rem;">
-                            <select class="form-control course" name="tag" style="display: inline-block; width: auto;">
-                                {% for subfield in form.tag %}
-                                <option value="{{subfield.data}}">{{subfield.label.text}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <p class="postText" style="margin-top: 1rem;">Subtags:</p>
-                        <div class="form-row" style="margin-bottom: 1rem;">
-                            {% for subfield in form.subtag %}
-                                <div class="form-check form-check-inline col">
-                                    <input class="form-check-input" type="checkbox" id="{{ subfield.id }}" value="{{ subfield.data }}" name="{{ subfield.name }}">
-                                    <label class="form-check-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                        <div class = "row">
+                            <div class = "col-3">
+                                <p class="postText">Tag:</p>
+                                <select class="form-control course" name="tag" style="display: inline-block; width: auto;">
+                                    {% for subfield in form.tag %}
+                                    <option value="{{subfield.data}}">{{subfield.label.text}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class = "col">
+                                <div class="form-row">
+                                    <p class="postText mb-4 fw-6 fw-light">Subtags:</p>
+                                    {% for subfield in form.subtag %}
+                                        <div class="form-check form-check-inline col">
+                                            <input class="form-check-input" type="checkbox" id="{{ subfield.id }}" value="{{ subfield.data }}" name="{{ subfield.name }}">
+                                            <label class="form-check-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                                        </div>
+                                    {% endfor %}
                                 </div>
-                            {% endfor %}
+                            </div>
                         </div>
-
                     </div>
                 </div>
 
-                <div class = "d-flex flex-row-reverse mt-2">
+                <div class = "d-flex flex-row-reverse mt-3">
                     <a class = "btn  rounded-pill ms-3 fw-bold" style="background-color: rgba(210, 122, 94, 0.15); color: black;" href = "login">Cancel</a>
                     {{ form.submit(class="btn rounded-pill fw-bold", style="background-color: rgba(210, 122, 94, 0.15); color: black;") }}
 
@@ -187,6 +190,8 @@
             defaultImg.style.visibility = 'visible';
             uploadCaption.style.visibility = 'visible';
         }
+
+        
     </script>
     
 {% endblock %}

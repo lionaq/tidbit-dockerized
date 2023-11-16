@@ -17,7 +17,7 @@ class Post(UserMixin):
 
     def add(self):
         cursor = mysql.connection.cursor(dictionary=True)
-        sql_post = "INSERT INTO post(user_id, date, title, caption, ingredients, instructions, tag, subtags) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        sql_post = "INSERT INTO post(user_id, date, title, caption, ingredients, instructions, tag, subtags) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
         sql_urls = "INSERT INTO post_url (post_id, url, type) VALUES (%s, %s, %s)"
 
         # Insert post data into the `post` table
