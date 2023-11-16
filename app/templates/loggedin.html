@@ -2,7 +2,34 @@
 {% block content %}
 
 <p>You're Logged IN!</p>
-<p>Welcome , {{ name }}</p>
+<p>Welcome, {{ name }}</p>
 <a href="/logout">Logout</a>
 <a href="/create-post">Create Post</a>
+<br>
+<br>
+<!-- User Posts Gallery -->
+<div class="img-container">
+  <div class="row">
+    {% for post in posts %}
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="image-container">
+          {% for cont in content %}
+          {% if cont.id == post.id: %}
+              {% if cont.type == 'image' %}
+                  <a href="">
+                    <img src="{{ cont.url }}" class="rounded gallery-media" alt="{{ post.title }}">
+                  </a>
+              {% elif cont.type == 'video' %}
+                  <video controls class="rounded gallery-media">
+                    <source src="{{ cont.url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+              {% endif %}
+          {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

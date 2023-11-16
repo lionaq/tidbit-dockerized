@@ -61,6 +61,28 @@ class User(UserMixin):
         user = cursor.fetchone()
         cursor.close()
         return cls(**user) if user else None
+    
+    @classmethod
+    def search_by_username(cls, username):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT * FROM user WHERE username = %s"
+        cursor.execute(sql, (username,))
+        user_data = cursor.fetchone()
+        cursor.close()
+
+        if user_data:
+            return cls(
+                id=user_data['id'],
+                email=user_data['email'],
+                fullname=user_data['fullname'],
+                username=user_data['username'],
+                password=user_data['password'],
+                bio=user_data['bio'],
+                profilepic=user_data['profilepic'],
+                coverpic=user_data['coverpic']
+            )
+        else:
+            return None
 
 
     def add(self):
@@ -69,3 +91,12 @@ class User(UserMixin):
         cursor.execute(sql,(self.email,self.fullname,self.username,self.password,self.bio,self.profilepic,self.coverpic))
         mysql.connection.commit()
         cursor.close()
+        
+    @classmethod
+    def fetch_user_posts(cls, user_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT * FROM post WHERE user_id = %s"
+        cursor.execute(sql, (user_id,))
+        posts = cursor.fetchall()
+        cursor.close()
+        return posts

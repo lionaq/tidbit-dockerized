@@ -38,11 +38,6 @@ def create_app(test_config=None):
     def index():
         return render_template('home.html')
     
-    @app.route('/loggedin')
-    @login_required
-    def loggedin():
-        return render_template('loggedin.html' , name = current_user.username)
-    
     #Blueprints
     from .controller import auth
     from .controller import post

@@ -1,4 +1,5 @@
 from cloudinary.uploader import upload
+from cloudinary.utils import cloudinary_url
 from flask import Blueprint
 from flask import render_template, request, redirect, flash
 from datetime import date
@@ -20,35 +21,43 @@ def create():
         today = date.today()
 
         # Upload images/videos to Cloudinary
-        content_urls = []
+        posts = []
         for file in form.content.data:
-            upload_result = upload(file, folder="Tidbit-web")
-            content_urls.append(upload_result['secure_url'])
+            # Determine the resource type based on file type
+            resource_type = 'video' if file.filename.endswith(('.mp4', '.mov')) else 'image'
 
-        # Other form field data
-        title = form.title.data
-        caption = form.caption.data
-        ingredients = form.ingredients.data
-        instructions = form.instructions.data
-        tag = ",".join(form.tag.data)
-        selected_tags = ",".join(form.subtag.data)
+            # Upload with dynamically set resource_type
+            upload_result = upload(file, folder="Tidbit-web", resource_type=resource_type)
 
-        post = Post(
-            user_id=user_id,
-            date=today,
-            content=content_urls,  # Save list of content URLs
-            title=title,
-            caption=caption,
-            ingredients=ingredients,
-            instructions=instructions,
-            tag=tag,
-            subtags=selected_tags
-        )
-        post.add()
+            # For videos, get the secure URL using cloudinary_url
+            secure_url = upload_result['secure_url'] if resource_type == 'image' else cloudinary_url(upload_result['public_id'], resource_type='video')[0]
+
+            # Set the type field based on resource_type
+            type = 'image' if resource_type == 'image' else 'video'
+
+            posts.append(Post(
+                user_id=user_id,
+                date=today,
+                content=[secure_url],
+                type=type,
+                title=form.title.data,
+                caption=form.caption.data,
+                ingredients=form.ingredients.data,
+                instructions=form.instructions.data,
+                tag=",".join(form.tag.data),
+                subtags=",".join(form.subtag.data)
+            ))
+
+        # Add all posts to the database
+        for post in posts:
+            post.add()
 
         flash("Post created successfully!", 'info')
         return redirect('/loggedin')
 
     return render_template('posts/create.html', form=form)
+
+
+
 
 
