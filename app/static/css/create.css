@@ -1,0 +1,67 @@
+.postText{
+    color: #000;
+    text-align: left;
+    font-family: Dosis;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 0.75px;
+}
+.textFieldBorder{
+    border-radius: 10px; border: 1px solid #D9D9D9;
+}
+
+*{
+    font-family:dosis;
+}
+
+.postUpload {
+    position: relative;
+  }
+
+.postUpload .btn {
+    position: absolute;
+    top:5%;
+    left: 95%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    font-size: 80px;  
+    color:#FF0000;
+    border: none;
+  }
+
+.postUpload #uploadIcon{
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    opacity:0.5
+
+
+}
+.postUpload #uploadCaption{
+    position: absolute;
+    top: 63%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    font-weight: bold;
+    opacity:0.5
+}
+
+.custom-control-input:focus ~ .custom-control-label::before {
+    box-shadow:none !important;
+}
+
+.carousel-control-prev, .carousel-control-next {
+    height: 5vh%; /* Adjust the width as needed */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    border-radius: 30%; /* Make the outline rounded */
+    background-color: black;
+}
