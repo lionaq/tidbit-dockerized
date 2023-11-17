@@ -32,11 +32,13 @@
           <p class="small py-3">{{ current_user.bio }}</p>
         </div>
 
-        {% if current_user.website %}
-        <p class="small">
-            <a href="{{ current_user.website }}" target="_blank">{{ current_user.website }}</a>
-        </p>
-        {% endif %}
+        <div class="text-center"> 
+          {% if current_user.website %} 
+            <p class="small"> 
+              <a href="{{ current_user.website }}" target="_blank" style="text-decoration: none; color: darkblue">{{ current_user.website }}</a> 
+            </p> 
+          {% endif %}
+        </div>
 
         <div class="d-flex justify-content-center text-center">
           <a href="">
