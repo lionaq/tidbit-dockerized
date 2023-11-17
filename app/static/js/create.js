@@ -13,7 +13,7 @@ $(document).ready(function () {
         event.preventDefault();
 
         // Display the loading overlay
-        $('body').append('<div class="loading-overlay">Uploading...</div>');
+        $('body').append('<div class="loading-overlay"> <div class="spinner-border me-3" style="width: 3rem; height: 3rem;"> <span class="visually-hidden">Loading...</span></div><h2> Creating Post... </h2></div>');
 
         var formData = new FormData($(this)[0]);
 

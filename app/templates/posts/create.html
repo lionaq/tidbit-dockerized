@@ -2,7 +2,6 @@
 
 {% block content%}
 <link rel="stylesheet" type="text/css" href="static\css\create.css">
-
     <div class = "container-md my-4 p-3" style = "border-radius: 10px; border: 1px solid rgba(0, 0, 0, 0.20); background: #FFF;">
         <form id="postForm" method="POST" novalidate enctype="multipart/form-data">
             {{ form.hidden_tag() }}
@@ -59,19 +58,9 @@
                         </div>
                     </div>
                 </div>
-
                 <div class = "d-flex flex-row-reverse mt-3">
                     <a class = "btn  rounded-pill ms-3 fw-bold" style="background-color: rgba(210, 122, 94, 0.15); color: black;" href = "login">Cancel</a>
                     {{ form.submit(class="btn rounded-pill fw-bold", style="background-color: rgba(210, 122, 94, 0.15); color: black;") }}
-
-                </div>
-                
-                <!-- Add this inside the <div class="container p-4"> element -->
-                <div id="loadingScreen" class="loading-screen d-none">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <p class="mt-2">Uploading...</p>
                 </div>
             </div>
         </form>
