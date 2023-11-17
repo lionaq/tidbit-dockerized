@@ -41,8 +41,5 @@ class Post(UserMixin):
         cursor.execute(sql, (user_id,))
         content = cursor.fetchall()
 
-        # Debug print to inspect the fetched content
-        print("Fetched Content:", content)
-        
         cursor.close()
         return content

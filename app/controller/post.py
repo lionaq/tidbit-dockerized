@@ -45,11 +45,9 @@ def create():
         # Add the post to the database
         post.add()
 
-        print("Post created successfully!")
         flash("Post created successfully!", 'info')
         return redirect('/loggedin')
 
-    print("Form validation failed or method not POST.")
     return render_template('posts/create.html', form=form)
 
 
