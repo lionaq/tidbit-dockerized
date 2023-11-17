@@ -29,7 +29,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign in')
 
 class CreatePost(FlaskForm):
-    content = MultipleFileField('Content', validators=[FileAllowed(['jpg', 'png', 'gif', 'mp4', 'mov'])])
+    content = MultipleFileField('Content', validators=[FileAllowed(['jpg', 'png', 'gif', 'mp4', 'mov']), validators.DataRequired()])
     title = StringField('Title', [validators.DataRequired()])
     caption = TextAreaField('Caption', [validators.DataRequired()] )
     ingredients = TextAreaField('Ingredients', [validators.DataRequired()])

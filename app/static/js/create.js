@@ -11,7 +11,10 @@ $(document).ready(function () {
 
     $("#postForm").submit(function (event) {
         event.preventDefault();
-
+        if (!isFormValid()) {
+            $("#clearFiles").click();
+            return;
+        }
         // Display the loading overlay
         $('body').append('<div class="loading-overlay"> <div class="spinner-border me-3" style="width: 3rem; height: 3rem;"> <span class="visually-hidden">Loading...</span></div><h2> Creating Post... </h2></div>');
 
@@ -35,6 +38,10 @@ $(document).ready(function () {
     });
 });
 
+function isFormValid() {
+    let form = $("#postForm")[0];
+    return form.checkValidity(); // This assumes your form has a 'required' attribute on the necessary fields
+}
 document.getElementById("content").addEventListener("change", function (event) {
     let input = event.target;
     if (input.files.length == 0) { return; }
