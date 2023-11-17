@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="static\css\create.css">
 
     <div class = "container-md my-4 p-3" style = "border-radius: 10px; border: 1px solid rgba(0, 0, 0, 0.20); background: #FFF;">
-        <form method="POST" novalidate enctype="multipart/form-data">
+        <form id="postForm" method="POST" novalidate enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <div class = "container p-4">
                 <p style = "text-align: left; font-family: Dosis; font-size: 30px;  font-weight: bold; letter-spacing: 1.5px;">New Post</p>
@@ -78,5 +78,6 @@
     </div>
 
     <script src="static/js/create.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     
 {% endblock %}

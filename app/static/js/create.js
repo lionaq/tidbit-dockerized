@@ -8,18 +8,43 @@ $(document).ready(function () {
         $("#content").val('');  // Clear the file input field
         clearFilePreview('<img id="imagePreview" src="static/img/UploadImg.png" alt="File Preview" class="img-thumbnail" style="width:600px; height:350px; opacity:0.2;">');
     });
+
+    $("#postForm").submit(function (event) {
+        event.preventDefault();
+
+        // Display the loading overlay
+        $('body').append('<div class="loading-overlay">Uploading...</div>');
+
+        var formData = new FormData($(this)[0]);
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                // Handle success, e.g., redirect to the logged-in page
+                window.location.href = '/loggedin';
+            },
+            complete: function () {
+                // Remove the loading overlay when the request is complete
+                $('.loading-overlay').remove();
+            }
+        });
+    });
 });
 
 document.getElementById("content").addEventListener("change", function (event) {
     let input = event.target;
-    if(input.files.length == 0){return;}
+    if (input.files.length == 0) { return; }
     clearFilePreview(' ');
     let iterCount = 0;
     Array.from(input.files).forEach(function (file) {
         iterCount++;
         let reader = new FileReader();
         let preview = document.createElement('div');
-        if (iterCount < 2){preview.className = 'carousel-item active';} else { preview.className = 'carousel-item';}
+        if (iterCount < 2) { preview.className = 'carousel-item active'; } else { preview.className = 'carousel-item'; }
         preview.style.overflow = 'hidden'; // Hide overflow to maintain consistent size
 
         reader.onload = function () {
@@ -65,6 +90,3 @@ function clearFilePreview(defaultPrev) {
     defaultImg.style.visibility = 'visible';
     uploadCaption.style.visibility = 'visible';
 }
-
-
-
