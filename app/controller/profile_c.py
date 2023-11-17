@@ -21,7 +21,7 @@ def profile(username):
     user = Profile.fetch_user_data(username)
     if user:
         posts = Profile.fetch_user_posts(user.id)
-        return render_template('user_profile.html', user=user, posts=posts)
+        return render_template('user_profile.html', user=user, posts=posts, content=content)
     else:
         return render_template('user_profile.html')
 
@@ -106,3 +106,4 @@ def upload_cover_pic():
     else:
         flash('Invalid file type. Allowed types: png, jpg, jpeg', 'error')
         return redirect('/settings/edit-profile')
+        content = Profile.fetch_post_content(user.id)

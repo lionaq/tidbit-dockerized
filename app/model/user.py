@@ -8,13 +8,14 @@ def load_user(id):
     return User.search_by_id(int(id))
 
 class User(UserMixin):
-    def __init__(self, id=None, email = None, fullname = None, username = None, password = None,bio = None,profilepic = None, coverpic = None):
+    def __init__(self, id=None, email = None, fullname = None, username = None, password = None, bio = None, website = None, profilepic = None, coverpic = None):
         self.id = id
         self.email = email
         self.fullname = fullname
         self.username = username
         self.password = password
         self.bio = bio
+        self.website = website
         self.profilepic = profilepic if profilepic else  url_for('static', filename='img/default_profilepic.png')
         self.coverpic = coverpic if coverpic else url_for('static', filename='img/default_coverpic.jpg')
         
@@ -33,7 +34,6 @@ class User(UserMixin):
             return check_password_hash(stored_password, password)
         else:
             return False
-
     
     @classmethod
     def check_username(cls, username):

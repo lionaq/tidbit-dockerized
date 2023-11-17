@@ -2,13 +2,14 @@ from app import mysql, login
 from flask_login import UserMixin
 
 class Profile(UserMixin):
-    def __init__(self, id=None, email=None, fullname=None, username=None, password=None, bio=None, profilepic=None, coverpic=None):
+    def __init__(self, id=None, email=None, fullname=None, username=None, password=None, bio=None, website=None, profilepic=None, coverpic=None):
         self.id = id
         self.email = email
         self.fullname = fullname
         self.username = username
         self.password = password
         self.bio = bio
+        self.website = website
         self.profilepic = profilepic 
         self.coverpic = coverpic
         
