@@ -15,5 +15,15 @@ def profile(username):
     if user:
         posts = Profile.fetch_user_posts(user.id)
         content = Profile.fetch_post_content(user.id)
-        return render_template('user_profile.html', user=user, posts=posts, content=content)
+
+        first_images = {post['id']: None for post in posts}
+
+        for cont in content:
+            if cont['id'] in first_images and first_images[cont['id']] is None:
+                first_images[cont['id']] = cont['url']
+
+        posts_with_images = zip(posts, first_images.values())
+
+        return render_template('user_profile.html', user=user, posts_with_images=posts_with_images)
+    
     return render_template('user_profile.html')

@@ -13,3 +13,23 @@ CREATE TABLE IF NOT EXISTS user (
     profilepic VARCHAR(255),
     coverpic VARCHAR(255)
 );
+
+CREATE TABLE IF NOT EXISTS post (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    date DATE,
+    title VARCHAR(255),
+    caption TEXT,
+    ingredients TEXT,
+    instructions TEXT,
+    tag VARCHAR(99),
+    subtags VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+CREATE TABLE IF NOT EXISTS post_url (
+	id INT auto_increment PRIMARY KEY,
+    url VARCHAR(255),
+    post_id INT,
+    FOREIGN KEY (post_id) REFERENCES post(id)
+);
