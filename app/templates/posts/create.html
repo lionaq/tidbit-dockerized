@@ -45,8 +45,8 @@
                                 </select>
                             </div>
                             <div class = "col">
+                                <p class="postText mb-4 fw-6 fw-light">Subtags:</p>
                                 <div class="form-row">
-                                    <p class="postText mb-4 fw-6 fw-light">Subtags:</p>
                                     {% for subfield in form.subtag %}
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="checkbox" id="{{ subfield.id }}" value="{{ subfield.data }}" name="{{ subfield.name }}">
