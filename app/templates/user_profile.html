@@ -31,6 +31,13 @@
           <p class="small text-muted">@{{ current_user.username }}</p>
           <p class="small py-3">{{ current_user.bio }}</p>
         </div>
+
+        {% if current_user.website %}
+        <p class="small">
+            <a href="{{ current_user.website }}" target="_blank">{{ current_user.website }}</a>
+        </p>
+        {% endif %}
+
         <div class="d-flex justify-content-center text-center">
           <a href="">
               <div class="d-flex px-3 py-3">

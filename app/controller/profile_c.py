@@ -16,3 +16,4 @@ def profile(username):
         posts = Profile.fetch_user_posts(user.id)
         content = Profile.fetch_post_content(user.id)
         return render_template('user_profile.html', user=user, posts=posts, content=content)
+    return render_template('user_profile.html')
