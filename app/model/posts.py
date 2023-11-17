@@ -40,5 +40,9 @@ class Post(UserMixin):
         sql = "SELECT post.id, post_url.url, post_url.type FROM user INNER JOIN post ON user.id = post.user_id INNER JOIN post_url ON post.id = post_url.post_id WHERE user.id = %s"
         cursor.execute(sql, (user_id,))
         content = cursor.fetchall()
+
+        # Debug print to inspect the fetched content
+        print("Fetched Content:", content)
+        
         cursor.close()
         return content

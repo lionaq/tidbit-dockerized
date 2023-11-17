@@ -56,5 +56,6 @@ def loggedin():
     if user:
         posts = User.fetch_user_posts(user.id)
         content = Post.fetch_post_content(user.id)
-        return render_template('/loggedin.html', name = current_user.username, user=user, posts=posts, content=content)
+
+        return render_template('/loggedin.html', name = username, user=user, posts=posts, content=content)
     
