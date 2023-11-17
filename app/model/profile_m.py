@@ -42,3 +42,39 @@ class Profile(UserMixin):
         posts = cursor.fetchall()
         cursor.close()
         return posts
+
+    def update_profile(self, new_username, new_fullname, new_bio):
+        cursor = mysql.connection.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM user WHERE username = %s", (new_username,))
+        result = cursor.fetchone()
+
+        if result and result['id'] != self.id:
+            return False
+        else:
+            sql = "UPDATE user SET username = %s, fullname = %s, bio = %s WHERE id = %s"
+            cursor.execute(sql, (new_username, new_fullname, new_bio, self.id))
+            mysql.connection.commit()
+            return True
+        cursor.close()
+
+    def update_profile_picture(self, new_profilepic):
+        cursor = mysql.connection.cursor(dictionary=True)
+
+        # Update the profilepic in the database
+        sql = "UPDATE user SET profilepic = %s WHERE id = %s"
+        cursor.execute(sql, (new_profilepic, self.id))
+        mysql.connection.commit()
+
+        cursor.close()
+        return True
+    
+    def update_cover_picture(self, new_coverpic):
+        cursor = mysql.connection.cursor(dictionary=True)
+
+        # Update the coverpic in the database
+        sql = "UPDATE user SET coverpic = %s WHERE id = %s"
+        cursor.execute(sql, (new_coverpic, self.id))
+        mysql.connection.commit()
+
+        cursor.close()
+        return True

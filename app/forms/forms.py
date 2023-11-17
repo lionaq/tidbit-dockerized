@@ -25,3 +25,17 @@ class LoginForm(FlaskForm):
     username = StringField('Username', [validators.DataRequired()])
     password = PasswordField('Password', [validators.InputRequired()])
     submit = SubmitField('Sign in')
+
+class EditProfileForm(FlaskForm):
+    username = StringField('Username', [validators.DataRequired()])
+    fullname = StringField('Full Name', [validators.DataRequired()])
+    bio = StringField('Bio', [validators.DataRequired()])
+
+    def __init__(self, *args, **kwargs):
+        super(EditProfileForm, self).__init__(*args, **kwargs)
+        self.current_user = kwargs['current_user']
+
+    def validate_username(self, username):
+        user = User.check_username(username.data)
+        if user and user.id != self.current_user.id:
+            raise validators.ValidationError('Username is already taken')
