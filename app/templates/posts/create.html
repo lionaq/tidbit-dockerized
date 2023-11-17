@@ -12,7 +12,7 @@
                     <div class ="col">
                         {{ form.content(class="form-control my-4 fs-4", style="display:none;", multiple="multiple") }}
                         <div class="form-group">
-                            <label class="postUpload carousel slide overflow-hidden" for="{{ form.content.id }}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer;" id = "carousel" data-bs-theme="dark">
+                            <label class="postUpload carousel slide overflow-hidden" for="{{ form.content.id }}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer;" id = "carousel">
                                 <!-- Add a container for previews -->
                                 <div id="filePreviews" class = "carousel-inner" style = "width:600px; height:350px;">
                                     <img id="imagePreview" src="static/img/UploadImg.png" alt="File Preview" class="img-thumbnail" style="width:600px; height:350px; opacity:0.2;">
@@ -39,7 +39,7 @@
                         <div class = "row">
                             <div class = "col-3">
                                 <p class="postText">Tag:</p>
-                                <select class="form-control course" name="tag" style="display: inline-block; width: auto;">
+                                <select class="form-control course" name="tag">
                                     {% for subfield in form.tag %}
                                     <option value="{{subfield.data}}">{{subfield.label.text}}</option>
                                     {% endfor %}
@@ -49,7 +49,7 @@
                                 <div class="form-row">
                                     <p class="postText mb-4 fw-6 fw-light">Subtags:</p>
                                     {% for subfield in form.subtag %}
-                                        <div class="form-check form-check-inline col">
+                                        <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="checkbox" id="{{ subfield.id }}" value="{{ subfield.data }}" name="{{ subfield.name }}">
                                             <label class="form-check-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
                                         </div>
