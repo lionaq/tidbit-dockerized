@@ -27,8 +27,8 @@ class Post(UserMixin):
         post_id = cursor.lastrowid
 
         # Insert URLs into the `post_urls` table
-        for url in self.content:
-            cursor.execute(sql_urls, (post_id, url, self.type))
+        for entry in self.content:
+            cursor.execute(sql_urls, (post_id, entry['url'], entry['type']))
 
         # Commit changes
         mysql.connection.commit()
