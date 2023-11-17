@@ -1,65 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content%}
-<style>
-    .postText{
-        color: #000;
-        text-align: left;
-        font-family: Dosis;
-        font-size: 17px;
-        font-style: normal;
-        font-weight: 700;
-        line-height: normal;
-        letter-spacing: 0.75px;
-    }
-    .textFieldBorder{
-        border-radius: 10px; border: 1px solid #D9D9D9;
-    }
+<link rel="stylesheet" type="text/css" href="static\css\create.css">
 
-    *{
-        font-family:dosis;
-    }
-
-    .postUpload {
-        position: relative;
-      }
-
-    .postUpload .btn {
-        position: absolute;
-        top:5%;
-        left: 95%;
-        transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        font-size: 80px;  
-        color:#FF0000;
-        border: none;
-      }
-    
-    .postUpload #uploadIcon{
-        position: absolute;
-        top: 42%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        opacity:0.5
-    
-    
-    }
-    .postUpload #uploadCaption{
-        position: absolute;
-        top: 63%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        font-weight: bold;
-        opacity:0.5
-    }
-
-    .custom-control-input:focus ~ .custom-control-label::before {
-        box-shadow:none !important;
-    }
-    
-</style>
     <div class = "container-md my-4 p-3" style = "border-radius: 10px; border: 1px solid rgba(0, 0, 0, 0.20); background: #FFF;">
         <form method="POST" novalidate enctype="multipart/form-data">
             {{ form.hidden_tag() }}
@@ -69,20 +12,28 @@
                     <div class ="col">
                         {{ form.content(class="form-control my-4 fs-4", style="display:none;", multiple="multiple") }}
                         <div class="form-group">
-                            <label class="postUpload" for="{{ form.content.id }}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer;">
+                            <label class="postUpload carousel slide overflow-hidden" for="{{ form.content.id }}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer;" id = "carousel" data-bs-theme="dark">
                                 <!-- Add a container for previews -->
-                                <div id="filePreviews">
+                                <div id="filePreviews" class = "carousel-inner" style = "width:600px; height:350px;">
                                     <img id="imagePreview" src="static/img/UploadImg.png" alt="File Preview" class="img-thumbnail" style="width:600px; height:350px; opacity:0.2;">
                                 </div>
-                                <button class="btn" type="button" id="clearFiles" style="visibility:hidden">&times;</button>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                                <button class="btn z-5" type="button" id="clearFiles" style="visibility:hidden">&times;</button>
                                 <img id="uploadIcon" src="static/img/uploadIcon.png" style="width:150px; height:150px;">
-                                <a id="uploadCaption"> Click in this area to upload image </a>
-                            </label>                            
+                                <a id="uploadCaption"> Click in this area to upload images and/or videos </a>
+                            </label>                        
                         </div>  
                         {{ form.title(class="form-control my-4 fs-4", style = "textFieldBorder", placeholder = "Add Title", style = "font-weight: 600;") }}
                         {{ form.caption(class="form-control my-4", style = "textFieldBorder", rows="5", placeholder = "A little something about your post") }}
                     </div>
-                    <div class = "col ps-3">
+                    <div class = "col ps-2">
                         <p class = "postText">Ingredients:</p>{{ form.ingredients(class="form-control my-4", rows="5", style = "textFieldBorder", placeholder = "List the ingredients here") }}
                         <p class = "postText">Instructions:</p>{{ form.instructions(class="form-control my-4", rows="10", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}</p>
                         <div class = "row">
@@ -114,84 +65,10 @@
                     {{ form.submit(class="btn rounded-pill fw-bold", style="background-color: rgba(210, 122, 94, 0.15); color: black;") }}
 
                 </div>
-
             </div>
         </form>
     </div>
 
-
-    <script>
-        var clearBtn = document.getElementById("clearFiles");
-        var defaultImg = document.getElementById("uploadIcon");
-        var filePreviewContainer = document.getElementById("filePreviews");
-    
-        $(document).ready(function () {
-            $("#clearFiles").on("click", function (e) {
-                e.preventDefault();
-                $("#content").val('');  // Clear the file input field
-                clearFilePreview();
-            });
-        });
-    
-        document.getElementById("content").addEventListener("change", function (event) {
-            var input = event.target;
-            clearFilePreview();
-    
-            Array.from(input.files).forEach(function (file) {
-                var reader = new FileReader();
-                var preview = document.createElement('div');
-                preview.className = 'thumbnail-container'; // Apply styling for the container
-                preview.style.width = '150px'; // Set a fixed width for the thumbnails
-                preview.style.height = '150px'; // Set a fixed height for the thumbnails
-                preview.style.overflow = 'hidden'; // Hide overflow to maintain consistent size
-    
-                reader.onload = function () {
-                    if (file.type.startsWith('image/')) {
-                        // For image files
-                        var img = document.createElement('img');
-                        img.className = 'img-thumbnail';
-                        img.style.width = '100%';
-                        img.style.height = '100%';
-                        img.style.objectFit = 'cover'; // Maintain aspect ratio for images
-                        img.src = reader.result;
-                        preview.appendChild(img);
-                    } else if (file.type.startsWith('video/')) {
-                        // For video files
-                        var video = document.createElement('video');
-                        video.className = 'img-thumbnail';
-                        video.style.width = '100%';
-                        video.style.height = '100%';
-                        video.style.objectFit = 'cover'; // Maintain aspect ratio for videos
-                        video.setAttribute('controls', 'false'); // Disable video controls
-                        video.setAttribute('disablePictureInPicture', 'true'); // Disable Picture-in-Picture mode
-                        var source = document.createElement('source');
-                        source.src = URL.createObjectURL(file);
-                        source.type = file.type;
-                        video.appendChild(source);
-                        preview.appendChild(video);
-                    }
-    
-                    filePreviewContainer.appendChild(preview);
-                };
-    
-                reader.readAsDataURL(file);
-            });
-    
-            clearBtn.style.visibility = 'visible';
-            filePreviewContainer.style.display = 'flex';
-            defaultImg.style.visibility = 'hidden';
-            uploadCaption.style.visibility = 'hidden';
-        });
-    
-        function clearFilePreview() {
-            filePreviewContainer.innerHTML = ''; // Clear previous previews
-            clearBtn.style.visibility = 'hidden';
-            filePreviewContainer.style.display = 'block';
-            defaultImg.style.visibility = 'visible';
-            uploadCaption.style.visibility = 'visible';
-        }
-
-        
-    </script>
+    <script src="static/js/create.js"></script>
     
 {% endblock %}
