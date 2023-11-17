@@ -66,3 +66,5 @@ function clearFilePreview(defaultPrev) {
     uploadCaption.style.visibility = 'visible';
 }
 
+
+

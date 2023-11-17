@@ -65,6 +65,14 @@
                     {{ form.submit(class="btn rounded-pill fw-bold", style="background-color: rgba(210, 122, 94, 0.15); color: black;") }}
 
                 </div>
+                
+                <!-- Add this inside the <div class="container p-4"> element -->
+                <div id="loadingScreen" class="loading-screen d-none">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Uploading...</p>
+                </div>
             </div>
         </form>
     </div>
