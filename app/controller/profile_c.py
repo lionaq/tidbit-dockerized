@@ -21,7 +21,7 @@ def profile(username):
     user = Profile.fetch_user_data(username)
     if user:
         posts = Profile.fetch_user_posts(user.id)
-        return render_template('user_profile.html', user=user, posts=posts, content=content)
+        return render_template('user_profile.html', user=user, posts=posts)
     else:
         return render_template('user_profile.html')
 
@@ -33,14 +33,16 @@ def edit_profile():
         username = form.username.data
         full_name = form.fullname.data
         bio = form.bio.data
+        website = form.website.data
 
         profile = Profile.fetch_user_data(current_user.username)
-        status = profile.update_profile(username, full_name, bio)
+        status = profile.update_profile(username, full_name, bio, website)
 
         if status:
             current_user.username = username
             current_user.fullname = full_name
             current_user.bio = bio
+            current_user.website = website
             flash('Profile updated', 'success')
 
         return render_template('edit_profile.html', status=status, form=form)

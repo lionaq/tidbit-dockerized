@@ -29,7 +29,8 @@ class LoginForm(FlaskForm):
 class EditProfileForm(FlaskForm):
     username = StringField('Username', [validators.DataRequired()])
     fullname = StringField('Full Name', [validators.DataRequired()])
-    bio = StringField('Bio', [validators.DataRequired()])
+    bio = StringField('Bio')
+    website = StringField('Website')
 
     def __init__(self, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)

@@ -10,8 +10,8 @@ class Profile(UserMixin):
         self.password = password
         self.bio = bio
         self.website = website
-        self.profilepic = profilepic 
-        self.coverpic = coverpic
+        self.profilepic = profilepic if profilepic else  url_for('static', filename='img/default_profilepic.png')
+        self.coverpic = coverpic if coverpic else url_for('static', filename='img/default_coverpic.jpg')
         
     @classmethod
     def fetch_user_data(cls, username):
@@ -29,6 +29,7 @@ class Profile(UserMixin):
                 username=user_data['username'],
                 password=user_data['password'],
                 bio=user_data['bio'],
+                website=user_data['website'],
                 profilepic=user_data['profilepic'],
                 coverpic=user_data['coverpic']
             )
@@ -44,7 +45,7 @@ class Profile(UserMixin):
         cursor.close()
         return posts
 
-    def update_profile(self, new_username, new_fullname, new_bio):
+    def update_profile(self, new_username, new_fullname, new_bio, new_website):
         cursor = mysql.connection.cursor(dictionary=True)
         cursor.execute("SELECT * FROM user WHERE username = %s", (new_username,))
         result = cursor.fetchone()
@@ -52,8 +53,8 @@ class Profile(UserMixin):
         if result and result['id'] != self.id:
             return False
         else:
-            sql = "UPDATE user SET username = %s, fullname = %s, bio = %s WHERE id = %s"
-            cursor.execute(sql, (new_username, new_fullname, new_bio, self.id))
+            sql = "UPDATE user SET username = %s, fullname = %s, bio = %s, website = %s WHERE id = %s"
+            cursor.execute(sql, (new_username, new_fullname, new_bio, new_website, self.id))
             mysql.connection.commit()
             return True
         cursor.close()

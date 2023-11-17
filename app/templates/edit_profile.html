@@ -80,7 +80,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="bio" class="form-label" style="font-weight: 500">Bio</label>
-                    <textarea type="text" class="form-control" style="width:500px; border-color: gray" id="bio" name="bio" required>{{ current_user.bio }}</textarea>
+                    <textarea type="text" class="form-control" style="width:500px; border-color: gray" id="bio" name="bio">{{ current_user.bio }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="website" class="form-label" style="font-weight: 500">Website</label>
+                    <input type="text" class="form-control" style="width:500px; border-color: gray" id="website" name="website" value={{ current_user.website }}>
                 </div>
                 <div>
                 <button type="submit" class="btn btn-primary" style="margin-top: 10px; margin-left: 200px; width: 80px; background-color: #d17a5e; border-color: #8a4d39">Save</button>
