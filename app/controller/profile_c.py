@@ -22,11 +22,13 @@ def profile(username):
     if user:
         posts = Profile.fetch_user_posts(user.id)
         content = Profile.fetch_post_content(user.id)
-        first_images = {post['id']: None for post in posts}
+
+        first_images = {post['id']: {'url': None, 'type': 'image'} for post in posts}
 
         for cont in content:
-            if cont['id'] in first_images and first_images[cont['id']] is None:
-                first_images[cont['id']] = cont['url']
+            if cont['id'] in first_images and first_images[cont['id']]['url'] is None:
+                first_images[cont['id']]['url'] = cont['url']
+                first_images[cont['id']]['type'] = cont.get('type', 'image')  # Default to 'image' if 'type' is not present or None
 
         posts_with_images = zip(posts, first_images.values())
 

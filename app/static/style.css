@@ -100,7 +100,7 @@
 .image-overlay i {
     color: white;
     font-size: 21px;
-    margin-bottom: 25px;
+    margin-bottom: 28px;
     margin-right: 20px;
     transition: transform 0.3s ease; 
 }
@@ -113,6 +113,12 @@
     object-fit: cover;
     width: 100%;
     height: 200px;
+}
+
+.gallery-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* Create post icon */

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Create new post{% endblock %}
+
+{% block content%}
+<link rel="stylesheet" type="text/css" href="static\css\create.css">
+    <div class = "container-md my-4 p-3" style = "border-radius: 10px; border: 1px solid rgba(0, 0, 0, 0.20); background: #FFF;">
+        <form id="postForm" method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class = "container p-4">
+                <p style = "text-align: left; font-family: Dosis; font-size: 30px;  font-weight: bold; letter-spacing: 1.5px;">New Post</p>
+                <div class = "row">
+                    <div class ="col">
+                        {{ form.content(class="form-control my-4 fs-4", style="display:none;", multiple="multiple") }}
+                        <div class="form-group">
+                            <label class="postUpload carousel slide overflow-hidden" for="{{ form.content.id }}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer;" id = "carousel">
+                                <!-- Add a container for previews -->
+                                <div id="filePreviews" class = "carousel-inner" style = "width:600px; height:350px;">
+                                    <img id="imagePreview" src="static/img/UploadImg.png" alt="File Preview" class="img-thumbnail" style="width:600px; height:350px; opacity:0.2;">
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                                <button class="btn z-5" type="button" id="clearFiles" style="visibility:hidden">&times;</button>
+                                <img id="uploadIcon" src="static/img/uploadIcon.png" style="width:150px; height:150px;">
+                                <a id="uploadCaption"> Click in this area to upload images and/or videos </a>
+                            </label>                        
+                        </div>  
+                        {{ form.title(class="form-control my-4 fs-4", style = "textFieldBorder", placeholder = "Add Title", style = "font-weight: 600;") }}
+                        {{ form.caption(class="form-control my-4", style = "textFieldBorder", rows="5", placeholder = "A little something about your post") }}
+                    </div>
+                    <div class = "col ps-2">
+                        <p class = "postText">Ingredients:</p>{{ form.ingredients(class="form-control my-4", rows="5", style = "textFieldBorder", placeholder = "List the ingredients here") }}
+                        <p class = "postText">Instructions:</p>{{ form.instructions(class="form-control my-4", rows="10", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}</p>
+                        <div class = "row">
+                            <div class = "col-3">
+                                <p class="postText">Tag:</p>
+                                <select class="form-control course" name="tag">
+                                    {% for subfield in form.tag %}
+                                    <option value="{{subfield.data}}">{{subfield.label.text}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class = "col">
+                                <p class="postText mb-4 fw-6 fw-light">Subtags:</p>
+                                <div class="form-row">
+                                    {% for subfield in form.subtag %}
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="{{ subfield.id }}" value="{{ subfield.data }}" name="{{ subfield.name }}">
+                                            <label class="form-check-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class = "d-flex flex-row-reverse mt-3">
+                    <a class = "btn  rounded-pill ms-3 fw-bold" style="background-color: rgba(210, 122, 94, 0.15); color: black;" href = "login">Cancel</a>
+                    {{ form.submit(class="btn rounded-pill fw-bold", style="background-color: rgba(210, 122, 94, 0.15); color: black;") }}
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="static/js/create.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    
+{% endblock %}

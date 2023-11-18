@@ -75,12 +75,17 @@
         <!-- User Posts Gallery -->
         <div class="img-container">
           <div class="row">
-            {% for post, first_image_url in posts_with_images %}
+            {% for post, first_image_info in posts_with_images %}
               <div class="col-lg-3 col-md-6 mb-4">
                 <div class="image-container">
-                  <a href="">
-                    <img src="{{ first_image_url }}" class="gallery-image" alt="{{ post['title'] }}">
-                  </a>
+                  {% if first_image_info['type'] == 'image' %}
+                    <img src="{{ first_image_info['url'] }}" class="gallery-image" alt="{{ post['title'] }}">
+                  {% elif first_image_info['type'] == 'video' %}
+                    <video class="gallery-video">
+                      <source src="{{ first_image_info['url'] }}" type="video/mp4">
+                      Your browser does not support the video tag.
+                    </video>
+                  {% endif %}
                   <div class="image-overlay">
                     <a href="" class="overlay-link">
                       <i class="fa-solid fa-pen-to-square" id="editPost"></i>
@@ -93,14 +98,15 @@
               </div>
             {% endfor %}
           </div>
-        </div>        
+        </div>
 
         <!-- Create post icon -->
-        <a href="">
+        <a href="{{ url_for('post_bp.create') }}">
           <div class="floating-icon">
               <i class="fa-solid fa-plus"></i>
           </div>
         </a>
+        
       </div>
     </section>
   </main>

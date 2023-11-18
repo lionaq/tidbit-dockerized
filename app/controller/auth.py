@@ -1,8 +1,9 @@
 from flask import Blueprint
-from flask import render_template, request,redirect,url_for, flash
-from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from flask import render_template, request, redirect, url_for, flash
+from flask_login import  login_user,  login_required, logout_user, current_user
 from app.forms.forms import RegisterForm, LoginForm
 from app.model.user import User
+from app.model.posts import Post
 
 auth_bp = Blueprint(
     "auth_bp",
@@ -12,7 +13,7 @@ auth_bp = Blueprint(
 @auth_bp.route('/login', methods=['GET','POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('loggedin'))
+        return redirect(url_for('auth_bp.loggedin'))
     form = LoginForm()
     if form.validate_on_submit() and request.method == 'POST':
         username = form.username.data
@@ -29,7 +30,7 @@ def login():
 @auth_bp.route('/register', methods=['GET','POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('loggedin'))
+        return redirect(url_for('auth_bp.loggedin'))
     form = RegisterForm()
     if form.validate_on_submit() and request.method =='POST':
         user = User(email=form.email.data, fullname = form.fullname.data, username = form.username.data)
@@ -46,3 +47,15 @@ def logout():
     logout_user()
     flash("You have been logged out!", 'info')
     return redirect(url_for('auth_bp.login'))
+
+@auth_bp.route('/loggedin')
+@login_required
+def loggedin():
+    username = current_user.username
+    user = User.search_by_username(username)
+    if user:
+        posts = User.fetch_user_posts(user.id)
+        content = Post.fetch_post_content(user.id)
+
+        return render_template('/loggedin.html', name = username, user=user, posts=posts, content=content)
+    
