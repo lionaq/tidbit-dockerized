@@ -81,7 +81,7 @@
                   {% if first_image_info['type'] == 'image' %}
                     <img src="{{ first_image_info['url'] }}" class="gallery-image" alt="{{ post['title'] }}">
                   {% elif first_image_info['type'] == 'video' %}
-                    <video controls class="gallery-video">
+                    <video class="gallery-video">
                       <source src="{{ first_image_info['url'] }}" type="video/mp4">
                       Your browser does not support the video tag.
                     </video>
@@ -101,7 +101,7 @@
         </div>
 
         <!-- Create post icon -->
-        <a href="">
+        <a href="{{ url_for('post_bp.create') }}">
           <div class="floating-icon">
               <i class="fa-solid fa-plus"></i>
           </div>
