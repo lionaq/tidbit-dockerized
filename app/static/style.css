@@ -20,6 +20,11 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* link in bio */
+.link a:hover {
+    border-bottom: 1px solid darkblue;
+}
+
 /* Navbar: Posts, Liked, and Saved */
 .nav {
     background-color: #ffffff;
@@ -67,12 +72,6 @@
 .image-container {
     position: relative;
     width: 100%;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    border-radius: 3%;
-}
-
-.image-container:hover .gallery-image {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .image-overlay {
@@ -81,7 +80,7 @@
     right: 0;
     left: 0;
     top: 0;
-    background: rgba(84, 84, 84, 0.323);
+    background: rgba(84, 84, 84, 0.407);
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
@@ -101,7 +100,7 @@
 .image-overlay i {
     color: white;
     font-size: 21px;
-    margin-bottom: 25px;
+    margin-bottom: 28px;
     margin-right: 20px;
     transition: transform 0.3s ease; 
 }
@@ -114,6 +113,12 @@
     object-fit: cover;
     width: 100%;
     height: 200px;
+}
+
+.gallery-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* Create post icon */
