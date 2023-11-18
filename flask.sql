@@ -31,5 +31,6 @@ CREATE TABLE IF NOT EXISTS post_url (
 	id INT auto_increment PRIMARY KEY,
     url VARCHAR(255),
     post_id INT,
+    type VARCHAR(10),
     FOREIGN KEY (post_id) REFERENCES post(id)
 );
