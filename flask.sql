@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS user (
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     bio TEXT,
+    website VARCHAR(255),
     profilepic VARCHAR(255),
     coverpic VARCHAR(255)
 );
