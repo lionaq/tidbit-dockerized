@@ -10,8 +10,8 @@ class Profile(UserMixin):
         self.password = password
         self.bio = bio
         self.website = website
-        self.profilepic = profilepic 
-        self.coverpic = coverpic
+        self.profilepic = profilepic if profilepic else 'static/img/default_profilepic.png'
+        self.coverpic = coverpic if coverpic else 'static/img/default_coverpic.jpg'
         
     @classmethod
     def fetch_user_data(cls, username):
