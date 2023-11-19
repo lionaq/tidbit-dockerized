@@ -58,7 +58,6 @@ def edit(post_id):
     form = EditPost()
     if request.method == 'POST':
         if form.validate_on_submit():
-            print('Form validated successfully')
             if form.content.data:
                 print('Pass 2')
                 # Upload images/videos to Cloudinary, if any
@@ -107,8 +106,6 @@ def edit(post_id):
                 return redirect('/loggedin')
             
         else:
-            print("Tag Data:", form.tag.data)
-            print("Subtag Data:", form.subtag.data)
             print(form.errors)
             flash("Form validation failed", 'danger')
             
