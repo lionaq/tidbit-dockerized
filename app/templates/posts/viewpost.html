@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% set active_page = "viewpostrecipe" %}
+{% block title %} {{user.username}} | Viewpost {% endblock%}
+{% block content%}
+
+<style>
+    .comment-section:hover hr {
+        display: block;
+    }
+
+    .comment-section:hover a {
+        font-weight: bold;
+    }
+
+    .comment-section hr {
+        display: none;
+        width: 150%;
+        border: 3px solid #D17A5E;
+    }
+</style>
+
+<a class="btn btn-dark text-light" href="javascript:history.go(-1)">GO BACK</a>
+
+<div id="carouselviewpost" class="carousel slide carousel-fade align-self-center w-75 mx-auto" data-bs-theme="dark">
+    <div class="carousel-inner">
+        {% for img in content %}
+        {% if img.type == 'image' %}
+        <div class="carousel-item {{'active' if loop.first}}">
+            <img src="{{img.url}}" class="d-block mx-auto" style="height: 400px;">
+        </div>
+        {% elif img.type == 'video'%}
+        <div class="carousel-item {{'active' if loop.first}}">
+            <p>1</p>
+        </div>
+        {% endif%}
+        {% endfor %}
+    </div>
+    
+    <div class="d-flex justify-content-around position-absolute z-3 w-100">
+        <button>{{post.title}}</button>
+        <button>FOLLOW</button>
+        <button>SAVED</button>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselviewpost" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselviewpost" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+    
+</div>
+
+
+<div class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center mt-5">
+    <div class="d-flex justify-content-between w-75">
+        <a href="{{url_for('profile_bp.profile',username=user.username)}}">
+            <div class="d-flex align-items-center">
+                <img src="{{user.profilepic}}" class="d-block m-auto align-self-center p-1 rounded-pill shadow-lg"
+                    style="height: 70px; width: 70px;">
+                <div class="d-flex flex-column">
+                    <p class="m-0 fw-bold">{{user.fullname}}</p>
+                    <p class="m-0 align-self-start fw-lighter" style="font-size: 10px;">@{{user.username}}</p>
+                </div>
+            </div>
+        </a>
+
+        <button class="btn flex-shrink-0 align-self-center m-1" style="background-color: #D27A5E;">FOLLOW</button>
+    </div>
+    <div class="d-flex w-75 align-content-start justify-content-start align-items-start">
+        <p class="align-self-start mt-3 fw-lighter fs-6 text-break text-start">{{post.caption}}</p>
+    </div>
+    <div class="d-flex w-75 flex-wrap">
+        {% for x in post.subtags.split(',') %}
+        <div class="text-wrap text-dark mx-1 my-1 rounded-pill fw-semibold"
+            style="width: 6rem; background-color: #D9D9D9; height: 30px;">
+            {{x}}
+        </div>
+        {% endfor%}
+    </div>
+    <hr class="w-75 mt-3">
+    <div class="d-flex w-75 justify-content-around">
+        <div class="d-flex flex-column align-items-center">
+            <a href="{{url_for('post_bp.view_post',postid=post.id)}}"
+                class="{{'fw-bold' if active_page == 'viewpostrecipe'}}">RECIPE</a>
+            {% if active_page == 'viewpostrecipe'%}
+            <hr style="width: 150%; border: 3px solid #D17A5E;">
+            {% endif%}
+        </div>
+        <div class="d-flex flex-column align-items-center comment-section">
+            <a href="#">COMMENTS</a>
+            <hr>
+        </div>
+    </div>
+    <hr class="w-75 mt-3">
+    <div class="d-flex w-75 flex-column align-items-start">
+        <h6 class="ms-5 my-3">INGREDIENTS</h1>
+            <p class="mt-3 text-break text-start">{{post.ingredients}}</p>
+    </div>
+
+    <div class="d-flex w-75 flex-column align-items-start">
+        <h6 class="ms-5 my-3">INSTRUCTION</h1>
+            <p class="mt-3 text-break text-start">{{post.instructions}}</p>
+    </div>
+
+</div>
+
+{% endblock %}

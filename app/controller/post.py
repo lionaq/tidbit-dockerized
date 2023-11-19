@@ -6,6 +6,7 @@ from datetime import date
 from flask_login import current_user, login_required
 from app.forms.forms import CreatePost
 from app.model.posts import Post
+from app.model.user import User
 
 post_bp = Blueprint(
     "post_bp",
@@ -52,6 +53,12 @@ def create():
 
 
 
-
+@post_bp.route('/<int:postid>/viewpost', methods=['GET', 'POST'])
+@login_required
+def view_post(postid):
+    post = Post.get_by_id(postid)
+    user = User.search_by_id(post.user_id)
+    content = Post.fetch_view_post_img(post.id)
+    return render_template('posts/viewpost.html', post=post, user=user, content=content)
 
 

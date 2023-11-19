@@ -43,3 +43,22 @@ class Post(UserMixin):
 
         cursor.close()
         return content
+    
+    @classmethod
+    def fetch_view_post_img(cls, post_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT post.id, post_url.url, post_url.type FROM user INNER JOIN post ON user.id = post.user_id INNER JOIN post_url ON post.id = post_url.post_id WHERE post.id = %s"
+        cursor.execute(sql, (post_id,))
+        content = cursor.fetchall()
+
+        cursor.close()
+        return content
+
+    @classmethod
+    def get_by_id(cls, id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT * FROM post WHERE id=%s"
+        cursor.execute(sql, (id,))
+        post = cursor.fetchone()
+        cursor.close()
+        return cls(**post) if post else None
