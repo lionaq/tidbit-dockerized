@@ -6,6 +6,10 @@
 <a href="/logout">Logout</a>
 <a href="/create-post">Create Post</a>
 <br>
+{% for x in posts %}
+<a href="{{url_for('post_bp.view_post',postid=x.id)}}">POST {{x.id}}</a>
+{%endfor%}
+<br>
 <br>
 <!-- User Posts Gallery -->
 <div class="img-container">
