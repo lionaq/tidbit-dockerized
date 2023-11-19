@@ -124,7 +124,7 @@
                 </svg>
             </button>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Edit Post</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('post_bp.edit', post_id=post.id) }}">Edit Post</a></li>
                 <li><a class="dropdown-item" href="#">Delete Post</a></li>
             </ul>
         </div>
