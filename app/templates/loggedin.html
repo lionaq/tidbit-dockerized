@@ -1,47 +1,111 @@
 {% extends 'base.html' %}
+{%block title%}Feed{%endblock%}
 {% block content %}
-
-<p>You're Logged IN!</p>
-<p>Welcome, {{ name }}</p>
-<a href="/logout">Logout</a>
-<a href="/create-post">Create Post</a>
-<br>
-<br>
+{% set ns = namespace(firstItem=0) %}
+{% set num = namespace(iter=0)%}
 <!-- User Posts Gallery -->
-<div class="img-container">
-  <div class="row">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create.css') }}">
+<section>
+  <style>
+    .overflow-ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+  <h1 class = "display-5 fw-bold mt-4">Feed <small class="text-body-secondary fs-6">Start looking at your friends' posts or your own!</small></h1>
+  <div class="row justify-content-center">
     {% for post in posts %}
-      <div class="col-lg-3 col-md-6 mb-4">
-        <div id="carousel{{ post.id }}" class="carousel slide" data-ride="carousel">
+      <div class=" col-lg-6 g-5 px-5 mb-5 mt-2 justify-content-center">
+        <div class = "row my-3">
+          <div class = "col-sm-9">
+            <div class = "row">
+              <div class = "col-sm-2 me-3">
+                <a href="{{ url_for('profile_bp.profile', username=current_user.username) }}"><img class="rounded-pill shadow-sm" src="{{ current_user.profilepic }}" style="height: 70px; width: 70px; "></a>
+              </div>
+              <div class = "col-sm-9 ms-1">
+                <p class = "fs-4 fw-semibold m-0 p-0">{{current_user.fullname}}</h3>
+                <p class="fs-6 text-muted">@{{ current_user.username }}</p>
+              </div>
+            </div>
+          </div>
+          <div class = "col d-flex align-items-center justify-content-end">
+           {%if post.user_id != current_user.id%} <button style = "width:100%;" class = "btn btn btn-success">Follow</button> {%endif%}
+          </div>
+        </div>
+        <div id="carousel{{ post.id }}" class="carousel slide shadow-sm">
           <div class="carousel-inner">
+            {% set ns.firstItem = 1 %}
             {% for cont in content %}
-              {% if cont.id == post.id %}
-                <div class="carousel-item {% if loop.first %}active{% endif %}">
-                  <img src="{{ cont.url }}" class="d-block w-100" alt="{{ post.title }}">
+              {% if cont.id == post.id: %}
+              {% set num.iter = num.iter + 1 %}
+                <div class="carousel-item {% if ns.firstItem == 1 %}active{% endif %}">
+                  {% if cont.type == 'image' %}
+                      <img src="{{ cont.url }}" class="object-fit-cover" alt="{{ post.title }}" width = "100%" height="310px">
+                  {% elif cont.type == 'video' %}
+                      <video  width="100%" height="310px" class = "object-fit-cover"><source src="{{ cont.url }}" type="video/mp4"></video>
+                  {% endif %}
                 </div>
+                {% set ns.firstItem = 0 %}  
               {% endif %}
             {% endfor %}
           </div>
-          <a class="carousel-control-prev" href="#carousel{{ post.id }}" role="button" data-slide="prev">
+          <button class="carousel-control-prev" data-bs-target="#carousel{{ post.id }}" type="button" data-bs-slide="prev" style = "{% if num.iter == 1%}display:none;{%endif%}">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-          </a>
-          <a class="carousel-control-next" href="#carousel{{ post.id }}" role="button" data-slide="next">
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" data-bs-target="#carousel{{ post.id }}" type="button" data-bs-slide="next" style = "{% if num.iter == 1%}display:none;{%endif%}">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-          </a>
+            <span class="visually-hidden">Next</span>
+          </button>
         </div>
-        <div class="image-overlay">
-          <a href="#" class="overlay-link">
-            <i class="fa-solid fa-pen-to-square" id="editPost"></i>
-          </a>
-          <a href="#" class="overlay-link">
-            <i class="fa-solid fa-trash" id="deletePost"></i>
-          </a>
+        {% set num.iter = 0%}
+         <!--Title and caption section-->
+        <div class = "row">
+          <div class = "col-sm-10">
+            <h2 class = "mt-3 overflow-ellipsis">{{post.title}}</h2>
+          </div>
+          <div class = "col d-flex align-items-center justify-content-end">
+            <a href="#"><img src="{{url_for('static', filename='img/reportIcon.png')}}" style="height: 40px; width: 40px; opacity: 0.65;" class = "mt-3"></a>
+          </div>
+          <p class="fs-6 text-muted overflow-ellipsis my-1">{{ post.caption }}</p>
+        </div>
+        
+        <!--Like commends and bookmark section-->
+        <div class = "row">
+          <div class = "col-sm-2 my-2">
+            <div class = "row row-cols-2">
+              <div class = "col">
+                <button style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-heart fa-2xl"style="color: #000000;"></i></button>
+              </div>
+              <div class = "col ps-2">
+                <p class="fs-5">{{ range(1, 599) | random }}</p>
+              </div>
+            </div>
+          </div>
+          <div class = "col-sm-2 my-2">
+            <div class = "row row-cols-2">
+              <div class = "col">
+                <button style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-comment fa-2xl " style="color: #000000;"></i></button>
+              </div>
+              <div class = "col ps-2">
+                <p class="fs-5">{{ range(1, 1000) | random }}</p>
+              </div>
+            </div>
+          </div>
+          <div class = "col-sm-2 my-2">
+            <div class = "row row-cols-2">
+              <div class = "col">
+                <button style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-bookmark fa-2xl" style="color: #000000;"></i></i></button>
+              </div>
+              <div class = "col ps-2">
+                <p class="fs-5">{{ range(1, 100) | random }}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     {% endfor %}
   </div>
-</div>
-
+</section>
 {% endblock %}

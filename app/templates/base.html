@@ -47,7 +47,7 @@
             </script>
 
             <div class="me-4">
-              <a href="{{ url_for('profile_bp.profile', username=current_user.username) }}"><img src="{{ url_for('static', filename='img/PlaceholderIcon.jpg') }}" style="height: 35px; width: 35px;"></a>
+              <a href="{{ url_for('profile_bp.profile', username=current_user.username) }}"><img class="img rounded-pill" src="{{ current_user.profilepic }}" style="height: 35px; width: 35px;"></a>
             </div>
 
             <div class="nav-item dropdown me-5">

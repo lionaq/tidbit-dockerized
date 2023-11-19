@@ -30,8 +30,8 @@ class LoginForm(FlaskForm):
 
 class CreatePost(FlaskForm):
     content = MultipleFileField('Content', validators=[FileAllowed(['jpg', 'png', 'gif', 'mp4', 'mov']), validators.DataRequired()])
-    title = StringField('Title', [validators.DataRequired()])
-    caption = TextAreaField('Caption', [validators.DataRequired()] )
+    title = StringField('Title', validators=[validators.DataRequired(), validators.Length(max=255)])
+    caption = TextAreaField('Caption', validators=[validators.DataRequired(), validators.Length(max=255)] )
     ingredients = TextAreaField('Ingredients', [validators.DataRequired()])
     instructions = TextAreaField('Instructions', [validators.DataRequired()])
     tag =  SelectMultipleField('Tag', choices=[('American Cuisine', 'American Cuisine'), ('Filipino Cuisine', 'Filipino Cuisine'), ('French Cuisine', 'French Cuisine'), ('Japanese Cuisine', 'Japanese Cuisine'), ('Chinese Cuisine', 'Chinese Cuisine'), ('Greek Cuisine', 'Greek Cuisine'), ('Mexican Cuisine', 'Mexican Cuisine'), ('Indian Cuisine', 'Indian Cuisine'), ('Thai Cuisine', 'Thai Cuisine')], widget=widgets.ListWidget(prefix_label=False))
