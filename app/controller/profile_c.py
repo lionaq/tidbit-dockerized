@@ -55,10 +55,12 @@ def edit_profile():
             current_user.bio = bio
             current_user.website = website
             flash('Profile updated', 'success')
+        else:
+            flash('Failed to update profile', 'error')
 
-        return render_template('edit_profile.html', status=status, form=form)
-    else:
-        return render_template('edit_profile.html', form=form)
+        return redirect('/settings/edit-profile')
+
+    return render_template('edit_profile.html', form=form)
 
 @profile_bp.route('/upload-profile-pic', methods=['POST'])
 def upload_profile_pic():
