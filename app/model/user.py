@@ -101,3 +101,13 @@ class User(UserMixin):
         posts = cursor.fetchall()
         cursor.close()
         return posts
+    
+    @classmethod
+    def fetch_user_post_content(cls, user_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT post.id, post_url.url, post_url.type FROM user INNER JOIN post ON user.id = post.user_id INNER JOIN post_url ON post.id = post_url.post_id WHERE user.id = %s"
+        cursor.execute(sql, (user_id,))
+        content = cursor.fetchall()
+
+        cursor.close()
+        return content
