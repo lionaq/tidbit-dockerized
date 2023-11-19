@@ -33,15 +33,18 @@
 
         <!-- User Data -->
         <section>
-          <div class="justify-content-center text-center" style="margin-top: 68px;">
-            <h5>{{ current_user.fullname }}</h5>
-            <p class="small text-muted">@{{ current_user.username }}</p>
-            <p class="small py-3">{{ current_user.bio }}</p>
-          </div>
-
-          <div class="text-center">
+          <div class="justify-content-center text-center" style="margin-top: 68px">
+            <h5 style="margin-bottom:2px">{{ current_user.fullname }}</h5>
+            <p class="small text-muted" style="margin-bottom: 8px">@{{ current_user.username }}</p>
+            
+            {% if current_user.bio %}
+              <p class="small py-3 bio-text">{{ current_user.bio }}</p>
+            {% elif not current_user.bio %}
+              <p class="default-division" style="margin-top: 68px"></p>
+            {% endif %}
+            
             {% if current_user.website %} 
-              <p class="small link"> 
+              <p class="small link">
                 <a href="{{ current_user.website }}" target="_blank" style="text-decoration: none; color: darkblue">{{ current_user.website }}</a> 
               </p> 
             {% endif %}
