@@ -27,8 +27,12 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             success: function (data) {
-                // Handle success, e.g., redirect to the logged-in page
-                window.location.href = '/loggedin';
+            console.log(username)
+                if (window.location.pathname === '/edit-post/'+postId) {
+                    window.location.href = '/' + username;
+                } else {
+                    window.location.href = '/loggedin';
+                }
             },
             complete: function () {
                 // Remove the loading overlay when the request is complete

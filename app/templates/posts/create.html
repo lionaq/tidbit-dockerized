@@ -67,8 +67,11 @@
             </div>
         </form>
     </div>
-
-    <script src="static/js/create.js"></script>
+    <script>
+        let username = "{{userName}}";
+        let postId = "{{post.id}}";
+    </script>
+    <script src="{{ url_for('static', filename='js/create.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     
 {% endblock %}

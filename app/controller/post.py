@@ -47,8 +47,8 @@ def create():
 
         flash("Post created successfully!", 'info')
         return redirect('/loggedin')
-
-    return render_template('posts/create.html', form=form)
+    userName = current_user.username
+    return render_template('posts/create.html', form=form, userName=userName)
 
 from flask import render_template
 
@@ -127,7 +127,8 @@ def edit(post_id):
     form.tag.data = post['tag'].split(',') if post['tag'] else []
     form.subtag.data = post['subtags'].split(',') if post['subtags'] else []
 
-    return render_template('posts/edit.html', form=form, post=post, content=content)
+    userName = current_user.username
+    return render_template('posts/edit.html', form=form, post=post, content=content, userName = userName)
 
 
 
