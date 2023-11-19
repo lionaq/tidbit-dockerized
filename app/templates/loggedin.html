@@ -2,27 +2,44 @@
 {%block title%}Feed{%endblock%}
 {% block content %}
 {% set ns = namespace(firstItem=0) %}
-<p>You're Logged IN!</p>
-<p>Welcome, {{ name }}</p>
-<a href="/logout">Logout</a>
-<a href="/create-post">Create Post</a>
-<br>
-<br>
 <!-- User Posts Gallery -->
-<div class="img-container">
-  <div class="row">
+<section>
+  <style>
+    .overflow-ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+  <div class="row justify-content-center">
     {% for post in posts %}
-      <div class="col">
-        <div id="carousel{{ post.id }}" class="carousel slide">
+      <div class=" col-lg-6 g-5 px-5 my-5 justify-content-center">
+        <div class = "row my-3">
+          <div class = "col">
+            <div class = "row">
+              <div class = "col-sm-4">
+                <a href="{{ url_for('profile_bp.profile', username=current_user.username) }}"><img class="rounded-pill shadow-sm" src="{{ current_user.profilepic }}" style="height: 70px; width: 70px; "></a>
+              </div>
+              <div class = "col-sm-8">
+                <p class = "fs-4 fw-semibold m-0 p-0">{{current_user.fullname}}</h3>
+                <p class="fs-6 text-muted">@{{ current_user.username }}</p>
+              </div>
+            </div>
+          </div>
+          <div class = "col d-flex align-items-center justify-content-end">
+            <button class = "btn btn btn-success">Follow</button>
+          </div>
+        </div>
+        <div id="carousel{{ post.id }}" class="carousel slide shadow-sm">
           <div class="carousel-inner">
             {% set ns.firstItem = 1 %}
             {% for cont in content %}
               {% if cont.id == post.id: %}
                 <div class="carousel-item {% if ns.firstItem == 1 %}active{% endif %}">
                   {% if cont.type == 'image' %}
-                      <img src="{{ cont.url }}" class="d-block w-100 object-fit" alt="{{ post.title }}">
+                      <img src="{{ cont.url }}" class="object-fit-cover" alt="{{ post.title }}" width = "100%" height="325px">
                   {% elif cont.type == 'video' %}
-                      <video  width="100%" height="100%" class = "object-fit"><source src="{{ cont.url }}" type="video/mp4"></video>
+                      <video  width="100%" height="325px" class = "object-fit-cover"><source src="{{ cont.url }}" type="video/mp4"></video>
                   {% endif %}
                 </div>
                 {% set ns.firstItem = 0 %}  
@@ -38,9 +55,17 @@
             <span class="sr-only">Next</span>
           </a>
         </div>
+        <div class = "row">
+          <div class = "col-sm-10">
+            <h2 class = "my-3 overflow-ellipsis">{{post.title}}</h2>
+          </div>
+          <div class = "col d-flex align-items-center justify-content-end">
+            <a href="#"><img src="{{url_for('static', filename='img/reportIcon.png')}}" style="height: 40px; width: 40px; opacity: 0.65;"></a>
+          </div>
+          <p class="small overflow-ellipsis">{{ post.caption }}</p>
+        </div>
       </div>
     {% endfor %}
   </div>
-</div>
-
+</section>
 {% endblock %}
