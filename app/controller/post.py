@@ -47,8 +47,7 @@ def create():
 
         flash("Post created successfully!", 'info')
         return redirect('/loggedin')
-    userName = current_user.username
-    return render_template('posts/create.html', form=form, userName=userName)
+    return render_template('posts/create.html', form=form)
 
 from flask import render_template
 

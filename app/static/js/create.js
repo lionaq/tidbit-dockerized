@@ -27,7 +27,6 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             success: function (data) {
-            console.log(username)
                 if (window.location.pathname === '/edit-post/'+postId) {
                     window.location.href = '/' + username;
                 } else {
