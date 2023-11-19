@@ -30,12 +30,16 @@
         </div>
         {% elif img.type == 'video'%}
         <div class="carousel-item {{'active' if loop.first}}">
-            <p>1</p>
+            <video controls width="100%" height="100%">
+                <source src="{{ cont.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
         </div>
         {% endif%}
         {% endfor %}
     </div>
     
+    <!-- IDK HOW WHAT WHY TO FUCKING OVERLAY -->
     <div class="d-flex justify-content-around position-absolute z-3 w-100">
         <button>{{post.title}}</button>
         <button>FOLLOW</button>
@@ -55,7 +59,7 @@
 
 <div class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center mt-5">
     <div class="d-flex justify-content-between w-75">
-        <a href="{{url_for('profile_bp.profile',username=user.username)}}">
+        <a href="{{url_for('profile_bp.profile',username=user.username)}}" class="text-dark text-decoration-none">
             <div class="d-flex align-items-center">
                 <img src="{{user.profilepic}}" class="d-block m-auto align-self-center p-1 rounded-pill shadow-lg"
                     style="height: 70px; width: 70px;">
@@ -83,13 +87,13 @@
     <div class="d-flex w-75 justify-content-around">
         <div class="d-flex flex-column align-items-center">
             <a href="{{url_for('post_bp.view_post',postid=post.id)}}"
-                class="{{'fw-bold' if active_page == 'viewpostrecipe'}}">RECIPE</a>
+                class="{{'fw-bold' if active_page == 'viewpostrecipe'}} text-dark text-decoration-none">RECIPE</a>
             {% if active_page == 'viewpostrecipe'%}
             <hr style="width: 150%; border: 3px solid #D17A5E;">
             {% endif%}
         </div>
         <div class="d-flex flex-column align-items-center comment-section">
-            <a href="#">COMMENTS</a>
+            <a href="#" class="text-dark text-decoration-none">COMMENTS</a>
             <hr>
         </div>
     </div>
