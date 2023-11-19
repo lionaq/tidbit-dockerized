@@ -6,7 +6,7 @@ $(document).ready(function () {
     $("#clearFiles").on("click", function (e) {
         e.preventDefault();
         $("#content").val('');  // Clear the file input field
-        clearFilePreview('<img id="imagePreview" src="static/img/UploadImg.png" alt="File Preview" class="img-thumbnail" style="width:600px; height:350px; opacity:0.2;">');
+        clearFilePreview('<img id="imagePreview" src="static/img/UploadImg.png" alt="File Preview" class="img-thumbnail" style="width:100%; height:350px; opacity:0.2;">');
     });
 
     $("#postForm").submit(function (event) {
@@ -60,7 +60,7 @@ document.getElementById("content").addEventListener("change", function (event) {
                 let img = document.createElement('img');
                 img.style.width = '100%';
                 img.style.height = '100%';
-                img.style.objectFit = 'contain'; // Maintain aspect ratio for images
+                img.style.objectFit = 'cover'; // Maintain aspect ratio for images
                 img.src = reader.result;
                 preview.appendChild(img);
             } else if (file.type.startsWith('video/')) {
@@ -68,7 +68,7 @@ document.getElementById("content").addEventListener("change", function (event) {
                 let video = document.createElement('video');
                 video.style.width = '100%';
                 video.style.height = '100%';
-                video.style.objectFit = 'contain'; // Maintain aspect ratio for videos
+                video.style.objectFit = 'cover'; // Maintain aspect ratio for videos
                 video.setAttribute('controls', 'false'); // Disable video controls
                 video.setAttribute('disablePictureInPicture', 'true'); // Disable Picture-in-Picture mode
                 let source = document.createElement('source');

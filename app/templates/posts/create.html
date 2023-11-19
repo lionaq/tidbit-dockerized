@@ -13,10 +13,10 @@
                     <div class ="col">
                         {{ form.content(class="form-control my-4 fs-4", style="display:none;", multiple="multiple") }}
                         <div class="form-group">
-                            <label class="postUpload carousel slide overflow-hidden" for="{{ form.content.id }}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer;" id = "carousel">
+                            <label class="postUpload carousel slide overflow-hidden d-flex justify-content-center" for="{{ form.content.id }}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer;" id = "carousel">
                                 <!-- Add a container for previews -->
-                                <div id="filePreviews" class = "carousel-inner" style = "width:600px; height:350px;">
-                                    <img id="imagePreview" src="static/img/UploadImg.png" alt="File Preview" class="img-thumbnail" style="width:600px; height:350px; opacity:0.2;">
+                                <div id="filePreviews" class = "carousel-inner" style = "width:100%; height:350px;">
+                                    <img id="imagePreview" src="static/img/UploadImg.png" alt="File Preview" class="img-thumbnail" style="width:100%; height:350px; opacity:0.2;">
                                 </div>
                                 <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -38,7 +38,7 @@
                         <p class = "postText">Ingredients:</p>{{ form.ingredients(class="form-control my-4", rows="5", style = "textFieldBorder", placeholder = "List the ingredients here") }}
                         <p class = "postText">Instructions:</p>{{ form.instructions(class="form-control my-4", rows="10", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}</p>
                         <div class = "row">
-                            <div class = "col-3">
+                            <div class = "col-sm-3 mb-4">
                                 <p class="postText">Tag:</p>
                                 <select class="form-control course" name="tag">
                                     {% for subfield in form.tag %}
