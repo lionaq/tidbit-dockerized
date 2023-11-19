@@ -18,19 +18,19 @@
     {% for post in posts %}
       <div class=" col-lg-6 g-5 px-5 mb-5 mt-2 justify-content-center">
         <div class = "row my-3">
-          <div class = "col">
+          <div class = "col-sm-9">
             <div class = "row">
-              <div class = "col-sm-4">
+              <div class = "col-sm-2 me-3">
                 <a href="{{ url_for('profile_bp.profile', username=current_user.username) }}"><img class="rounded-pill shadow-sm" src="{{ current_user.profilepic }}" style="height: 70px; width: 70px; "></a>
               </div>
-              <div class = "col-sm-8">
+              <div class = "col-sm-9 ms-1">
                 <p class = "fs-4 fw-semibold m-0 p-0">{{current_user.fullname}}</h3>
                 <p class="fs-6 text-muted">@{{ current_user.username }}</p>
               </div>
             </div>
           </div>
           <div class = "col d-flex align-items-center justify-content-end">
-           {%if post.user_id != current_user.id%} <button class = "btn btn btn-success">Follow</button> {%endif%}
+           {%if post.user_id == current_user.id%} <button style = "width:100%;" class = "btn btn btn-success">Follow</button> {%endif%}
           </div>
         </div>
         <div id="carousel{{ post.id }}" class="carousel slide shadow-sm">
@@ -78,7 +78,7 @@
               <div class = "col">
                 <button style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-heart fa-2xl"style="color: #000000;"></i></button>
               </div>
-              <div class = "col ps-1">
+              <div class = "col ps-2">
                 <p class="fs-5">{{ range(1, 599) | random }}</p>
               </div>
             </div>
@@ -88,7 +88,7 @@
               <div class = "col">
                 <button style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-comment fa-2xl " style="color: #000000;"></i></button>
               </div>
-              <div class = "col ps-1">
+              <div class = "col ps-2">
                 <p class="fs-5">{{ range(1, 1000) | random }}</p>
               </div>
             </div>
@@ -98,7 +98,7 @@
               <div class = "col">
                 <button style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-bookmark fa-2xl" style="color: #000000;"></i></i></button>
               </div>
-              <div class = "col ps-1">
+              <div class = "col ps-2">
                 <p class="fs-5">{{ range(1, 100) | random }}</p>
               </div>
             </div>
