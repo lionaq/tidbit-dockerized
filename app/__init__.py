@@ -20,11 +20,11 @@ def create_app(test_config=None):
         MYSQL_HOST=DB_HOST
     )
 
-    cloudinary.config( 
-        cloud_name = "de5airg96", 
-        api_key = "748925714839382", 
-        api_secret = "_VlvX3gLbyqV73cu8hCY_hvE9bQ",
-        secure=True
+    cloudinary.config(
+       cloud_name=CLOUD_NAME,
+       api_key=API_KEY,
+       api_secret=API_SECRET,
+       secure=True,
     )
 
     mysql.init_app(app)
