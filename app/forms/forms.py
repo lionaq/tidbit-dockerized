@@ -39,7 +39,7 @@ class CreatePost(FlaskForm):
     submit = SubmitField('Create Post')
 
 class EditPost(FlaskForm):
-    content = FileField('Content', validators=[FileAllowed(['jpg', 'png', 'gif', 'mp4', 'mov']), validators.Optional()], render_kw={'multiple': True})
+    content = MultipleFileField('Content', validators=[FileAllowed(['jpg', 'png', 'gif', 'mp4', 'mov']), validators.Optional()], render_kw={'multiple': True})
     title = StringField('Title', [validators.DataRequired()])
     caption = TextAreaField('Caption', [validators.DataRequired()] )
     ingredients = TextAreaField('Ingredients', [validators.DataRequired()])
