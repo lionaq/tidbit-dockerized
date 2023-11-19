@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 
-from flask_wtf.file import MultipleFileField, FileAllowed
+from flask_wtf.file import MultipleFileField, FileAllowed, FileField
 
 from wtforms import validators,StringField,SubmitField,PasswordField, SelectMultipleField, widgets, TextAreaField
 
@@ -39,7 +39,7 @@ class CreatePost(FlaskForm):
     submit = SubmitField('Create Post')
 
 class EditPost(FlaskForm):
-    content = MultipleFileField('Content', validators=[FileAllowed(['jpg', 'png', 'gif', 'mp4', 'mov'])])
+    content = FileField('Content', validators=[FileAllowed(['jpg', 'png', 'gif', 'mp4', 'mov']), validators.Optional()], render_kw={'multiple': True})
     title = StringField('Title', [validators.DataRequired()])
     caption = TextAreaField('Caption', [validators.DataRequired()] )
     ingredients = TextAreaField('Ingredients', [validators.DataRequired()])

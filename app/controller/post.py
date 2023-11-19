@@ -88,6 +88,24 @@ def edit(post_id):
                 flash("Post created successfully!", 'info')
                 return redirect('/loggedin')
             
+            else:
+                # Create one Post instance and change it
+                post = Post(
+                    id = post_id,
+                    title=form.title.data,
+                    caption=form.caption.data,
+                    ingredients=form.ingredients.data,
+                    instructions=form.instructions.data,
+                    tag=",".join(form.tag.data),
+                    subtags=",".join(form.subtag.data)
+                )
+
+                # Add the post to the database
+                post.edit()
+
+                flash("Post created successfully!", 'info')
+                return redirect('/loggedin')
+            
         else:
             print("Tag Data:", form.tag.data)
             print("Subtag Data:", form.subtag.data)
@@ -111,7 +129,7 @@ def edit(post_id):
     # Set data for tag and subtag
     form.tag.data = post['tag'].split(',') if post['tag'] else []
     form.subtag.data = post['subtags'].split(',') if post['subtags'] else []
-    
+
     return render_template('posts/edit.html', form=form, post=post, content=content)
 
 
