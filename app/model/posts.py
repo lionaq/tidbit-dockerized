@@ -66,7 +66,18 @@ class Post(UserMixin):
             # Commit changes
             mysql.connection.commit()
             cursor.close()
+            
 
+    def delete(post_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "DELETE FROM post WHERE id = %s"
+
+        # Delete post
+        cursor.execute(sql, (post_id,))
+
+        # Commit changes
+        mysql.connection.commit()
+        cursor.close()
 
 
     

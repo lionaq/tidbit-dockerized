@@ -1,7 +1,8 @@
+from cloudinary import uploader
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 from flask import Blueprint
-from flask import render_template, request, redirect, flash
+from flask import render_template, request, redirect, flash, url_for
 from datetime import date
 from flask_login import current_user, login_required
 from app.forms.forms import CreatePost, EditPost
@@ -80,10 +81,10 @@ def edit(post_id):
                     subtags=",".join(form.subtag.data)
                 )
 
-                # Add the post to the database
+                # Modify the post on the database
                 post.edit()
 
-                flash("Post created successfully!", 'info')
+                flash("Post modified successfully!", 'info')
                 return redirect('/loggedin')
             
             else:
@@ -98,10 +99,10 @@ def edit(post_id):
                     subtags=",".join(form.subtag.data)
                 )
 
-                # Add the post to the database
+                # Modify post on the database
                 post.edit()
 
-                flash("Post created successfully!", 'info')
+                flash("Post modified successfully!", 'info')
                 return redirect('/loggedin')
             
         else:
@@ -128,6 +129,36 @@ def edit(post_id):
 
     userName = current_user.username
     return render_template('posts/edit.html', form=form, post=post, content=content, userName = userName)
+
+@post_bp.route('/delete-post/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def delete(post_id):
+    # Get the file URL/s from the request
+    post = Post.fetch_post(post_id)
+    content = Post.fetch_post_content(post_id)
+        
+    try:
+        # Delete the file from Cloudinary
+        for cont in content:
+            print(f"Deleting file from Cloudinary: {cont['url']}")
+            result = uploader.destroy(cont['url'], invalidate=True)
+
+            print(result)
+
+            if 'result' in result and result['result'] == 'ok':
+                print(f"Deleted file {cont['url']} from Cloudinary successfully.")
+            else:
+                print(f"Failed to delete file {cont['url']} from Cloudinary. Result: {result}")
+
+        # Delete post from post table
+        Post.delete(post_id)
+        
+        return redirect(url_for('auth_bp.loggedin'))  # Use url_for to generate the URL
+
+    except Exception as e:
+        print(f'Error: {str(e)}')
+        # Handle the exception, maybe redirect to an error page or show an error message to the user
+        return f'Error: {str(e)}'
 
 
 
