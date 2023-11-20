@@ -131,9 +131,9 @@ def edit(post_id):
     return render_template('posts/edit.html', form=form, post=post, content=content, userName = userName)
 
 
-@post_bp.route('/delete-post/<int:post_id>', methods=['GET', 'POST'])
+@post_bp.route('/<string:user_name>/delete-post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
-def delete(post_id):
+def delete(user_name, post_id):
     # Get the file URL/s from the request
     post = Post.fetch_post(post_id)
     content = Post.fetch_post_content(post_id)
@@ -161,7 +161,7 @@ def delete(post_id):
         if goods == True:
             # Delete post from post table
             Post.delete(post_id)
-            return redirect(url_for('auth_bp.loggedin'))
+            return redirect(url_for('profile_bp.profile', username = user_name))
         else:
             print(public_id)
             print('Deletion failed!')

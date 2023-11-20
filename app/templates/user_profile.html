@@ -90,7 +90,7 @@
                     <a href="{{ url_for('post_bp.edit', post_id=post['id']) }}" class="overlay-link">
                       <i class="fa-solid fa-pen-to-square" id="editPost"></i>
                     </a>                    
-                    <a href="{{ url_for('post_bp.delete', post_id=post['id']) }}" onclick="return confirm('Are you sure you want to delete this post?')" class="overlay-link">
+                    <a href="{{ url_for('post_bp.delete', user_name = user.username, post_id=post['id']) }}" onclick="return confirm('Are you sure you want to delete this post?')" class="overlay-link">
                       <i class="fa-solid fa-trash" id="deletePost"></i>
                     </a>
                   </div>
