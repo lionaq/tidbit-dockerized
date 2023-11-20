@@ -11,11 +11,6 @@ profile_bp = Blueprint(
     __name__
 )
 
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
-
-def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
-
 @profile_bp.route('/<username>', methods=['GET'])
 def profile(username):
     user = Profile.fetch_user_data(username)
@@ -28,7 +23,7 @@ def profile(username):
         for cont in content:
             if cont['id'] in first_images and first_images[cont['id']]['url'] is None:
                 first_images[cont['id']]['url'] = cont['url']
-                first_images[cont['id']]['type'] = cont.get('type', 'image')  # Default to 'image' if 'type' is not present or None
+                first_images[cont['id']]['type'] = cont.get('type', 'image')
 
         posts_with_images = zip(posts, first_images.values())
 
@@ -41,6 +36,18 @@ def edit_profile():
     form = EditProfileForm(current_user=current_user)
     
     if form.validate_on_submit():
+        profile_pic_file = request.files['profile_pic']
+        if profile_pic_file:
+            result = upload(profile_pic_file, folder='profilepic')
+            profile = Profile.fetch_user_data(current_user.username)
+            profile.update_profile_picture(result['secure_url'])
+
+        cover_pic_file = request.files.get('cover_pic')
+        if cover_pic_file:
+            result = upload(cover_pic_file, folder='coverpic')
+            profile = Profile.fetch_user_data(current_user.username)
+            profile.update_cover_picture(result['secure_url'])
+        
         username = form.username.data
         full_name = form.fullname.data
         bio = form.bio.data
@@ -61,64 +68,3 @@ def edit_profile():
         return redirect('/settings/edit-profile')
 
     return render_template('edit_profile.html', form=form)
-
-@profile_bp.route('/upload-profile-pic', methods=['POST'])
-def upload_profile_pic():
-    if 'profile_pic' not in request.files:
-        flash('No file part', 'error')
-        return redirect('/settings/edit-profile')
-
-    file = request.files['profile_pic']
-
-    if file.filename == '':
-        flash('No file selected', 'error')
-        return redirect('/settings/edit-profile')
-
-    if file and allowed_file(file.filename):
-        # Upload the profile picture to Cloudinary
-        result = upload(file, folder='profilepic')
-
-        # Update the user's profilepic in the database
-        profile = Profile.fetch_user_data(current_user.username)
-        status = profile.update_profile_picture(result['secure_url'])
-
-        if status:
-            flash('Profile picture updated', 'success')
-        else:
-            flash('Failed to update profile picture', 'error')
-
-        return redirect('/settings/edit-profile')
-    else:
-        flash('Invalid file type. Allowed types: png, jpg, jpeg', 'error')
-        return redirect('/settings/edit-profile')
-    
-@profile_bp.route('/upload-cover-pic', methods=['POST'])
-def upload_cover_pic():
-    if 'cover_pic' not in request.files:
-        flash('No file part', 'error')
-        return redirect('/settings/edit-profile')
-
-    file = request.files['cover_pic']
-
-    if file.filename == '':
-        flash('No file selected', 'error')
-        return redirect('/settings/edit-profile')
-
-    if file and allowed_file(file.filename):
-        # Upload the cover picture to Cloudinary
-        result = upload(file, folder='coverpic')
-
-        # Update the user's coverpic in the database
-        profile = Profile.fetch_user_data(current_user.username)
-        status = profile.update_cover_picture(result['secure_url'])
-
-        if status:
-            flash('Cover picture updated', 'success')
-        else:
-            flash('Failed to update cover picture', 'error')
-
-        return redirect('/settings/edit-profile')
-    else:
-        flash('Invalid file type. Allowed types: png, jpg, jpeg', 'error')
-        return redirect('/settings/edit-profile')
-        content = Profile.fetch_post_content(user.id)

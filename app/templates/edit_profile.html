@@ -14,7 +14,7 @@
             <div class="container-fluid">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link {% if 'edit-profile' in request.path %}active{% endif %}" href="/settings/edit-profile">Edit profile</a>
+                        <a class="nav-link {% if 'edit-profile' in request.path %}active{% endif %}" href="{{ url_for('profile_bp.edit_profile') }}">Edit profile</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if 'notifications' in request.path %}active{% endif %}" href="#">Notifications</a>
@@ -45,34 +45,45 @@
                 {% endwith %}
             </div>
 
-            <div class="d-flex justify-content-center">
-                <img src="{{ current_user.coverpic }}" class="cover-pic-edit"/>
-            </div>
-            <div class="d-flex justify-content-center">
-                <img src="{{ current_user.profilepic }}" class="profile-pic-edit rounded-circle"/>
-            </div>
-
-            <div style="margin-top: 35px">
-                <label for="profile_pic" style="font-size: 15px; font-weight: 500; margin-bottom: 10px">Profile Picture</label>
-                <form action="/upload-profile-pic" method="POST" enctype="multipart/form-data">
-                    <input name="csrf_token" value="{{ csrf_token() }}" hidden/>
-                    <input type="file" name="profile_pic" accept="image/*">
-                    <input type="submit" value="Upload Profile Picture" class="btn btn-secondary btn-sm" style="margin-left: 50px; background-color: #d17b5ee2; border-color: #8a4d39">
-                </form>  
+            <div class="invalid-file-msg" style="border-radius: 10px">
+                {% if form.profile_pic.errors %}
+                <p class="alert-danger" style="position: absolute; width: 665px; padding: 3px; text-indent: 10px; border-radius: 5px; height: 30px">
+                    {{ form.profile_pic.errors[0] }}
+                </p>
+                {% endif %}
             </div>
 
-            <div style="margin-top: 15px">
-                <label for="cover_pic" style="font-size: 15px; font-weight: 500; margin-bottom: 10px">Cover Picture</label>
-                <form action="/upload-cover-pic" method="POST" enctype="multipart/form-data">
-                    <input name="csrf_token" value="{{ csrf_token() }}" hidden/>
-                    <input type="file" name="cover_pic" accept="image/*">
-                    <input type="submit" value="Upload Cover Picture " class="btn btn-secondary btn-sm" style="margin-left: 50px; background-color: #d17b5ee2; border-color: #8a4d39">
-                </form>   
+            <div class="invalid-file-msg" style="border-radius: 10px">
+                {% if form.cover_pic.errors %}
+                <p class="alert-danger" style="position: absolute; width: 665px; padding: 3px; text-indent: 10px; border-radius: 5px; height: 30px">
+                    {{ form.cover_pic.errors[0] }}
+                </p>
+                {% endif %}
             </div>
 
-            <div style="margin-top: 35px; margin-bottom: 200px">
-                <form method="POST" action="/settings/edit-profile">
+            <div style="margin-top: 30px; margin-bottom: 200px">
+                <form method="POST" action="/settings/edit-profile" enctype="multipart/form-data">
                     <input name="csrf_token" value="{{ csrf_token() }}" hidden />
+
+                    <div id="profile-pic-upload-container" class="file-upload-container">
+                        <input type="file" id="profile_pic" name="profile_pic" accept="image/*" style="display: none;">
+                        <img id="profile-pic-preview" src="{{ current_user.profilepic }}" alt="Profile Picture Preview" class="profile-pic-edit img-thumbnail">
+                        <div style="position: absolute; top: 358px; left: 633px;">
+                            <button type="button" onclick="document.getElementById('profile_pic').click();" class="btn btn-secondary btn-sm" style="opacity: 0.65">
+                                <i class="fa-solid fa-camera"></i>
+                            </button>
+                        </div>
+                    </div>
+                
+                    <div id="cover-pic-upload-container" class="file-upload-container">
+                        <input type="file" id="cover_pic" name="cover_pic" accept="image/*" style="display: none;">
+                        <img id="cover-pic-preview" src="{{ current_user.coverpic }}" alt="Cover Picture Preview" class="cover-pic-edit img-thumbnail">
+                        <div style="position: absolute; top: 339px; left: 842px;">
+                            <button type="button" onclick="document.getElementById('cover_pic').click();" class="btn btn-secondary btn-sm" style="opacity: 0.65">
+                                <i class="fa-solid fa-camera"></i>
+                            </button>
+                        </div>
+                    </div>
 
                     <div class="mb-3">
                         <label for="username" class="form-label" style="font-weight: 500">Username</label>
@@ -117,7 +128,7 @@
                     </div>
 
                     <div>
-                    <button type="submit" class="btn btn-primary" style="margin-top: 10px; margin-left: 200px; width: 80px; background-color: #d17a5e; border-color: #8a4d39">Save</button>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 15px; margin-left: 200px; width: 80px; background-color: #d17a5e; border-color: #8a4d39">Save</button>
                     </div> 
 
                 </form>
@@ -142,6 +153,36 @@
     </script>
 
     <script>
+        document.getElementById('profile_pic').addEventListener('change', function () {
+            var fileInput = this;
+            var previewImage = document.getElementById('profile-pic-preview');
+
+            if (fileInput.files && fileInput.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        });
+    </script>
+
+    <script>
+        document.getElementById('cover_pic').addEventListener('change', function () {
+            var fileInput = this;
+            var previewImage = document.getElementById('cover-pic-preview');
+    
+            if (fileInput.files && fileInput.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        });
+    </script>    
+
+    <script>
         document.addEventListener('DOMContentLoaded', function () {
             var bioTextarea = document.getElementById('bio');
             var bioCounter = document.getElementById('bio-count');
@@ -151,7 +192,6 @@
                 var bioLength = bioTextarea.value.length;
                 bioCounter.innerText = bioLength;
         
-                // Change color based on the length
                 if (bioLength > 150) {
                     bioCounter.style.color = 'red';
                     bioErrorMessage.textContent = 'Bio must be at most 150 characters.';

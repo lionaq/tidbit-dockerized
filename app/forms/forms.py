@@ -1,10 +1,15 @@
 from flask_wtf import FlaskForm
 
-from flask_wtf.file import MultipleFileField, FileAllowed
+from flask_wtf.file import FileField, MultipleFileField, FileAllowed
 
 from wtforms import validators,StringField,SubmitField,PasswordField, SelectMultipleField, widgets, TextAreaField
 
 from app.model.user import User 
+
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 class RegisterForm(FlaskForm):
     email = StringField('Email', [validators.DataRequired(), validators.Email(message="Please enter a valid email")])
@@ -33,6 +38,8 @@ class EditProfileForm(FlaskForm):
     fullname = StringField('Full Name', [validators.DataRequired(), validators.Length(min=5,message="Minimum of 5 Characters")])
     bio = TextAreaField('Bio', validators=[validators.Length(max=150)])
     website = StringField('Website')
+    profile_pic = FileField('Profile Picture', validators=[FileAllowed(ALLOWED_EXTENSIONS, 'Invalid file type. Allowed types: .jpg, .jpeg, .png')])
+    cover_pic = FileField('Cover Picture', validators=[FileAllowed(ALLOWED_EXTENSIONS, 'Invalid file type. Allowed types: .jpg, .jpeg, .png')])
 
     def __init__(self, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)
