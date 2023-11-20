@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 
 from flask_wtf.file import MultipleFileField, FileAllowed, FileField
 
-from wtforms import validators,StringField,SubmitField,PasswordField, SelectMultipleField, widgets, TextAreaField
+from wtforms import validators,StringField,SubmitField,PasswordField, SelectMultipleField, widgets, TextAreaField, URLField
 
 from app.model.user import User 
 
@@ -37,7 +37,7 @@ class EditProfileForm(FlaskForm):
     username = StringField('Username', [validators.DataRequired(), validators.Length(min=5,message="Minimum of 5 Characters")])
     fullname = StringField('Full Name', [validators.DataRequired(), validators.Length(min=5,message="Minimum of 5 Characters")])
     bio = TextAreaField('Bio', validators=[validators.Length(max=140)])
-    website = StringField('Website')
+    website = URLField('Website')
     profile_pic = FileField('Profile Picture', validators=[FileAllowed(ALLOWED_EXTENSIONS, 'Invalid file type. Allowed types: .jpg, .jpeg, .png')])
     cover_pic = FileField('Cover Picture', validators=[FileAllowed(ALLOWED_EXTENSIONS, 'Invalid file type. Allowed types: .jpg, .jpeg, .png')])
 
