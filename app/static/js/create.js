@@ -1,12 +1,13 @@
 let clearBtn = document.getElementById("clearFiles");
 let defaultImg = document.getElementById("uploadIcon");
 let filePreviewContainer = document.getElementById("filePreviews");
+divClear = "<img id='imagePreview' src='"+uploadIcon+"'alt='File Preview' class='img-thumbnail' style='width:100%; height:350px; opacity:0.2';>";
 
 $(document).ready(function () {
     $("#clearFiles").on("click", function (e) {
         e.preventDefault();
         $("#content").val('');  // Clear the file input field
-        clearFilePreview('<img id="imagePreview" src="static/img/UploadImg.png" alt="File Preview" class="img-thumbnail" style="width:100%; height:350px; opacity:0.2;">');
+        clearFilePreview(divClear);
     });
 
     $("#postForm").submit(function (event) {
