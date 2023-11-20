@@ -131,47 +131,47 @@ def edit(post_id):
     return render_template('posts/edit.html', form=form, post=post, content=content, userName = userName)
 
 
-@post_bp.route('/<string:user_name>/delete-post/<int:post_id>', methods=['GET', 'POST'])
+@post_bp.route('/<string:user_name>/delete-post/<int:post_id>', methods=['POST'])
 @login_required
 def delete(user_name, post_id):
-    # Get the file URL/s from the request
-    post = Post.fetch_post(post_id)
-    content = Post.fetch_post_content(post_id)
-        
-    try:
-        goods = False
-        # Delete the file from Cloudinary
-        for cont in content:
-            print(f"Deleting file from Cloudinary:", cont['url'])
-            public_id = Post.get_public_id_from_url(cont['url'])
-            print(f"Deleting file from Cloudinary:", public_id)
-            print(cont['type'])
+    if request.method == 'POST':
+        # Get the file URL/s from the request
+        post = Post.fetch_post(post_id)
+        content = Post.fetch_post_content(post_id)
             
-            result = uploader.destroy(public_id, resource_type = cont['type'])
+        try:
+            goods = False
+            # Delete the file from Cloudinary
+            for cont in content:
+                print(f"Deleting file from Cloudinary:", cont['url'])
+                public_id = Post.get_public_id_from_url(cont['url'])
+                print(f"Deleting file from Cloudinary:", public_id)
+                print(cont['type'])
+                
+                result = uploader.destroy(public_id, resource_type = cont['type'])
 
-            print(result)
+                print(result)
 
-            if 'result' in result and result['result'] == 'ok':
-                print(f"Deleted file {cont['url']} from Cloudinary successfully.")
-                goods = True
+                if 'result' in result and result['result'] == 'ok':
+                    print(f"Deleted file {cont['url']} from Cloudinary successfully.")
+                    goods = True
+                else:
+                    print(f"Failed to delete file {public_id} from Cloudinary. Result: {result}")
+                    goods = False
+
+            if goods == True:
+                # Delete post from post table
+                Post.delete(post_id)
+                return redirect(url_for('profile_bp.profile', username = user_name))
             else:
-                print(f"Failed to delete file {public_id} from Cloudinary. Result: {result}")
-                goods = False
+                print(public_id)
+                print('Deletion failed!')
+                return f'Deletion failed!'
 
-        if goods == True:
-            # Delete post from post table
-            Post.delete(post_id)
-            return redirect(url_for('profile_bp.profile', username = user_name))
-        else:
-            print(public_id)
-            print('Deletion failed!')
-            return f'Deletion failed!'
-
-    except Exception as e:
-        print(f'Error: {str(e)}')
-        # Handle the exception, maybe redirect to an error page or show an error message to the user
-        return f'Error: {str(e)}'
-
+        except Exception as e:
+            print(f'Error: {str(e)}')
+            # Handle the exception, maybe redirect to an error page or show an error message to the user
+            return f'Error: {str(e)}'
 
 
 
