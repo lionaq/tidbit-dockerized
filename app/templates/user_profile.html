@@ -19,13 +19,13 @@
         <section>
           <div class="d-flex justify-content-center cover-pic-container rounded-bottom">
             <img 
-              src="{{ user.coverpic }}" 
+              {% if 'static' in user.coverpic %}src = "{{url_for('static', filename=user.coverpic[7:])}}"{%else%}src="{{ user.coverpic }}"{%endif%}
               class="cover-pic" 
             />
           </div>
           <div class="d-flex justify-content-center">
             <img 
-              src="{{ user.profilepic }}" 
+            {% if 'static' in user.profilepic %}src = "{{url_for('static', filename=user.profilepic[7:])}}"{%else%}src="{{ user.profilepic }}"{%endif%}
               class="profile-pic rounded-circle" 
               />
           </div>
