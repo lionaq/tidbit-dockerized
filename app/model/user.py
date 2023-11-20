@@ -1,6 +1,7 @@
 from app import mysql, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from flask import url_for
 
 @login.user_loader
 def load_user(id):
@@ -15,8 +16,8 @@ class User(UserMixin):
         self.password = password
         self.bio = bio
         self.website = website
-        self.profilepic = profilepic if profilepic else 'static/img/default_profilepic.png'
-        self.coverpic = coverpic if coverpic else 'static/img/default_coverpic.jpg'
+        self.profilepic = profilepic if profilepic else url_for('static', filename='img/default_profilepic.png')
+        self.coverpic = coverpic if coverpic else url_for('static', filename='img/default_coverpic.png')
         
     def set_password(self, password):
         self.password = generate_password_hash(password)

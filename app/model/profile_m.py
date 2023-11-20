@@ -1,6 +1,6 @@
 from app import mysql, login
 from flask_login import UserMixin
-
+from flask import url_for
 class Profile(UserMixin):
     def __init__(self, id=None, email=None, fullname=None, username=None, password=None, bio=None, website=None, profilepic=None, coverpic=None):
         self.id = id
@@ -10,8 +10,8 @@ class Profile(UserMixin):
         self.password = password
         self.bio = bio
         self.website = website
-        self.profilepic = profilepic if profilepic else 'static/img/default_profilepic.png'
-        self.coverpic = coverpic if coverpic else 'static/img/default_coverpic.jpg'
+        self.profilepic = profilepic if profilepic else url_for('static', filename='img/default_profilepic.png')
+        self.coverpic = coverpic if coverpic else url_for('static', filename='img/default_coverpic.png')
         
     @classmethod
     def fetch_user_data(cls, username):
