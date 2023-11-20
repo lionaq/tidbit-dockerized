@@ -52,9 +52,9 @@ def create():
 
 from flask import render_template
 
-@post_bp.route('/edit-post/<int:post_id>', methods=['GET', 'POST'])
+@post_bp.route('/<string:user_name>/edit-post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
-def edit(post_id):
+def edit(user_name, post_id):
     form = EditPost()
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -84,8 +84,7 @@ def edit(post_id):
                 # Modify the post on the database
                 post.edit()
 
-                flash("Post modified successfully!", 'info')
-                return redirect('/loggedin')
+                return redirect(url_for('profile_bp.profile', username = user_name))
             
             else:
                 # Create one Post instance and change it
