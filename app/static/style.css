@@ -146,3 +146,15 @@
 .floating-icon i {
     font-size: 35px;
 }
+
+/* Add this to your CSS file or style tag */
+.overlay-link {
+    background: none;
+    border: none;
+}
+
+.delete-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}

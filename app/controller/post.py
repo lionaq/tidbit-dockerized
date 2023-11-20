@@ -136,7 +136,6 @@ def edit(post_id):
 def delete(user_name, post_id):
     if request.method == 'POST':
         # Get the file URL/s from the request
-        post = Post.fetch_post(post_id)
         content = Post.fetch_post_content(post_id)
             
         try:
