@@ -71,7 +71,6 @@
             <a href="" class="nav-link">Saved</a>
           </nav>
         </div>
-
         <!-- User Posts Gallery -->
         <div class="img-container">
           <div class="row">
@@ -87,6 +86,7 @@
                     </video>
                   {% endif %}
                   <div class="image-overlay">
+                    {% if user.username == current_user.username %}
                     <a href="{{ url_for('post_bp.edit', post_id=post['id']) }}" class="overlay-link">
                       <i class="fa-solid fa-pen-to-square" id="editPost"></i>
                     </a>
@@ -96,7 +96,7 @@
                           <i class="fa-solid fa-trash" id="deletePost"></i>
                       </button>
                     </form>
-
+                    {%endif%}
                   </div>
                 </div>
               </div>

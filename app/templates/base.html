@@ -30,7 +30,7 @@
                 <button class="input-group-text rounded-pill" id="basic-addon1" style = "height:30px; background: #D9D9D9; border: 0;"><img src="{{ url_for('static', filename='img/search.svg') }}" class="img" alt="tidbit logo" style= " width: 35px; height: 30px;"></button>
             </form>
 
-
+            {% if current_user.is_anonymous == false%}
             <button class="img me-3" style = "border:none; background-color:white;" onclick="changeNotifImg()">
               <img src="{{ url_for('static', filename='img/notifIcon.png') }}" style="height: 26px; width: 26px;" id="img1">
             </button>
@@ -45,11 +45,9 @@
                 }
               }
             </script>
-
             <div class="me-4">
               <a href="{{ url_for('profile_bp.profile', username=current_user.username) }}"><img class="img rounded-pill" src="{{ current_user.profilepic }}" style="height: 35px; width: 35px;"></a>
             </div>
-
             <div class="nav-item dropdown me-5">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
               <ul class="dropdown-menu dropdown-menu-end">
@@ -59,6 +57,7 @@
                 <li><a class="dropdown-item" href="/logout"><img class="img me-1" src="{{ url_for('static', filename='img/logoutIcon.png') }}" style="height: 50px; width: 50px;"><span style = "display: inline-block; vertical-align: middle; line-height: normal;">Log Out<span></a></li>
               </ul>
             </div>
+            {%endif%}
         </div>
     </nav>
     
