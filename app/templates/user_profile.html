@@ -88,9 +88,9 @@
                   </video>
                   {% endif %}
                   <div class="image-overlay">
-                    <a href="" class="overlay-link">
+                    <a href="{{ url_for('post_bp.edit', post_id=post['id']) }}" class="overlay-link">
                       <i class="fa-solid fa-pen-to-square" id="editPost"></i>
-                    </a>
+                    </a>                    
                     <a href="" class="overlay-link">
                       <i class="fa-solid fa-trash" id="deletePost"></i>
                     </a>

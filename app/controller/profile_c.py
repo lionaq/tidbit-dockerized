@@ -1,6 +1,5 @@
 from flask import Blueprint
-from flask import render_template, request, redirect, flash
-from datetime import date
+from flask import render_template
 from flask_login import current_user
 from app.model.profile_m import Profile
 
