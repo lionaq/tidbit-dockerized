@@ -109,7 +109,7 @@
         </div>
 
         <!-- Create post icon -->
-        <a href="{{ url_for('post_bp.create') }}">
+        <a href="{{ url_for('post_bp.create', user_name = current_user.username) }}">
           <div class="floating-icon">
               <i class="fa-solid fa-plus"></i>
           </div>

@@ -2,7 +2,7 @@ from cloudinary import uploader
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 from flask import Blueprint
-from flask import render_template, request, redirect, flash, url_for
+from flask import render_template, request, redirect, flash, url_for, abort
 from datetime import date
 from flask_login import current_user, login_required
 from app.forms.forms import CreatePost, EditPost
@@ -13,9 +13,12 @@ post_bp = Blueprint(
     __name__
 )
 
-@post_bp.route('/create-post', methods=['GET', 'POST'])
+@post_bp.route('/<string:user_name>/create-post', methods=['GET', 'POST'])
 @login_required
-def create():
+def create(user_name):
+    if user_name != current_user.username:
+        abort(418) # :)
+
     form = CreatePost()
     if form.validate_on_submit() and request.method == 'POST':
         user_id = current_user.id
@@ -45,9 +48,8 @@ def create():
 
         # Add the post to the database
         post.add()
-
         flash("Post created successfully!", 'info')
-        return redirect('/loggedin')
+        return redirect(url_for('profile_bp.profile', username = user_name))
     return render_template('posts/create.html', form=form)
 
 from flask import render_template
