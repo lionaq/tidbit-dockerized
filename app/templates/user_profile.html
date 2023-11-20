@@ -71,7 +71,6 @@
             <a href="" class="nav-link">Saved</a>
           </nav>
         </div>
-
         <!-- User Posts Gallery -->
         <div class="img-container">
           <div class="row">
@@ -86,6 +85,7 @@
                       Your browser does not support the video tag.
                     </video>
                   {% endif %}
+
                   {% if post['user_id'] == current_user.id %}
                     <div class="image-overlay">
                       <form action="{{ url_for('post_bp.edit', user_name=user.username, post_id=post['id']) }}" method="POST" style="border: none;">
