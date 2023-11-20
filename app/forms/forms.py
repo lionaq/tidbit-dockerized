@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 
-from flask_wtf.file import FileField, MultipleFileField, FileAllowed
+from flask_wtf.file import MultipleFileField, FileAllowed, FileField
 
 from wtforms import validators,StringField,SubmitField,PasswordField, SelectMultipleField, widgets, TextAreaField
 
@@ -36,7 +36,7 @@ class LoginForm(FlaskForm):
 class EditProfileForm(FlaskForm):
     username = StringField('Username', [validators.DataRequired(), validators.Length(min=5,message="Minimum of 5 Characters")])
     fullname = StringField('Full Name', [validators.DataRequired(), validators.Length(min=5,message="Minimum of 5 Characters")])
-    bio = TextAreaField('Bio', validators=[validators.Length(max=150)])
+    bio = TextAreaField('Bio', validators=[validators.Length(max=140)])
     website = StringField('Website')
     profile_pic = FileField('Profile Picture', validators=[FileAllowed(ALLOWED_EXTENSIONS, 'Invalid file type. Allowed types: .jpg, .jpeg, .png')])
     cover_pic = FileField('Cover Picture', validators=[FileAllowed(ALLOWED_EXTENSIONS, 'Invalid file type. Allowed types: .jpg, .jpeg, .png')])
@@ -59,3 +59,13 @@ class CreatePost(FlaskForm):
     tag =  SelectMultipleField('Tag', choices=[('American Cuisine', 'American Cuisine'), ('Filipino Cuisine', 'Filipino Cuisine'), ('French Cuisine', 'French Cuisine'), ('Japanese Cuisine', 'Japanese Cuisine'), ('Chinese Cuisine', 'Chinese Cuisine'), ('Greek Cuisine', 'Greek Cuisine'), ('Mexican Cuisine', 'Mexican Cuisine'), ('Indian Cuisine', 'Indian Cuisine'), ('Thai Cuisine', 'Thai Cuisine')], widget=widgets.ListWidget(prefix_label=False))
     subtag = SelectMultipleField('Subtags', choices=[('breakfast', 'Breakfast'), ('lunch', 'Lunch'), ('snack', 'Snack'), ('dinner', 'Dinner'), ('dessert', 'Dessert')], option_widget=widgets.CheckboxInput(), widget=widgets.ListWidget(prefix_label=False))
     submit = SubmitField('Create Post')
+
+class EditPost(FlaskForm):
+    content = MultipleFileField('Content', validators=[FileAllowed(['jpg', 'png', 'gif', 'mp4', 'mov']), validators.Optional()])
+    title = StringField('Title', [validators.DataRequired()])
+    caption = TextAreaField('Caption', [validators.DataRequired()] )
+    ingredients = TextAreaField('Ingredients', [validators.DataRequired()])
+    instructions = TextAreaField('Instructions', [validators.DataRequired()])
+    tag =  SelectMultipleField('Tag', choices=[('American Cuisine', 'American Cuisine'), ('Filipino Cuisine', 'Filipino Cuisine'), ('French Cuisine', 'French Cuisine'), ('Japanese Cuisine', 'Japanese Cuisine'), ('Chinese Cuisine', 'Chinese Cuisine'), ('Greek Cuisine', 'Greek Cuisine'), ('Mexican Cuisine', 'Mexican Cuisine'), ('Indian Cuisine', 'Indian Cuisine'), ('Thai Cuisine', 'Thai Cuisine')], widget=widgets.ListWidget(prefix_label=False))
+    subtag = SelectMultipleField('Subtags', choices=[('breakfast', 'Breakfast'), ('lunch', 'Lunch'), ('snack', 'Snack'), ('dinner', 'Dinner'), ('dessert', 'Dessert')], option_widget=widgets.CheckboxInput(), widget=widgets.ListWidget(prefix_label=False))
+    submit = SubmitField('Edit Post')

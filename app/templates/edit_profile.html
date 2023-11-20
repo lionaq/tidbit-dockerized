@@ -115,7 +115,7 @@
                             <textarea type="text" class="form-control" style="width: 500px; height: 90px; border-color: gray" id="bio" name="bio"></textarea>
                         {% endif %}
                         <p id="bio-error-message" class="small text-danger" style="position:absolute; margin-top: 1px"></p>
-                        <small id="bio-counter" class="form-text text-muted" style="position:absolute; margin-left: 448px; margin-top: 1px"><span id="bio-count">0</span>/150</small>
+                        <small id="bio-counter" class="form-text text-muted" style="position:absolute; margin-left: 448px; margin-top: 1px"><span id="bio-count">0</span>/140</small>
                     </div>
 
                     <div class="mb-3">
@@ -192,11 +192,11 @@
                 var bioLength = bioTextarea.value.length;
                 bioCounter.innerText = bioLength;
         
-                if (bioLength > 150) {
+                if (bioLength > 140) {
                     bioCounter.style.color = 'red';
-                    bioErrorMessage.textContent = 'Bio must be at most 150 characters.';
+                    bioErrorMessage.textContent = 'Bio must be at most 140 characters.';
                 } else {
-                    bioCounter.style.color = ''; // Reset to the default color
+                    bioCounter.style.color = '';
                     bioErrorMessage.textContent = '';
                 }
             }

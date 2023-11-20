@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit post{% endblock %}
+
+{% block content%}
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <div class = "container-md my-4 p-3" style = "border-radius: 10px; border: 1px solid rgba(0, 0, 0, 0.20); background: #FFF;">
+        <form id="postForm" method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class = "container p-4">
+                <p style = "text-align: left; font-family: Dosis; font-size: 30px;  font-weight: bold; letter-spacing: 1.5px;">Edit Post</p>
+                <div class = "row">
+                    <div class ="col">
+                        {{ form.title(class="form-control my-4 fs-4", style = "textFieldBorder", placeholder = "Add Title", style = "font-weight: 600;") }}
+                        <div class="form-group">
+                            <!-- Existing content carousel -->
+                            <div id="existingContentCarousel" class="carousel slide" data-bs-ride="carousel" style="width: 100%; height: 350px; margin-bottom: 20px; overflow: hidden;">
+                                <div class="carousel-inner">
+                                    <!-- Loop through existing content images and videos -->
+                                    {% for cont in content %}
+                                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                            {% if cont['type'] == 'image' %}
+                                                <img src="{{ cont['url'] }}" class="object-fit-cover" alt="Existing Content" width = "100%" height="350px">
+                                            {% elif cont['type'] == 'video' %}
+                                                <video controls width="100%" height="350px" class="object-fit-cover">
+                                                    <source src="{{ cont['url'] }}" type="video/mp4">
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#existingContentCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#existingContentCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+
+                            <!-- Upload area carousel -->
+                            {{ form.content(class="form-control my-4 fs-4", style="display:none;", multiple="multiple") }}
+                            <div class="form-group">
+                                <label class="postUpload carousel slide overflow-hidden d-flex justify-content-center" for="{{ form.content.id }}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer;" id = "carousel">
+                                    <!-- Add a container for previews -->
+                                    <div id="filePreviews" class = "carousel-inner" style = "width:100%; height:350px;">
+                                        <img id="imagePreview" src="{{ url_for('static', filename='img/UploadImg.png') }}"alt="File Preview" class="img-thumbnail" style="width:100%; height:350px; opacity:0.2;">
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                    <button class="btn z-5" type="button" id="clearFiles" style="visibility:hidden">&times;</button>
+                                    <img id="uploadIcon" src="{{ url_for('static', filename='img/UploadIcon.png') }}" style="width:150px; height:150px;">
+                                    <a id="uploadCaption"> Click here to replace post images and/or videos </a>
+                                </label>                        
+                            </div>
+                        </div>
+                    </div>
+                    <div class = "col ps-2">
+                        <p class = "postText">Caption:</p>{{ form.caption(class="form-control my-4", style = "textFieldBorder", rows="5", placeholder = "A little something about your post") }}
+                        <p class = "postText">Ingredients:</p>{{ form.ingredients(class="form-control my-4", rows="5", style = "textFieldBorder", placeholder = "List the ingredients here") }}
+                        <p class = "postText">Instructions:</p>{{ form.instructions(class="form-control my-4", rows="10", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}</p>
+                        <div class = "row">
+                            <div class = "col-sm-3 mb-4">
+                                <!-- Tag field -->
+                                <p class="postText">Tag:</p>
+                                <select class="form-control course" name="tag">
+                                    {% for choice in form.tag.choices %}
+                                        <option value="{{ choice[0] }}" {% if choice[0] in form.tag.data %}selected{% endif %}>{{ choice[1] }}</option>
+                                    {% endfor %}
+                                </select>
+                                <!-- Subtag checkboxes -->
+                            </div>
+                            <div class = "col">
+                                <p class="postText mb-4 fw-6 fw-light">Subtags:</p>
+                                <div class="form-row">
+                                    {% for choice in form.subtag.choices %}
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="{{ choice[0] }}" value="{{ choice[0] }}" name="subtag" {% if choice[0] in form.subtag.data %}checked{% endif %}>
+                                            <label class="form-check-label" for="{{ choice[0] }}">{{ choice[1] }}</label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class = "d-flex flex-row-reverse mt-3">
+                    <a class = "btn  rounded-pill ms-3 fw-bold" style="background-color: rgba(210, 122, 94, 0.15); color: black;" href = "login">Cancel</a>
+                    {{ form.submit(class="btn rounded-pill fw-bold", style="background-color: rgba(210, 122, 94, 0.15); color: black;") }}
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let username = "{{userName}}";
+        let postId = "{{post.id}}";
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="{{ url_for('static', filename='js/create.js') }}"></script>
+{% endblock %}

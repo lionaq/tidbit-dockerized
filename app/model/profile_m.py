@@ -1,6 +1,6 @@
 from app import mysql, login
 from flask_login import UserMixin
-
+from flask import url_for
 class Profile(UserMixin):
     def __init__(self, id=None, email=None, fullname=None, username=None, password=None, bio=None, website=None, profilepic=None, coverpic=None):
         self.id = id
@@ -66,7 +66,6 @@ class Profile(UserMixin):
             mysql.connection.commit()
             cursor.close()
             return True
-        cursor.close()
 
     def update_profile_picture(self, new_profilepic):
         cursor = mysql.connection.cursor(dictionary=True)

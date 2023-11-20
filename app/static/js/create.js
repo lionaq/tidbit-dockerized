@@ -6,7 +6,7 @@ $(document).ready(function () {
     $("#clearFiles").on("click", function (e) {
         e.preventDefault();
         $("#content").val('');  // Clear the file input field
-        clearFilePreview('<img id="imagePreview" src="static/img/UploadImg.png" alt="File Preview" class="img-thumbnail" style="width:600px; height:350px; opacity:0.2;">');
+        clearFilePreview('<img id="imagePreview" src="static/img/UploadImg.png" alt="File Preview" class="img-thumbnail" style="width:100%; height:350px; opacity:0.2;">');
     });
 
     $("#postForm").submit(function (event) {
@@ -16,7 +16,7 @@ $(document).ready(function () {
             return;
         }
         // Display the loading overlay
-        $('body').append('<div class="loading-overlay"> <div class="spinner-border me-3" style="width: 3rem; height: 3rem;"> <span class="visually-hidden">Loading...</span></div><h2> Creating Post... </h2></div>');
+        $('body').append('<div class="loading-overlay"> <div class="spinner-border me-3" style="width: 3rem; height: 3rem;"> <span class="visually-hidden">Loading...</span></div><h2> This should only take a minute... </h2></div>');
 
         var formData = new FormData($(this)[0]);
 
@@ -27,8 +27,11 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             success: function (data) {
-                // Handle success, e.g., redirect to the logged-in page
-                window.location.href = '/loggedin';
+                if (window.location.pathname === '/edit-post/'+postId) {
+                    window.location.href = '/' + username;
+                } else {
+                    window.location.href = '/loggedin';
+                }
             },
             complete: function () {
                 // Remove the loading overlay when the request is complete
@@ -60,7 +63,7 @@ document.getElementById("content").addEventListener("change", function (event) {
                 let img = document.createElement('img');
                 img.style.width = '100%';
                 img.style.height = '100%';
-                img.style.objectFit = 'contain'; // Maintain aspect ratio for images
+                img.style.objectFit = 'cover'; // Maintain aspect ratio for images
                 img.src = reader.result;
                 preview.appendChild(img);
             } else if (file.type.startsWith('video/')) {
@@ -68,7 +71,7 @@ document.getElementById("content").addEventListener("change", function (event) {
                 let video = document.createElement('video');
                 video.style.width = '100%';
                 video.style.height = '100%';
-                video.style.objectFit = 'contain'; // Maintain aspect ratio for videos
+                video.style.objectFit = 'cover'; // Maintain aspect ratio for videos
                 video.setAttribute('controls', 'false'); // Disable video controls
                 video.setAttribute('disablePictureInPicture', 'true'); // Disable Picture-in-Picture mode
                 let source = document.createElement('source');
