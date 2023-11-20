@@ -12,7 +12,7 @@
             <div class = "container p-4">
                 <p style = "text-align: left; font-family: Dosis; font-size: 30px;  font-weight: bold; letter-spacing: 1.5px;">Edit Post</p>
                 <div class = "row">
-                    <div class ="col">
+                    <div class ="col-xl-6">
                         {{ form.title(class="form-control my-4 fs-4", style = "textFieldBorder", placeholder = "Add Title", style = "font-weight: 600;") }}
                         <div class="form-group">
                             <!-- Existing content carousel -->
@@ -65,7 +65,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class = "col ps-2">
+                    <div class = "col-xl-6 ps-2">
                         <p class = "postText">Caption:</p>{{ form.caption(class="form-control my-4", style = "textFieldBorder", rows="5", placeholder = "A little something about your post") }}
                         <p class = "postText">Ingredients:</p>{{ form.ingredients(class="form-control my-4", rows="5", style = "textFieldBorder", placeholder = "List the ingredients here") }}
                         <p class = "postText">Instructions:</p>{{ form.instructions(class="form-control my-4", rows="10", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}</p>

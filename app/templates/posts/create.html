@@ -3,20 +3,20 @@
 {% block title %}Create new post{% endblock %}
 
 {% block content%}
-<link rel="stylesheet" type="text/css" href="static\css\create.css">
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/create.css')}}">
     <div class = "container-md my-4 p-3" style = "border-radius: 10px; border: 1px solid rgba(0, 0, 0, 0.20); background: #FFF;">
         <form id="postForm" method="POST" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <div class = "container p-4">
                 <p style = "text-align: left; font-family: Dosis; font-size: 30px;  font-weight: bold; letter-spacing: 1.5px;">New Post</p>
                 <div class = "row">
-                    <div class ="col">
+                    <div class ="col-xl-6">
                         {{ form.content(class="form-control my-4 fs-4", style="display:none;", multiple="multiple") }}
                         <div class="form-group">
                             <label class="postUpload carousel slide overflow-hidden d-flex justify-content-center" for="{{ form.content.id }}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer;" id = "carousel">
                                 <!-- Add a container for previews -->
                                 <div id="filePreviews" class = "carousel-inner" style = "width:100%; height:350px;">
-                                    <img id="imagePreview" src="static/img/UploadImg.png" alt="File Preview" class="img-thumbnail" style="width:100%; height:350px; opacity:0.2;">
+                                    <img id="imagePreview" src="{{url_for('static', filename='img/UploadImg.png')}}" alt="File Preview" class="img-thumbnail" style="width:100%; height:350px; opacity:0.2;">
                                 </div>
                                 <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -27,14 +27,14 @@
                                     <span class="visually-hidden">Next</span>
                                 </button>
                                 <button class="btn z-5" type="button" id="clearFiles" style="visibility:hidden">&times;</button>
-                                <img id="uploadIcon" src="static/img/uploadIcon.png" style="width:150px; height:150px;">
+                                <img id="uploadIcon" src="{{url_for('static', filename='img/UploadIcon.png')}}" style="width:150px; height:150px;">
                                 <a id="uploadCaption"> Click in this area to upload images and/or videos </a>
                             </label>                        
                         </div>  
                         {{ form.title(class="form-control my-4 fs-4", style = "textFieldBorder", placeholder = "Add Title", style = "font-weight: 600;") }}
                         {{ form.caption(class="form-control my-4", style = "textFieldBorder", rows="5", placeholder = "A little something about your post") }}
                     </div>
-                    <div class = "col ps-2">
+                    <div class = "col-xl-6 ps-2">
                         <p class = "postText">Ingredients:</p>{{ form.ingredients(class="form-control my-4", rows="5", style = "textFieldBorder", placeholder = "List the ingredients here") }}
                         <p class = "postText">Instructions:</p>{{ form.instructions(class="form-control my-4", rows="10", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}</p>
                         <div class = "row">
