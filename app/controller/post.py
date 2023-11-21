@@ -52,8 +52,6 @@ def create(user_name):
         return redirect(url_for('profile_bp.profile', username = user_name))
     return render_template('posts/create.html', form=form)
 
-from flask import render_template
-
 @post_bp.route('/<string:user_name>/edit-post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
 def edit(user_name, post_id):
