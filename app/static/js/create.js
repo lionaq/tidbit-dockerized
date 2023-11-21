@@ -11,7 +11,6 @@ $(document).ready(function () {
     });
 
     $("#postForm").submit(function (event) {
-        event.preventDefault();
         if (!isFormValid()) {
             $("#clearFiles").click();
             return;
@@ -27,13 +26,6 @@ $(document).ready(function () {
             data: formData,
             contentType: false,
             processData: false,
-            success: function (data) {
-                if (window.location.pathname === '/edit-post/'+postId) {
-                    window.location.href = '/' + username;
-                } else {
-                    window.location.href = '/loggedin';
-                }
-            },
             complete: function () {
                 // Remove the loading overlay when the request is complete
                 $('.loading-overlay').remove();
@@ -43,7 +35,6 @@ $(document).ready(function () {
 
     // Attach click event handler to delete buttons
     $(document).on("click", ".delete-button", function (e) {
-        e.preventDefault();
 
         // Ask for confirmation
         if (confirm('Are you sure you want to delete this post?')) {
@@ -56,14 +47,6 @@ $(document).ready(function () {
                 url: form.attr('action'),
                 type: form.attr('method'),
                 data: form.serialize(),
-                success: function (data) {
-                    // Handle success if needed
-                    if (window.location.pathname === '/edit-post/' + postId) {
-                        window.location.href = '/' + username;
-                    } else {
-                        window.location.href = '/loggedin';
-                    }
-                },
                 complete: function () {
                     // Remove the loading overlay when the request is complete
                     $('.loading-overlay').remove();
