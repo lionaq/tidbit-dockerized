@@ -58,6 +58,11 @@ from flask import render_template
 @login_required
 def edit(user_name, post_id):
     form = EditPost()
+    # Fetch post data
+    post = Post.fetch_post(post_id)
+    content = Post.fetch_post_content(post_id)
+    prev_content = content
+
     if form.validate_on_submit():
         if form.content.data:
             print('Pass 2')
@@ -84,6 +89,25 @@ def edit(user_name, post_id):
 
             # Modify the post on the database
             post.edit()
+
+            # Delete previous content
+            for cont in prev_content:
+                print(f"Deleting file from Cloudinary:", cont['url'])
+                public_id = Post.get_public_id_from_url(cont['url'])
+                print(f"Deleting file from Cloudinary:", public_id)
+                print(cont['type'])
+                
+                result = uploader.destroy(public_id, resource_type = cont['type'])
+
+                print(result)
+
+                if 'result' in result and result['result'] == 'ok':
+                    print(f"Deleted file {cont['url']} from Cloudinary successfully.")
+                    
+                else:
+                    print(f"Failed to delete file {public_id} from Cloudinary. Result: {result}")
+                    
+
         
         else:
             # Create one Post instance and change it
@@ -105,10 +129,6 @@ def edit(user_name, post_id):
                         
         
     else:
-  
-        # Fetch post data
-        post = Post.fetch_post(post_id)
-        content = Post.fetch_post_content(post_id)
 
         # Populate the form with existing data
         form.title.data = post['title']
