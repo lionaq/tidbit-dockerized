@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask import render_template
+from flask import render_template, abort, request
 from flask_login import current_user
 from app.model.profile_m import Profile
 
@@ -8,9 +8,12 @@ profile_bp = Blueprint(
     __name__
 )
 
-@profile_bp.route('/<username>', methods=['GET'])
+@profile_bp.route('/<string:username>', methods=['GET'])
 def profile(username):
     user = Profile.fetch_user_data(username)
+    if user == None or request.method != 'GET':
+        abort(404)
+        
     if user:
         posts = Profile.fetch_user_posts(user.id)
         content = Profile.fetch_post_content(user.id)

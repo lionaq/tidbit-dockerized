@@ -96,7 +96,7 @@
                 </div>
                 <div class = "d-flex flex-row-reverse mt-3">
                     <a class = "btn  rounded-pill ms-3 fw-bold" style="background-color: rgba(210, 122, 94, 0.15); color: black;" href = "login">Cancel</a>
-                    {{ form.submit(class="btn rounded-pill fw-bold", style="background-color: rgba(210, 122, 94, 0.15); color: black;") }}
+                    {{ form.submit(class="btn rounded-pill fw-bold", onclick="return confirm('Are you sure you want to modify this post?')", style="background-color: rgba(210, 122, 94, 0.15); color: black;") }}
                 </div>
             </div>
         </form>
@@ -105,6 +105,7 @@
     <script>
         let username = "{{userName}}";
         let postId = "{{post.id}}";
+        let uploadIcon = "{{url_for('static', filename='img/UploadImg.png')}}";
     </script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="{{ url_for('static', filename='js/create.js') }}"></script>

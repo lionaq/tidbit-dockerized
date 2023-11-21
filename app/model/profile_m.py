@@ -11,7 +11,7 @@ class Profile(UserMixin):
         self.bio = bio
         self.website = website
         self.profilepic = profilepic if profilepic else url_for('static', filename='img/default_profilepic.png')
-        self.coverpic = coverpic if coverpic else url_for('static', filename='img/default_coverpic.png')
+        self.coverpic = coverpic if coverpic else url_for('static', filename='img/default_coverpic.jpg')
         
     @classmethod
     def fetch_user_data(cls, username):
