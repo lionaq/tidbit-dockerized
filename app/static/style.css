@@ -219,4 +219,20 @@
 textarea {
     resize: none;
     max-height: 200px;
-} 
+}
+
+.userTop{
+    position:relative;
+}
+.userTop .followBtn {
+
+    position: absolute;
+    top: 55%;
+    left: 90%;
+    width:11%;
+    height:33px;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    border: none;
+    cursor: pointer;
+}
