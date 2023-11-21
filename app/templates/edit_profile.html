@@ -47,7 +47,7 @@
 
             <div class="invalid-file-msg" style="border-radius: 10px">
                 {% if form.profile_pic.errors %}
-                <p class="alert-danger" style="position: absolute; width: 665px; padding: 3px; text-indent: 10px; border-radius: 5px; height: 30px">
+                <p class="alert-danger" style="position: absolute; max-width: 665px; padding: 3px; text-indent: 10px; border-radius: 5px; height: 30px">
                     {{ form.profile_pic.errors[0] }}
                 </p>
                 {% endif %}
@@ -55,7 +55,7 @@
 
             <div class="invalid-file-msg" style="border-radius: 10px">
                 {% if form.cover_pic.errors %}
-                <p class="alert-danger" style="position: absolute; width: 665px; padding: 3px; text-indent: 10px; border-radius: 5px; height: 30px">
+                <p class="alert-danger" style="position: absolute; max-width: 665px; padding: 3px; text-indent: 10px; border-radius: 5px; height: 30px">
                     {{ form.cover_pic.errors[0] }}
                 </p>
                 {% endif %}
@@ -87,7 +87,7 @@
 
                     <div class="mb-3">
                         <label for="username" class="form-label" style="font-weight: 500">Username</label>
-                        <input type="text" class="form-control" style="width:500px; border-color: gray" id="username" name="username" value="{{ current_user.username }}" required>
+                        <input type="text" class="form-control" style="max-width:500px; border-color: gray" id="username" name="username" value="{{ current_user.username }}" required>
                     </div>
 
                     {% if form.username.errors %}
@@ -98,7 +98,7 @@
 
                     <div class="mb-3">
                         <label for="fullname" class="form-label" style="margin-top: 15px; font-weight: 500">Full Name</label>
-                        <input type="text" class="form-control" style="width:500px; border-color: gray" id="fullname" name="fullname" value="{{ current_user.fullname }}" required>
+                        <input type="text" class="form-control" style="max-width:500px; border-color: gray" id="fullname" name="fullname" value="{{ current_user.fullname }}" required>
                     </div>
 
                     {% if form.fullname.errors %}
@@ -110,25 +110,25 @@
                     <div class="mb-3">
                         <label for="bio" class="form-label" style="margin-top: 15px; font-weight: 500">Bio</label>
                         {% if current_user.bio %}
-                            <textarea type="text" class="form-control" style="width: 500px; height: 90px; border-color: gray" id="bio" name="bio">{{ current_user.bio }}</textarea>
+                            <textarea type="text" class="form-control" style="max-width: 500px; height: 90px; border-color: gray" id="bio" name="bio">{{ current_user.bio }}</textarea>
                         {% elif not current_user.bio %}
-                            <textarea type="text" class="form-control" style="width: 500px; height: 90px; border-color: gray" id="bio" name="bio"></textarea>
+                            <textarea type="text" class="form-control" style="max-width: 500px; height: 90px; border-color: gray" id="bio" name="bio"></textarea>
                         {% endif %}
                         <p id="bio-error-message" class="small text-danger" style="position:absolute; margin-top: 1px"></p>
-                        <small id="bio-counter" class="form-text text-muted" style="position:absolute; margin-left: 448px; margin-top: 1px"><span id="bio-count">0</span>/140</small>
+                        <small id="bio-counter" class="form-text text-muted d-flex justify-content-end" style="position:absolute; max-width: 495px; margin-top: 1px"><span id="bio-count">0</span>/140</small>
                     </div>
 
                     <div class="mb-3">
                         <label for="website" class="form-label" style="margin-top: 15px; font-weight: 500">Website</label>
                         {% if current_user.website %}
-                            <input type="url"  class="form-control" style="margin-bottom: 25px; width:500px; border-color: gray" id="website" name="website" value="{{ current_user.website }}">
+                            <input type="url"  class="form-control" style="margin-bottom: 25px;  max-width:500px; border-color: gray" id="website" name="website" value="{{ current_user.website }}">
                         {% elif not current_user.website %}
-                            <input type="url"  class="form-control" style="margin-bottom: 25px; width:500px; border-color: gray" id="website" name="website" value="">
+                            <input type="url"  class="form-control" style="margin-bottom: 25px; max-width:500px; border-color: gray" id="website" name="website" value="">
                         {% endif %}
                     </div>
 
                     <div>
-                    <button type="submit" class="btn btn-primary" style="margin-top: 15px; margin-left: 200px; width: 80px; background-color: #d17a5e; border-color: #8a4d39">Save</button>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 15px; margin-left: 200px; max-width: 80px; background-color: #d17a5e; border-color: #8a4d39">Save</button>
                     </div> 
 
                 </form>
@@ -184,18 +184,21 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var bioTextarea = document.getElementById('bio');
-            var bioCounter = document.getElementById('bio-count');
-            var bioErrorMessage = document.getElementById('bio-error-message');
+            let bioTextarea = document.getElementById('bio');
+            let bioCount = document.getElementById('bio-count');
+            let bioCounter = document.getElementById('bio-counter');
+            let bioErrorMessage = document.getElementById('bio-error-message');
         
             function updateCharCount() {
-                var bioLength = bioTextarea.value.length;
-                bioCounter.innerText = bioLength;
+                let bioLength = bioTextarea.value.length;
+                bioCount.innerText = bioLength;
         
                 if (bioLength > 140) {
-                    bioCounter.style.color = 'red';
+
+                    bioCounter.style.visibility = 'hidden';
                     bioErrorMessage.textContent = 'Bio must be at most 140 characters.';
                 } else {
+                    bioCounter.style.visibility = 'visible';
                     bioCounter.style.color = '';
                     bioErrorMessage.textContent = '';
                 }
