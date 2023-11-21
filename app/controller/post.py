@@ -50,6 +50,11 @@ def create(user_name):
         post.add()
         flash("Post created successfully!", 'info')
         return redirect(url_for('profile_bp.profile', username = user_name))
+
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(f'{error}', 'error')
+
     return render_template('posts/create.html', form=form)
 
 @post_bp.route('/<string:user_name>/edit-post/<int:post_id>', methods=['GET', 'POST'])
@@ -139,6 +144,11 @@ def edit(user_name, post_id):
         form.subtag.data = post['subtags'].split(',') if post['subtags'] else []
 
         userName = current_user.username
+    
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'{error}', 'error')
+                
         return render_template('posts/edit.html', form=form, post=post, content=content, userName = userName)
 
 
