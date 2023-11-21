@@ -18,12 +18,10 @@ $(document).ready(function () {
         // Display the loading overlay
         $('body').append('<div class="loading-overlay"> <div class="spinner-border me-3" style="width: 3rem; height: 3rem;"> <span class="visually-hidden">Loading...</span></div><h2> This should only take a minute... </h2></div>');
 
-        var formData = new FormData($(this)[0]);
-
         $.ajax({
             url: $(this).attr('action'),
             type: $(this).attr('method'),
-            data: formData,
+            data: FormData($(this)[0]),
             contentType: false,
             processData: false,
             complete: function () {
@@ -35,6 +33,7 @@ $(document).ready(function () {
 
     // Attach click event handler to delete buttons
     $(document).on("click", ".delete-button", function (e) {
+        e.preventDefault();
 
         // Ask for confirmation
         if (confirm('Are you sure you want to delete this post?')) {
@@ -47,6 +46,14 @@ $(document).ready(function () {
                 url: form.attr('action'),
                 type: form.attr('method'),
                 data: form.serialize(),
+                success: function (data) {
+                    // Handle success if needed
+                    if (window.location.pathname === '/edit-post/' + postId) {
+                        window.location.href = '/' + username;
+                    } else {
+                        window.location.href = '/loggedin';
+                    }
+                },
                 complete: function () {
                     // Remove the loading overlay when the request is complete
                     $('.loading-overlay').remove();
