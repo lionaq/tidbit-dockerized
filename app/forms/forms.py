@@ -4,17 +4,21 @@ from flask_wtf.file import MultipleFileField, FileAllowed, FileField
 
 from wtforms import validators,StringField,SubmitField,PasswordField, SelectMultipleField, widgets, TextAreaField
 
-from app.model.user import User 
+from app.model.user import User
+
+import re
 
 class RegisterForm(FlaskForm):
     email = StringField('Email', [validators.DataRequired(), validators.Email(message="Please enter a valid email")])
     fullname = StringField('Fullname', [validators.DataRequired(), validators.Length(min=5,message="Minumum of 5 Characters")])
-    username = StringField('Username', [validators.DataRequired(), validators.Length(min=5,message="Minumum of 5 Characters")])
+    username = StringField('Username', [validators.DataRequired(), validators.Length(min=5,max=20,message="Username must be between 5-20 Characters")])
     password = PasswordField('Password', [validators.InputRequired(),validators.EqualTo('password2', message='Password must match')])
     password2 = PasswordField('Repeat Password', [validators.InputRequired()]) 
     submit = SubmitField('Sign up')
 
     def validate_username(self, username):
+        if not re.match("^[a-zA-Z0-9_]*$", username.data):
+            raise validators.ValidationError('Username should only contain letters, numbers, and underscores.')
         user = User.check_username(username.data)
         if user:
             raise validators.ValidationError('Username is already Taken')
