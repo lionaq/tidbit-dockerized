@@ -58,78 +58,70 @@ from flask import render_template
 @login_required
 def edit(user_name, post_id):
     form = EditPost()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            if form.content.data:
-                print('Pass 2')
-                # Upload images/videos to Cloudinary, if any
-                uploaded_content = []
-                for file in form.content.data:
-                    resource_type = 'video' if file.filename.endswith(('.mp4', '.mov')) else 'image'
-                    upload_result = upload(file, folder="Tidbit-web", resource_type=resource_type)
-                    secure_url = upload_result['secure_url'] if resource_type == 'image' else cloudinary_url(upload_result['public_id'], resource_type='video')[0]
-                    type = 'image' if resource_type == 'image' else 'video'
-                    uploaded_content.append({'url': secure_url, 'type': type})
+    if form.validate_on_submit():
+        if form.content.data:
+            print('Pass 2')
+            # Upload images/videos to Cloudinary, if any
+            uploaded_content = []
+            for file in form.content.data:
+                resource_type = 'video' if file.filename.endswith(('.mp4', '.mov')) else 'image'
+                upload_result = upload(file, folder="Tidbit-web", resource_type=resource_type)
+                secure_url = upload_result['secure_url'] if resource_type == 'image' else cloudinary_url(upload_result['public_id'], resource_type='video')[0]
+                type = 'image' if resource_type == 'image' else 'video'
+                uploaded_content.append({'url': secure_url, 'type': type})
 
-                # Create one Post instance and change it
-                post = Post(
-                    id = post_id,
-                    content=uploaded_content,
-                    title=form.title.data,
-                    caption=form.caption.data,
-                    ingredients=form.ingredients.data,
-                    instructions=form.instructions.data,
-                    tag=",".join(form.tag.data),
-                    subtags=",".join(form.subtag.data)
-                )
+            # Create one Post instance and change it
+            post = Post(
+                id = post_id,
+                content=uploaded_content,
+                title=form.title.data,
+                caption=form.caption.data,
+                ingredients=form.ingredients.data,
+                instructions=form.instructions.data,
+                tag=",".join(form.tag.data),
+                subtags=",".join(form.subtag.data)
+            )
 
-                # Modify the post on the database
-                post.edit()
-
-                return redirect(url_for('profile_bp.profile', username = user_name))
-            
-            else:
-                # Create one Post instance and change it
-                post = Post(
-                    id = post_id,
-                    title=form.title.data,
-                    caption=form.caption.data,
-                    ingredients=form.ingredients.data,
-                    instructions=form.instructions.data,
-                    tag=",".join(form.tag.data),
-                    subtags=",".join(form.subtag.data)
-                )
-
-                # Modify post on the database
-                post.edit()
-
-                flash("Post modified successfully!", 'info')
-                return redirect('/loggedin')
-            
+            # Modify the post on the database
+            post.edit()
+        
         else:
-            print(form.errors)
-            flash("Form validation failed", 'danger')
-            
+            # Create one Post instance and change it
+            post = Post(
+                id = post_id,
+                title=form.title.data,
+                caption=form.caption.data,
+                ingredients=form.ingredients.data,
+                instructions=form.instructions.data,
+                tag=",".join(form.tag.data),
+                subtags=",".join(form.subtag.data)
+            )
+
+            # Modify post on the database
+            post.edit()
+
+        flash("Post modified successfully!", 'info')
+        return redirect(request.url)
+                        
         
     else:
-        flash(form.errors, 'danger')
+  
+        # Fetch post data
+        post = Post.fetch_post(post_id)
+        content = Post.fetch_post_content(post_id)
 
-    # Fetch post data
-    post = Post.fetch_post(post_id)
-    content = Post.fetch_post_content(post_id)
+        # Populate the form with existing data
+        form.title.data = post['title']
+        form.caption.data = post['caption']
+        form.ingredients.data = post['ingredients']
+        form.instructions.data = post['instructions']
 
-    # Populate the form with existing data
-    form.title.data = post['title']
-    form.caption.data = post['caption']
-    form.ingredients.data = post['ingredients']
-    form.instructions.data = post['instructions']
+        # Set data for tag and subtag
+        form.tag.data = post['tag'].split(',') if post['tag'] else []
+        form.subtag.data = post['subtags'].split(',') if post['subtags'] else []
 
-    # Set data for tag and subtag
-    form.tag.data = post['tag'].split(',') if post['tag'] else []
-    form.subtag.data = post['subtags'].split(',') if post['subtags'] else []
-
-    userName = current_user.username
-    return render_template('posts/edit.html', form=form, post=post, content=content, userName = userName)
+        userName = current_user.username
+        return render_template('posts/edit.html', form=form, post=post, content=content, userName = userName)
 
 
 @post_bp.route('/<string:user_name>/delete-post/<int:post_id>', methods=['POST'])
@@ -162,6 +154,7 @@ def delete(user_name, post_id):
             if goods == True:
                 # Delete post from post table
                 Post.delete(post_id)
+                flash("Post Successfully Deleted!", 'info')
                 return redirect(url_for('profile_bp.profile', username = user_name))
             else:
                 print(public_id)
