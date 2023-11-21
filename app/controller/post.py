@@ -146,8 +146,9 @@ def edit(user_name, post_id):
         userName = current_user.username
     
         for field, errors in form.errors.items():
-            for error in errors:
-                flash(f'{error}', 'error')
+            if not any('This field is required' in error for error in errors):
+                for error in errors:
+                    flash(f'{error}', 'error')
                 
         return render_template('posts/edit.html', form=form, post=post, content=content, userName = userName)
 
