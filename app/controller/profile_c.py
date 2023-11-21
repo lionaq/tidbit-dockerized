@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask import render_template, request, redirect, flash
 from datetime import date
-from flask_login import current_user
+from flask_login import current_user, login_required
 from app.model.profile_m import Profile
 from app.forms.forms import EditProfileForm
 from cloudinary.uploader import upload
@@ -32,6 +32,7 @@ def profile(username):
     return render_template('user_profile.html')
 
 @profile_bp.route('/settings/edit-profile', methods=['GET', 'POST'])
+@login_required
 def edit_profile():
     form = EditProfileForm(current_user=current_user)
     
