@@ -10,7 +10,7 @@ class Profile(UserMixin):
         self.password = password
         self.bio = bio
         self.website = website
-        self.profilepic = profilepic if profilepic else  url_for('static', filename='img/default_profilepic.png')
+        self.profilepic = profilepic if profilepic else url_for('static', filename='img/default_profilepic.png')
         self.coverpic = coverpic if coverpic else url_for('static', filename='img/default_coverpic.jpg')
         
     @classmethod
@@ -52,7 +52,6 @@ class Profile(UserMixin):
         posts = cursor.fetchall()
         cursor.close()
         return posts
-
     def update_profile(self, new_username, new_fullname, new_bio, new_website):
         cursor = mysql.connection.cursor(dictionary=True)
         cursor.execute("SELECT * FROM user WHERE username = %s", (new_username,))
