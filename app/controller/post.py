@@ -20,7 +20,7 @@ def create(user_name):
         abort(418) # :)
 
     form = CreatePost()
-    if form.validate_on_submit() and request.method == 'POST':
+    if form.validate_on_submit():
         user_id = current_user.id
         today = date.today()
 
