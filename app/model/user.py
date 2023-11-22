@@ -34,7 +34,6 @@ class User(UserMixin):
             return check_password_hash(stored_password, password)
         else:
             return False
-
     
     @classmethod
     def check_username(cls, username):

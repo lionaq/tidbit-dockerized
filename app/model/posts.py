@@ -102,8 +102,12 @@ class Post(UserMixin):
         return content
     
     def get_public_id_from_url(url):
-        match = re.search(r'/v\d+/(Tidbit-web/[^/]+)\.\w+', url)  # for images
+        match = re.search(r'/v\d+/(Tidbit-web/[^/]+)\.\w+', url)  # for images in Tidbit-web
         if not match:
-            match = re.search(r'/v\d+/(Tidbit-web/[^/]+)', url)  # for videos
+            match = re.search(r'/v\d+/(Tidbit-web/[^/]+)', url)  # for videos in Tidbit-web
+        if not match:
+            match = re.search(r'/v\d+/(profilepic/[^/]+)\.\w+', url)  # for images in profilepic
+        if not match:
+            match = re.search(r'/v\d+/(coverpic/[^/]+)\.\w+', url)  # for images in coverpic
 
         return match.group(1) if match else None
