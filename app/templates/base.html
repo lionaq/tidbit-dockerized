@@ -24,6 +24,10 @@
                 <button class="input-group-text rounded-pill" id="basic-addon1" style = "height:30px; background: #D9D9D9; border: 0;"><img src="{{ url_for('static', filename='img/search.svg') }}" class="img" alt="tidbit logo" style= " width: 35px; height: 30px;"></button>
             </form>
 
+            <a href = "/explore" style = "display: inline-block; vertical-align: middle; line-height: normal; border:none; background-color:white;">
+              <img src={%block exploreBtn%}"{{ url_for('static', filename='img/exploreIcon.png') }}"{%endblock%} class="img me-3" alt="tidbit logo" style= " width: 28px; height: 28px;">
+            </a>
+
             {% if current_user.is_anonymous == false%}
             <button class="img me-3" style = "border:none; background-color:white;" onclick="changeNotifImg()">
               <img src="{{ url_for('static', filename='img/notifIcon.png') }}" style="height: 26px; width: 26px;" id="img1">
