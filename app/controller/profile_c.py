@@ -29,8 +29,7 @@ def profile(username):
                 first_images[cont['id']]['url'] = cont['url']
                 first_images[cont['id']]['type'] = cont.get('type', 'image')
 
-        posts_with_images = zip(posts, first_images.values())
-
+        posts_with_images = zip(reversed(posts), reversed(first_images.values()))
         return render_template('user_profile.html', user=user, posts_with_images=posts_with_images)
     
     return render_template('user_profile.html')
