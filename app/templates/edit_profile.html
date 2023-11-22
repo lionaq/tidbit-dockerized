@@ -65,25 +65,25 @@
                 <form method="POST" action="/settings/edit-profile" enctype="multipart/form-data">
                     <input name="csrf_token" value="{{ csrf_token() }}" hidden />
 
-                    <div id="profile-pic-upload-container" class="file-upload-container">
-                        <input type="file" id="profile_pic" name="profile_pic" accept="image/*" style="display: none;">
-                        <img id="profile-pic-preview" {% if 'static' in current_user.profilepic %}src = "{{url_for('static', filename=current_user.profilepic[7:])}}"{%else%}src="{{ current_user.profilepic }}"{%endif%} alt="Profile Picture Preview" class="profile-pic-edit img-thumbnail">
-                        <div style="position: absolute; top: 358px; left: 633px;">
-                            <button type="button" onclick="document.getElementById('profile_pic').click();" class="btn btn-secondary btn-sm" style="opacity: 0.65">
-                                <i class="fa-solid fa-camera"></i>
-                            </button>
-                        </div>
-                    </div>
-                
-                    <div id="cover-pic-upload-container" class="file-upload-container">
+                    <div id="cover-pic-upload-container" class="file-upload-container" style = "position:relative;">
                         <input type="file" id="cover_pic" name="cover_pic" accept="image/*" style="display: none;">
                         <img id="cover-pic-preview" {% if 'static' in current_user.coverpic %}src = "{{url_for('static', filename=current_user.coverpic[7:])}}"{%else%}src="{{ current_user.coverpic }}"{%endif%} alt="Cover Picture Preview" class="cover-pic-edit img-thumbnail">
-                        <div style="position: absolute; top: 339px; left: 842px;">
+                        <div style="position: absolute; top: 110px; left: 450px;">
                             <button type="button" onclick="document.getElementById('cover_pic').click();" class="btn btn-secondary btn-sm" style="opacity: 0.65">
                                 <i class="fa-solid fa-camera"></i>
                             </button>
                         </div>
                     </div>
+
+                    <div id="profile-pic-upload-container" class="file-upload-container" style = "position:relative;">
+                        <input type="file" id="profile_pic" name="profile_pic" accept="image/*" style="display: none;">
+                        <img id="profile-pic-preview" {% if 'static' in current_user.profilepic %}src = "{{url_for('static', filename=current_user.profilepic[7:])}}"{%else%}src="{{ current_user.profilepic }}"{%endif%} alt="Profile Picture Preview" class="profile-pic-edit img-thumbnail">
+                        <div style="position: absolute; top: -85px; left: 239px;">
+                            <button type="button" onclick="document.getElementById('profile_pic').click();" class="btn btn-secondary btn-sm" style="opacity: 0.65">
+                                <i class="fa-solid fa-camera"></i>
+                            </button>
+                        </div>
+                    </div> 
 
                     <div class="mb-3">
                         <label for="username" class="form-label" style="font-weight: 500">Username</label>
