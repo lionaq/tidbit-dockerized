@@ -38,6 +38,11 @@ def register():
         user.add()
         flash('Registration successful! You can now log in.', 'success')
         return redirect(url_for('auth_bp.login'))
+    
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(f'{error}', 'error')
+
     return render_template('auth/register.html', form=form)
 
 

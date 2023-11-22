@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <main>
+        <nav class="sidenav" style="position: fixed">
+            <div class="container-fluid">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'edit-profile' in request.path %}active{% endif %}" href="{{ url_for('profile_bp.edit_profile') }}">Edit profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'notifications' in request.path %}active{% endif %}" href="#">Notifications</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'community-guidelines' in request.path %}active{% endif %}" href="#">Community guidelines</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="edit-profile-content" style="margin-left: 285px">
+            <h4 class="edit-profile-header mb-2">Edit Profile</h4>
+            <p class="edit-profile-body small text-muted mb-0">
+                Keep personal information private. All information you add 
+                here is visible to anyone who views your profile.
+            </p>       
+
+            <div class="flash-messages" style="margin-top: 10px; margin-bottom: -10px; right: 10px; z-index: 9999; height: 10px;">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert {% if category == 'success' %}alert-success{% elif category == 'error' %}alert-danger{% else %}alert-info{% endif %}" style="width: 665px; padding: 3px; text-indent: 10px;">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <div class="invalid-file-msg" style="border-radius: 10px">
+                {% if form.profile_pic.errors %}
+                <p class="alert-danger" style="position: absolute; max-width: 665px; padding: 3px; text-indent: 10px; border-radius: 5px; height: 30px">
+                    {{ form.profile_pic.errors[0] }}
+                </p>
+                {% endif %}
+            </div>
+
+            <div class="invalid-file-msg" style="border-radius: 10px">
+                {% if form.cover_pic.errors %}
+                <p class="alert-danger" style="position: absolute; max-width: 665px; padding: 3px; text-indent: 10px; border-radius: 5px; height: 30px">
+                    {{ form.cover_pic.errors[0] }}
+                </p>
+                {% endif %}
+            </div>
+
+            <div style="margin-top: 30px; margin-bottom: 200px">
+                <form method="POST" action="/settings/edit-profile" enctype="multipart/form-data">
+                    <input name="csrf_token" value="{{ csrf_token() }}" hidden />
+
+                    <div id="cover-pic-upload-container" class="file-upload-container" style = "position:relative;">
+                        <input type="file" id="cover_pic" name="cover_pic" accept="image/*" style="display: none;">
+                        <img id="cover-pic-preview" {% if 'static' in current_user.coverpic %}src = "{{url_for('static', filename=current_user.coverpic[7:])}}"{%else%}src="{{ current_user.coverpic }}"{%endif%} alt="Cover Picture Preview" class="cover-pic-edit img-thumbnail">
+                        <div style="position: absolute; top: 110px; left: 450px;">
+                            <button type="button" onclick="document.getElementById('cover_pic').click();" class="btn btn-secondary btn-sm" style="opacity: 0.65">
+                                <i class="fa-solid fa-camera"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="profile-pic-upload-container" class="file-upload-container" style = "position:relative;">
+                        <input type="file" id="profile_pic" name="profile_pic" accept="image/*" style="display: none;">
+                        <img id="profile-pic-preview" {% if 'static' in current_user.profilepic %}src = "{{url_for('static', filename=current_user.profilepic[7:])}}"{%else%}src="{{ current_user.profilepic }}"{%endif%} alt="Profile Picture Preview" class="profile-pic-edit img-thumbnail">
+                        <div style="position: absolute; top: -85px; left: 239px;">
+                            <button type="button" onclick="document.getElementById('profile_pic').click();" class="btn btn-secondary btn-sm" style="opacity: 0.65">
+                                <i class="fa-solid fa-camera"></i>
+                            </button>
+                        </div>
+                    </div> 
+
+                    <div class="mb-3">
+                        <label for="username" class="form-label" style="font-weight: 500">Username</label>
+                        <input type="text" class="form-control" style="max-width:500px; border-color: gray" id="username" name="username" value="{{ current_user.username }}" required>
+                    </div>
+
+                    {% if form.username.errors %}
+                        <p class="message-text-error" style="position: absolute">
+                            {{ form.username.errors[0] }}
+                        </p>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label for="fullname" class="form-label" style="margin-top: 15px; font-weight: 500">Full Name</label>
+                        <input type="text" class="form-control" style="max-width:500px; border-color: gray" id="fullname" name="fullname" value="{{ current_user.fullname }}" required>
+                    </div>
+
+                    {% if form.fullname.errors %}
+                        <p class="message-text-error" style="position: absolute">
+                            {{ form.fullname.errors[0] }}
+                        </p>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label for="bio" class="form-label" style="margin-top: 15px; font-weight: 500">Bio</label>
+                        {% if current_user.bio %}
+                            <textarea type="text" class="form-control" style="max-width: 500px; height: 90px; border-color: gray" id="bio" name="bio">{{ current_user.bio }}</textarea>
+                        {% elif not current_user.bio %}
+                            <textarea type="text" class="form-control" style="max-width: 500px; height: 90px; border-color: gray" id="bio" name="bio"></textarea>
+                        {% endif %}
+                        <p id="bio-error-message" class="small text-danger" style="position:absolute; margin-top: 1px"></p>
+                        <small id="bio-counter" class="form-text text-muted d-flex justify-content-end" style="position:absolute; max-width: 495px; margin-top: 1px"><span id="bio-count">0</span>/140</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="website" class="form-label" style="margin-top: 15px; font-weight: 500">Website</label>
+                        {% if current_user.website %}
+                            <input type="url"  class="form-control" style="margin-bottom: 25px;  max-width:500px; border-color: gray" id="website" name="website" value="{{ current_user.website }}">
+                        {% elif not current_user.website %}
+                            <input type="url"  class="form-control" style="margin-bottom: 25px; max-width:500px; border-color: gray" id="website" name="website" value="">
+                        {% endif %}
+                    </div>
+
+                    <div>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 15px; margin-left: 200px; max-width: 80px; background-color: #d17a5e; border-color: #8a4d39">Save</button>
+                    </div> 
+
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+            navLinks.forEach(function(link) {
+                link.addEventListener('click', function() {
+                    navLinks.forEach(function(innerLink) {
+                        innerLink.classList.remove('active');
+                    });
+
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+
+    <script>
+        document.getElementById('profile_pic').addEventListener('change', function () {
+            var fileInput = this;
+            var previewImage = document.getElementById('profile-pic-preview');
+
+            if (fileInput.files && fileInput.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        });
+    </script>
+
+    <script>
+        document.getElementById('cover_pic').addEventListener('change', function () {
+            var fileInput = this;
+            var previewImage = document.getElementById('cover-pic-preview');
+    
+            if (fileInput.files && fileInput.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        });
+    </script>    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let bioTextarea = document.getElementById('bio');
+            let bioCount = document.getElementById('bio-count');
+            let bioCounter = document.getElementById('bio-counter');
+            let bioErrorMessage = document.getElementById('bio-error-message');
+        
+            function updateCharCount() {
+                let bioLength = bioTextarea.value.length;
+                bioCount.innerText = bioLength;
+        
+                if (bioLength > 140) {
+
+                    bioCounter.style.visibility = 'hidden';
+                    bioErrorMessage.textContent = 'Bio must be at most 140 characters.';
+                } else {
+                    bioCounter.style.visibility = 'visible';
+                    bioCounter.style.color = '';
+                    bioErrorMessage.textContent = '';
+                }
+            }
+        
+            updateCharCount();
+        
+            bioTextarea.addEventListener('input', updateCharCount);
+        });        
+    </script>
+
+</body>
+{% endblock %}
