@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{%block title%}Feed{%endblock%}
+{%block exploreBtn%}"{{ url_for('static', filename='img/exploreIcon_toggled.png') }}"{%endblock%}
+{%block title%}Explore{%endblock%}
 {% block content %}
 {% set ns = namespace(firstItem=0) %}
 {% set num = namespace(iter=0)%}
@@ -16,32 +17,32 @@
         text-overflow: ellipsis;
     }
 </style>
-  <h1 class = "display-5 fw-bold mt-3">Feed <small class="text-body-secondary fs-6">Start looking at your friends' posts or your own!</small></h1>
+  <h1 class = "display-5 fw-bold mt-3">Explore <small class="text-body-secondary fs-6">Looking for something different? The freshest content is served right here!</small></h1>
   <div class="row d-flex justify-content-center">
-    {% for post in posts %}
+    {% for post in postData %}
       <div class=" col-lg-6 my-3 justify-content-center">
         <div class = "rounded-4 p-1 px-4" style = "background-color:white;">
         <div class = "row my-3">
           <div class = "col-sm-9">
             <div class = "row">
               <div class = "col-sm-2 me-3">
-                <a href="{{ url_for('profile_bp.profile', username=current_user.username) }}"><img class="rounded-pill shadow-sm" src="{{ current_user.profilepic }}" style="height: 70px; width: 70px; "></a>
+                <a href="{{ url_for('profile_bp.profile', username=post.username) }}"><img class="rounded-pill shadow-sm" src="{{ post.profilepic }}" style="height: 70px; width: 70px; "></a>
               </div>
               <div class = "col-sm-9 ms-1">
-                <p class = "fs-4 fw-semibold m-0 p-0">{{current_user.fullname}}</h3>
-                <p class="fs-6 text-muted">@{{ current_user.username }}</p>
+                <p class = "fs-4 fw-semibold m-0 p-0">{{post.fullname}}</h3>
+                <p class="fs-6 text-muted">@{{ post.username }}</p>
               </div>
             </div>
           </div>
           <div class = "col d-flex align-items-center justify-content-end">
-           {%if post.user_id != current_user.id%} <button style = "width:100%;" class = "btn btn btn-success">Follow</button> {%endif%}
+            <button style = "width:100%; background: #D27A5E;" class = "btn btn btn-success">Follow</button>
           </div>
         </div>
         <div id="carousel{{ post.id }}" class="carousel slide shadow-sm">
           <div class="carousel-inner rounded-1">
             {% set ns.firstItem = 1 %}
-            {% for cont in content %}
-              {% if cont.id == post.id: %}
+            {% for cont in postCont %}
+              {% if cont.post_id == post.id: %}
               {% set num.iter = num.iter + 1 %}
                 <div class="carousel-item {% if ns.firstItem == 1 %}active{% endif %}">
                   {% if cont.type == 'image' %}
