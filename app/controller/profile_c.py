@@ -1,11 +1,12 @@
 from flask import Blueprint
-from flask import render_template, request, redirect, flash
+from flask import render_template, request, redirect, flash, abort
 from datetime import date
 from flask_login import current_user, login_required
+from app.model.posts import Post
 from app.model.profile_m import Profile
 from app.forms.forms import EditProfileForm
+from cloudinary import uploader
 from cloudinary.uploader import upload
-
 profile_bp = Blueprint(
     "profile_bp",
     __name__
@@ -44,12 +45,20 @@ def edit_profile():
         if profile_pic_file:
             result = upload(profile_pic_file, folder='profilepic')
             profile = Profile.fetch_user_data(current_user.username)
+            if 'static' not in current_user.profilepic:
+                public_id = Post.get_public_id_from_url(current_user.profilepic)
+                delete = uploader.destroy(public_id)
+                print(delete, " ", current_user.profilepic, "DELETED")
             profile.update_profile_picture(result['secure_url'])
 
         cover_pic_file = request.files.get('cover_pic')
         if cover_pic_file:
             result = upload(cover_pic_file, folder='coverpic')
             profile = Profile.fetch_user_data(current_user.username)
+            if 'static' not in current_user.coverpic:
+                public_id = Post.get_public_id_from_url(current_user.coverpic)
+                delete = uploader.destroy(public_id)
+                print(delete, " ", current_user.coverpic, "DELETED")
             profile.update_cover_picture(result['secure_url'])
         
         username = form.username.data
