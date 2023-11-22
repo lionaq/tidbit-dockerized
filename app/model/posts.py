@@ -1,5 +1,6 @@
 from app import mysql
 from flask_login import UserMixin
+import re
 
 class Post(UserMixin):
     def __init__(self, id=None, user_id=None, date=None, title=None, content=None, caption=None, ingredients=None, instructions=None, tag=None, subtags=None, type=None):
@@ -66,7 +67,18 @@ class Post(UserMixin):
             # Commit changes
             mysql.connection.commit()
             cursor.close()
+            
 
+    def delete(post_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "DELETE FROM post WHERE id = %s"
+
+        # Delete post
+        cursor.execute(sql, (post_id,))
+
+        # Commit changes
+        mysql.connection.commit()
+        cursor.close()
 
 
     
@@ -107,3 +119,13 @@ class Post(UserMixin):
         post = cursor.fetchone()
         cursor.close()
         return cls(**post) if post else None
+    def get_public_id_from_url(url):
+        match = re.search(r'/v\d+/(Tidbit-web/[^/]+)\.\w+', url)  # for images in Tidbit-web
+        if not match:
+            match = re.search(r'/v\d+/(Tidbit-web/[^/]+)', url)  # for videos in Tidbit-web
+        if not match:
+            match = re.search(r'/v\d+/(profilepic/[^/]+)\.\w+', url)  # for images in profilepic
+        if not match:
+            match = re.search(r'/v\d+/(coverpic/[^/]+)\.\w+', url)  # for images in coverpic
+
+        return match.group(1) if match else None

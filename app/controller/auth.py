@@ -4,6 +4,7 @@ from flask_login import  login_user,  login_required, logout_user, current_user
 from app.forms.forms import RegisterForm, LoginForm
 from app.model.user import User
 from app.model.posts import Post
+import random
 
 auth_bp = Blueprint(
     "auth_bp",
@@ -38,6 +39,11 @@ def register():
         user.add()
         flash('Registration successful! You can now log in.', 'success')
         return redirect(url_for('auth_bp.login'))
+    
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(f'{error}', 'error')
+
     return render_template('auth/register.html', form=form)
 
 
@@ -59,3 +65,11 @@ def loggedin():
 
         return render_template('/loggedin.html', name = username, user=user, posts=posts, content=content)
     
+@auth_bp.route('/explore')
+@login_required
+def explore():
+
+        data = User.fetch_ALL_posts_except_user(current_user.username)
+        cont = User.fetch_ALL_content_except_user(current_user.username)
+        random.shuffle(data)
+        return render_template('/explore.html', postData = data, postCont = cont)

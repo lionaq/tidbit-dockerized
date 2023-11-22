@@ -19,13 +19,13 @@
         <section>
           <div class="d-flex justify-content-center cover-pic-container rounded-bottom">
             <img 
-              src="{{ current_user.coverpic }}" 
+              {% if 'static' in user.coverpic %}src = "{{url_for('static', filename=user.coverpic[7:])}}"{%else%}src="{{ user.coverpic }}"{%endif%}
               class="cover-pic" 
             />
           </div>
           <div class="d-flex justify-content-center">
             <img 
-              src="{{ current_user.profilepic }}" 
+            {% if 'static' in user.profilepic %}src = "{{url_for('static', filename=user.profilepic[7:])}}"{%else%}src="{{ user.profilepic }}"{%endif%}
               class="profile-pic rounded-circle" 
               />
           </div>
@@ -33,16 +33,26 @@
 
         <!-- User Data -->
         <section>
-          <div class="justify-content-center text-center" style="margin-top: 68px;">
-            <h5>{{ current_user.fullname }}</h5>
-            <p class="small text-muted">@{{ current_user.username }}</p>
-            <p class="small py-3">{{ current_user.bio }}</p>
-          </div>
+          <div class=" justify-content-center text-center" style="margin-top: 68px">
+            <div class = "userTop container-fluid">
+              {% if current_user != user %}
+                <button type="submit" class="followBtn btn btn-lg btn-secondary btn-sm" style="background-color: #D17A5E; border: none">Follow</button>
+              {% endif %}
 
-          <div class="text-center">
-            {% if current_user.website %} 
-              <p class="small link"> 
-                <a href="{{ current_user.website }}" target="_blank" style="text-decoration: none; color: darkblue">{{ current_user.website }}</a> 
+              <h5 style="margin-bottom:2px">{{ user.fullname }}</h5>
+              <p class="small text-muted" style="margin-bottom: 8px">@{{ user.username }}</p>
+          </div>
+            {% if user.bio %}
+              <p class="small py-3 bio-text">{{ user.bio }}</p>
+            {% elif not user.bio %}
+              <p class="default-division" style="margin-top: 68px"></p>
+            {% endif %}
+            
+            {% if user.website %} 
+              <p class="small link">
+                <a href="{{ user.website }}" target="_blank" style="text-decoration: none; color: darkblue">
+                  <i class="fa-solid fa-link"></i> {{ user.website }}
+                </a> 
               </p> 
             {% endif %}
           </div>
@@ -66,12 +76,15 @@
         <!-- Navbar: Posts, Liked, and Saved -->
         <div>
           <nav class="nav justify-content-center">
-            <a href="{{ url_for('profile_bp.profile', username=current_user.username) }}" class="nav-link">Posts</a>
-            <a href="" class="nav-link">Liked</a>
-            <a href="" class="nav-link">Saved</a>
+            {% if current_user == user %}
+              <a href="{{ url_for('profile_bp.profile', username=user.username) }}" class="nav-link">Posts</a>
+              <a href="" class="nav-link">Liked</a>
+              <a href="" class="nav-link">Saved</a>
+            {% else %}
+              <a href="{{ url_for('profile_bp.profile', username=user.username) }}" class="nav-link">Posts</a>
+            {% endif %}
           </nav>
         </div>
-
         <!-- User Posts Gallery -->
         <div class="img-container">
           <div class="row">
@@ -87,14 +100,23 @@
                     Your browser does not support the video tag.
                   </video>
                   {% endif %}
-                  <div class="image-overlay">
-                    <a href="{{ url_for('post_bp.edit', post_id=post['id']) }}" class="overlay-link">
-                      <i class="fa-solid fa-pen-to-square" id="editPost"></i>
-                    </a>                    
-                    <a href="" class="overlay-link">
-                      <i class="fa-solid fa-trash" id="deletePost"></i>
-                    </a>
-                  </div>
+
+                  {% if post['user_id'] == current_user.id %}
+                    <div class="image-overlay">
+                      <form action="{{ url_for('post_bp.edit', user_name=user.username, post_id=post['id']) }}" method="POST" style="border: none;">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="overlay-link delete-button">
+                          <i class="fa-solid fa-pen-to-square" id="editPost"></i>
+                        </button>
+                      </form>
+                      <form action="{{ url_for('post_bp.delete', user_name=user.username, post_id=post['id']) }}" method="POST" style="border: none;">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" onclick="return confirm('Are you sure you want to delete this post?')" class="overlay-link delete-button">
+                            <i class="fa-solid fa-trash" id="deletePost"></i>
+                        </button>
+                      </form>
+                    </div>
+                  {% endif %}
                 </div>
               </a>
             </div>
@@ -103,7 +125,7 @@
         </div>
 
         <!-- Create post icon -->
-        <a href="{{ url_for('post_bp.create') }}">
+        <a href="{{ url_for('post_bp.create', user_name = current_user.username) }}">
           <div class="floating-icon">
             <i class="fa-solid fa-plus"></i>
           </div>
@@ -114,15 +136,16 @@
   </main>
 
   <script>
-    var path = window.location.pathname;
+    let path = window.location.pathname;
 
-    var links = document.querySelectorAll('.nav a');
-    for (var i = 0; i < links.length; i++) {
+    let links = document.querySelectorAll('.nav a');
+    for (let i = 0; i < links.length; i++) {
       if (links[i].getAttribute('href') === path) {
         links[i].classList.add('active');
       }
     }
   </script>
+  <script src="{{ url_for('static', filename='js/create.js') }}"></script>
 </body>
 
 {% endblock %}

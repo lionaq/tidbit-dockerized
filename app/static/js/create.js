@@ -1,16 +1,16 @@
 let clearBtn = document.getElementById("clearFiles");
 let defaultImg = document.getElementById("uploadIcon");
 let filePreviewContainer = document.getElementById("filePreviews");
+divClear = "<img id='imagePreview' src='"+uploadIcon+"'alt='File Preview' class='img-thumbnail' style='width:100%; height:350px; opacity:0.2';>";
 
 $(document).ready(function () {
     $("#clearFiles").on("click", function (e) {
         e.preventDefault();
         $("#content").val('');  // Clear the file input field
-        clearFilePreview('<img id="imagePreview" src="static/img/UploadImg.png" alt="File Preview" class="img-thumbnail" style="width:100%; height:350px; opacity:0.2;">');
+        clearFilePreview(divClear);
     });
 
     $("#postForm").submit(function (event) {
-        event.preventDefault();
         if (!isFormValid()) {
             $("#clearFiles").click();
             return;
@@ -18,21 +18,12 @@ $(document).ready(function () {
         // Display the loading overlay
         $('body').append('<div class="loading-overlay"> <div class="spinner-border me-3" style="width: 3rem; height: 3rem;"> <span class="visually-hidden">Loading...</span></div><h2> This should only take a minute... </h2></div>');
 
-        var formData = new FormData($(this)[0]);
-
         $.ajax({
             url: $(this).attr('action'),
             type: $(this).attr('method'),
-            data: formData,
+            data: FormData($(this)[0]),
             contentType: false,
             processData: false,
-            success: function (data) {
-                if (window.location.pathname === '/edit-post/'+postId) {
-                    window.location.href = '/' + username;
-                } else {
-                    window.location.href = '/loggedin';
-                }
-            },
             complete: function () {
                 // Remove the loading overlay when the request is complete
                 $('.loading-overlay').remove();

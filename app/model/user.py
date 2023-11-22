@@ -34,7 +34,6 @@ class User(UserMixin):
             return check_password_hash(stored_password, password)
         else:
             return False
-
     
     @classmethod
     def check_username(cls, username):
@@ -112,3 +111,23 @@ class User(UserMixin):
 
         cursor.close()
         return content
+    
+    @classmethod
+    def fetch_ALL_posts_except_user(cls, user_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT user.fullname, user.username, user.profilepic, user.coverpic, post.id, post.title, post.caption FROM user JOIN post ON user.id = post.user_id WHERE NOT username = %s;"
+        cursor.execute(sql, (user_id,))
+        data = cursor.fetchall()
+
+        cursor.close()
+        return data
+    
+    @classmethod
+    def fetch_ALL_content_except_user(cls, user_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT post_url.url, post_url.post_id, post_url.type FROM user JOIN post ON user.id = post.user_id JOIN post_url ON post.id = post_url.post_id WHERE NOT username =%s;"
+        cursor.execute(sql, (user_id,))
+        data = cursor.fetchall()
+
+        cursor.close()
+        return data
