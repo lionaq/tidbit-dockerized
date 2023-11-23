@@ -21,7 +21,7 @@
                                     {% for cont in content %}
                                         <div class="carousel-item {% if loop.first %}active{% endif %}">
                                             {% if cont['type'] == 'image' %}
-                                                <img src="{{ cont['url'] }}" class="object-fit-cover" alt="Existing Content" width = "100%" height="350px">
+                                                <img src="{{ cont['url'] }}" class="object-fit-cover" alt="Existing Content" width = "100%" height="350px" loading="lazy">
                                             {% elif cont['type'] == 'video' %}
                                                 <video controls width="100%" height="350px" class="object-fit-cover">
                                                     <source src="{{ cont['url'] }}" type="video/mp4">
@@ -47,7 +47,7 @@
                                 <label class="postUpload carousel slide overflow-hidden d-flex justify-content-center" for="{{ form.content.id }}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer;" id = "carousel">
                                     <!-- Add a container for previews -->
                                     <div id="filePreviews" class = "carousel-inner" style = "width:100%; height:350px;">
-                                        <img id="imagePreview" src="{{ url_for('static', filename='img/UploadImg.png') }}"alt="File Preview" class="img-thumbnail" style="width:100%; height:350px; opacity:0.2;">
+                                        <img id="imagePreview" src="{{ url_for('static', filename='img/UploadImg.png') }}"alt="File Preview" class="img-thumbnail" style="width:100%; height:350px; opacity:0.2;" loading="lazy">
                                     </div>
                                     <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
                                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -58,7 +58,7 @@
                                         <span class="visually-hidden">Next</span>
                                     </button>
                                     <button class="btn z-5" type="button" id="clearFiles" style="visibility:hidden">&times;</button>
-                                    <img id="uploadIcon" src="{{ url_for('static', filename='img/UploadIcon.png') }}" style="width:150px; height:150px;">
+                                    <img id="uploadIcon" src="{{ url_for('static', filename='img/UploadIcon.png') }}" style="width:150px; height:150px;" loading="lazy">
                                     <a id="uploadCaption"> Click here to replace post images and/or videos </a>
                                 </label>                        
                             </div>
@@ -94,8 +94,8 @@
                     </div>
                 </div>
                 <div class = "d-flex flex-row-reverse mt-3">
-                    <a class = "btn  rounded-pill ms-3 fw-bold" style="background-color: rgba(210, 122, 94, 0.15); color: black;" href = "login">Cancel</a>
-                    {{ form.submit(class="btn rounded-pill fw-bold", onclick="return confirm('Are you sure you want to modify this post?')", style="background-color: rgba(210, 122, 94, 0.15); color: black;") }}
+                    <a class = "btn  rounded-pill ms-3 fw-bold" style="background-color: rgba(210, 122, 94, 0.15); color: black;" href = "#">Cancel</a>
+                    {{ form.submit(class="btn rounded-pill fw-bold", style="background-color: rgba(210, 122, 94, 0.15); color: black;") }}
                 </div>
             </div>
         </form>

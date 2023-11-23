@@ -100,7 +100,7 @@
     <div class="dropdown pt-3">
       <button class="btn" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></button>
       <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="{{url_for('post_bp.edit',post_id=post.id)}}">Edit Post</a></li>
+        <li><a class="dropdown-item" href="{{url_for('post_bp.edit',post_id=post.id,user_name=current_user.username)}}">Edit Post</a></li>
         <li><a class="dropdown-item" href="#">Delete Post</a></li>
       </ul>
     </div>

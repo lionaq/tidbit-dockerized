@@ -18,13 +18,13 @@
         <!-- ProfilePic and CoverPic -->
         <section>
           <div class="d-flex justify-content-center cover-pic-container rounded-bottom">
-            <img 
+            <img loading="lazy"
               {% if 'static' in user.coverpic %}src = "{{url_for('static', filename=user.coverpic[7:])}}"{%else%}src="{{ user.coverpic }}"{%endif%}
               class="cover-pic" 
             />
           </div>
           <div class="d-flex justify-content-center">
-            <img 
+            <img loading="lazy"
             {% if 'static' in user.profilepic %}src = "{{url_for('static', filename=user.profilepic[7:])}}"{%else%}src="{{ user.profilepic }}"{%endif%}
               class="profile-pic rounded-circle" 
               />
@@ -93,7 +93,7 @@
               <a href="{{url_for('post_bp.view_post',postid=post.id)}}">
                 <div class="image-container">
                   {% if first_image_info['type'] == 'image' %}
-                  <img src="{{ first_image_info['url'] }}" class="gallery-image" alt="{{ post['title'] }}">
+                  <img loading="lazy"src="{{ first_image_info['url'] }}" class="gallery-image" alt="{{ post['title'] }}">
                   {% elif first_image_info['type'] == 'video' %}
                   <video class="gallery-video">
                     <source src="{{ first_image_info['url'] }}" type="video/mp4">

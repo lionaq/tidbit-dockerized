@@ -26,7 +26,7 @@
 
 <div
     class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center min-vh-100 pe-5">
-    <img src="{{ url_for('static', filename='img/Tidbit.png') }}" class="img" alt="tidbit logo">
+    <img src="{{ url_for('static', filename='img/Tidbit.png') }}" class="img" alt="tidbit logo" loading="lazy">
     <h1 class="fw-bold">Welcome back to TidBit!</h1>
     <p class="pb-3">Explore Flavor, Discover Tidbits</p>
     {% with messages = get_flashed_messages(with_categories=true) %}

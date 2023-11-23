@@ -25,7 +25,7 @@
     
 
 <div class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center min-vh-100">
-    <img src="{{ url_for('static', filename='img/Tidbit.png') }}" class="img" alt="tidbit logo">
+    <img src="{{ url_for('static', filename='img/Tidbit.png') }}" class="img" alt="tidbit logo" loading="lazy">
     <h1 class="fw-bold">Welcome to TidBit!</h1>
     <form method="POST" novalidate class="w-50 pb-5">
         {{ form.hidden_tag() }}
