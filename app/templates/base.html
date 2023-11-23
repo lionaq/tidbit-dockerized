@@ -16,7 +16,7 @@
   <body>
 
     <nav class="navbar navbar-expand-sm sticky-top" style="background-color: #FFF; box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);">
-        <a class="navbar-brand ms-4" href="/login" style = "color: #000; font-family: Dosis; font-size: 15px; font-style: normal; font-weight: 800;  letter-spacing: 0.75px;">
+        <a class="navbar-brand ms-4" href="{{url_for('main_bp.home')}}" style = "color: #000; font-family: Dosis; font-size: 15px; font-style: normal; font-weight: 800;  letter-spacing: 0.75px;">
           <img loading="lazy" src="{{ url_for('static', filename='img/Tidbit.png') }}" class="img me-3" alt="tidbit logo" style= " width: 35px; height: 35px;"><span style = "display: inline-block; vertical-align: middle; line-height: normal;">HOME<span></a>
         <div class="collapse navbar-collapse d-flex justify-content-center" id="navbarSupportedContent">
             <form class = "input-group w-50 mx-auto rounded-pill" style = "height:30px; background: #D9D9D9; min-width:150px;" >
@@ -24,7 +24,7 @@
                 <button class="input-group-text rounded-pill" id="basic-addon1" style = "height:30px; background: #D9D9D9; border: 0;"><img loading="lazy" src="{{ url_for('static', filename='img/search.svg') }}" class="img" alt="tidbit logo" style= " width: 35px; height: 30px;"></button>
             </form>
 
-            <a href = "/explore" style = "display: inline-block; vertical-align: middle; line-height: normal; border:none; background-color:white;">
+            <a href = "{{url_for('main_bp.explore')}}" style = "display: inline-block; vertical-align: middle; line-height: normal; border:none; background-color:white;">
               <img loading="lazy" src={%block exploreBtn%}"{{ url_for('static', filename='img/exploreIcon.png') }}"{%endblock%} class="img me-3" alt="tidbit logo" style= " width: 28px; height: 28px;">
             </a>
 

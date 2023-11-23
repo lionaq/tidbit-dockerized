@@ -21,6 +21,30 @@
       opacity: 0;
       transition: opacity 0.5s;
     }
+
+    .floating-icon {
+    position: fixed;
+    bottom: 87px;
+    right: 105px;
+    background-color: #D17A5E;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+    }
+    .floating-icon:hover,
+    .floating-icon:active {
+        transform: scale(1.1);
+    }
+
+    .floating-icon i {
+        font-size: 35px;
+    }
 </style>
   <h1 class = "display-5 fw-bold mt-3">Feed <small class="text-body-secondary fs-6">Start looking at your friends' posts or your own!</small></h1>
   <div class="row d-flex justify-content-center">
@@ -122,6 +146,11 @@
       </div>
     {% endfor %}
   </div>
+  <a href="{{ url_for('post_bp.create', user_name = current_user.username) }}">
+    <div class="floating-icon">
+      <i class="fa-solid fa-plus"></i>
+    </div>
+  </a>
 </section>
 
 <script>

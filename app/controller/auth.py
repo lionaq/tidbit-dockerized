@@ -3,8 +3,6 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import  login_user,  login_required, logout_user, current_user
 from app.forms.forms import RegisterForm, LoginForm
 from app.model.user import User
-from app.model.posts import Post
-import random
 
 auth_bp = Blueprint(
     "auth_bp",
@@ -14,7 +12,7 @@ auth_bp = Blueprint(
 @auth_bp.route('/login', methods=['GET','POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('auth_bp.loggedin'))
+        return redirect(url_for('main_bp.home'))
     form = LoginForm()
     if form.validate_on_submit() and request.method == 'POST':
         username = form.username.data
@@ -22,7 +20,7 @@ def login():
 
         if user and user.check_password(form.password.data):
             login_user(user)
-            return redirect('/loggedin')#You can change this so it redirects to wherever after login
+            return redirect(url_for('main_bp.home'))#You can change this so it redirects to wherever after login
         else:
             flash("Invalid username or password", 'danger')
     return render_template('auth/login.html', form=form)
@@ -31,7 +29,7 @@ def login():
 @auth_bp.route('/register', methods=['GET','POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('auth_bp.loggedin'))
+        return redirect(url_for('main_bp.home'))
     form = RegisterForm()
     if form.validate_on_submit() and request.method =='POST':
         user = User(email=form.email.data, fullname = form.fullname.data, username = form.username.data)
@@ -54,22 +52,3 @@ def logout():
     flash("You have been logged out!", 'info')
     return redirect(url_for('auth_bp.login'))
 
-@auth_bp.route('/loggedin')
-@login_required
-def loggedin():
-    username = current_user.username
-    user = User.search_by_username(username)
-    if user:
-        posts = User.fetch_user_posts(user.id)
-        content = User.fetch_user_post_content()
-
-        return render_template('/loggedin.html', name = username, user=user, posts=posts, content=content)
-    
-@auth_bp.route('/explore')
-@login_required
-def explore():
-
-        data = User.fetch_ALL_posts_except_user(current_user.username)
-        cont = User.fetch_ALL_content_except_user(current_user.username)
-        random.shuffle(data)
-        return render_template('/explore.html', postData = data, postCont = cont)

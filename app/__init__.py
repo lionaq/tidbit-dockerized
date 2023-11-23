@@ -40,9 +40,11 @@ def create_app(test_config=None):
     
     #Blueprints
     from .controller import auth
+    from .controller import main
     from .controller import post
     from .controller import profile_c
     app.register_blueprint(auth.auth_bp)
+    app.register_blueprint(main.main_bp)
     app.register_blueprint(post.post_bp)
     app.register_blueprint(profile_c.profile_bp)
 
