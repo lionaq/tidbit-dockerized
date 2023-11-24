@@ -9,6 +9,7 @@
 <section>
   <style>
     body {
+      scroll-behavior: smooth;
       background-color:#F0F2F5;
   }
     .overflow-ellipsis {
@@ -16,11 +17,25 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+    .lazy-post {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .follow{
+      width: 100%;
+      background-color: #D17A5E;
+      transition: all 0.3s ease;
+    }
+    .follow:hover{
+      transform: scale(1.1);
+      background-color: #D17A5E;
+      box-shadow: 0px 0px 10px 0px #D17A5E;
+    }
 </style>
   <h1 class = "display-5 fw-bold mt-3">Explore <small class="text-body-secondary fs-6">Looking for something different? The freshest content is served right here!</small></h1>
   <div class="row d-flex justify-content-center">
     {% for post in postData %}
-      <div class=" col-lg-6 my-3 justify-content-center">
+      <div class=" col-lg-6 my-3 justify-content-center lazy-post">
         <div class = "rounded-4 p-1 px-4" style = "background-color:white;">
         <div class = "row my-3">
           <div class = "col-sm-9">
@@ -35,7 +50,7 @@
             </div>
           </div>
           <div class = "col d-flex align-items-center justify-content-end">
-            <button style = "width:100%; background: #D27A5E;" class = "btn btn btn-success">Follow</button>
+            {%if post.user_id != current_user.id%}<button class = "btn follow">Follow</button> {%endif%}
           </div>
         </div>
         <div id="carousel{{ post.id }}" class="carousel slide shadow-sm">
@@ -55,14 +70,16 @@
               {% endif %}
             {% endfor %}
           </div>
-          <button class="carousel-control-prev" data-bs-target="#carousel{{ post.id }}" type="button" data-bs-slide="prev" style = "{% if num.iter == 1%}display:none;{%endif%}">
+          {% if num.iter > 1%}
+          <button class="carousel-control-prev" data-bs-target="#carousel{{ post.id }}" type="button" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
           </button>
-          <button class="carousel-control-next" data-bs-target="#carousel{{ post.id }}" type="button" data-bs-slide="next" style = "{% if num.iter == 1%}display:none;{%endif%}">
+          <button class="carousel-control-next" data-bs-target="#carousel{{ post.id }}" type="button" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
           </button>
+          {%endif%}
         </div>
         {% set num.iter = 0%}
          <!--Title and caption section-->
@@ -114,4 +131,32 @@
     {% endfor %}
   </div>
 </section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const lazyLoadPosts = document.querySelectorAll('.lazy-post');
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: .3
+    };
+
+    const observer = new IntersectionObserver(callback, observerOptions);
+
+    lazyLoadPosts.forEach(post => {
+      observer.observe(post);
+    });
+
+    function callback(entries, observer) {
+      entries.forEach(entry => {
+        const intersecting = entry.isIntersecting
+        if (intersecting) {
+          entry.target.style.opacity = '1'
+          observer.unobserve(entry.target);
+        }
+      });
+    }
+  });
+</script>
 {% endblock %}

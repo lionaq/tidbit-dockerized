@@ -17,6 +17,22 @@
     width: 150%;
     border: 3px solid #D17A5E;
   }
+  .tag-section span{
+    background-color: #6c757d;
+  }
+  .tag-section span:hover{
+    background-color: #d17a5e;
+    cursor: pointer;
+  }
+  .follow{
+    background-color: #D17A5E;
+    transition: all 0.3s ease;
+  }
+  .follow:hover{
+    transform: scale(1.1);
+    background-color: #D17A5E;
+    box-shadow: 0px 0px 10px 0px #D17A5E;
+  }
 </style>
 
 <div class="position-relative">
@@ -32,13 +48,13 @@
       {% if img.type == 'image' %}
       <div class="carousel-item {{'active' if loop.first}}">
         <div class="text-center">
-          <img src="{{img.url}}" class="img-fluid rounded-bottom-4" style="height: 400px; width: 800px;" loading="lazy">
+          <img src="{{img.url}}" class="img-fluid rounded-bottom-4" style="height: 400px; width: 75%;">
         </div>
       </div>
       {% elif img.type == 'video' %}
       <div class="carousel-item {{ 'active' if loop.first }}">
         <div class="position-relative d-flex justify-content-center">
-          <video controls autoplay width="75%" height="100%" class="align-self-center">
+          <video controls autoplay width="75%" height="100%" class="align-self-center object-fit-cover">
             <source src="{{ img.url }}" type="video/mp4">
             Your browser does not support the video tag.
           </video>
@@ -95,13 +111,13 @@
     </a>
 
     {% if current_user.id != post.user_id%}
-    <button class="btn flex-shrink-0 align-self-center m-1" style="background-color: #D27A5E;">FOLLOW</button>
+    <button class="btn flex-shrink-0 align-self-center m-1 follow">FOLLOW</button>
     {% else %}
     <div class="dropdown pt-3">
-      <button class="btn" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></button>
+      <button class="btn" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical" style="color: #d17a5e;"></i></button>
       <ul class="dropdown-menu">
         <li><a class="dropdown-item" href="{{url_for('post_bp.edit',post_id=post.id,user_name=current_user.username)}}">Edit Post</a></li>
-        <li><a class="dropdown-item" href="#">Delete Post</a></li>
+        <li><a class="dropdown-item btn" data-bs-toggle="modal" data-bs-target="#deleteConfirm">Delete Post</a></li>
       </ul>
     </div>
     {%endif%}
@@ -109,14 +125,10 @@
   <div class="d-flex w-100 align-content-start justify-content-start align-items-start">
     <p class="align-self-start mt-3 fw-lighter fs-6 text-break text-start">{{post.caption}}</p>
   </div>
-  <div class="d-flex w-100 flex-wrap">
-    <div class="text-dark mx-1 my-1 rounded-pill fw-semibold align-self-center"
-      style="background-color: #D9D9D9; height: 30px;">{{post.tag}}</div>
-    {% for x in post.subtags.split(',') %}
-    <div class="text-wrap text-dark mx-1 my-1 rounded-pill fw-semibold align-self-center"
-      style="width: 6rem; background-color: #D9D9D9; height: 30px;">
-      {{x}}
-    </div>
+  <div class="d-flex w-100 flex-wrap gap-2 tag-section">
+    <span class="badge rounded-pill my-auto">{{post.tag}}</span>
+    {% for tag in post.subtags.split(',') %}
+    <span class="badge rounded-pill my-auto">{{tag}}</span>
     {% endfor%}
   </div>
   <hr class="w-100 mt-3">
@@ -138,18 +150,46 @@
     <h6 class="ms-5 my-3">INGREDIENTS</h6>
     <ul class="my-3">
       {% for ing in post.ingredients.split('\r\n') %}
-      <li class="text-break text-start mt-3">{{ing}}</li>
+        {%if ing.strip()%}
+          <li class="text-break text-start mt-3 ps-3">{{ing}}</li>
+        {%endif%}
       {% endfor %}
     </ul>
   </div>
 
   <div class="d-flex w-100 flex-column align-items-start my-5">
     <h6 class="ms-5 my-3">INSTRUCTION</h6>
-    <ol>
+    <ol class="my-3">
       {% for int in post.instructions.split('\r\n') %}
-      <li class="text-break text-start mt-3">{{int}}</li>
+        {%if int.strip()%}
+          <li class="text-break text-start mt-3 ps-3">{{int}}</li>
+        {%endif%}
       {% endfor %}
     </ol>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal fade" id="deleteConfirm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteConfirmLabel" aria-hidden="true" data-bs-theme="dark">
+  <div class="modal-dialog text-light">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-center">
+        <h1 class="modal-title fs-5" id="deleteConfirmLabel">Delete Post</h1>
+      </div>
+      <div class="modal-body">
+        <form id="deletePostConfirm" method="POST" action="{{ url_for('post_bp.delete',user_name=current_user.username, post_id=post.id) }}">
+          {{ form.hidden_tag() }}
+          <div class="d-flex justify-content-between flex-column align-items-center">
+            <p>Are you sure u want to <strong> delete this post ?</strong></p>
+          </div>
+          <div class="alert alert-danger" id="errordelete" name="errordelete" role="alert" style="display: none"></div>      
+          <div class="d-flex justify-content-end gap-3">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="color: black;">Cancel</button>
+            {{ form.submit(class="btn btn-danger") }}
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 

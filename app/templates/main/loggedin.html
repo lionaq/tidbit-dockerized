@@ -19,7 +19,17 @@
     }
     .lazy-post {
       opacity: 0;
-      transition: opacity 0.5s;
+      transition: opacity 0.3s ease;
+    }
+    .follow{
+      width: 100%;
+      background-color: #D17A5E;
+      transition: all 0.3s ease;
+    }
+    .follow:hover{
+      transform: scale(1.1);
+      background-color: #D17A5E;
+      box-shadow: 0px 0px 10px 0px #D17A5E;
     }
 
     .floating-icon {
@@ -35,11 +45,13 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease-in-out;
+    opacity: .3;
     }
     .floating-icon:hover,
     .floating-icon:active {
         transform: scale(1.1);
+        opacity: 1;
     }
 
     .floating-icon i {
@@ -64,7 +76,7 @@
             </div>
           </div>
           <div class = "col d-flex align-items-center justify-content-end">
-           {%if post.user_id != current_user.id%} <button style = "width:100%;" class = "btn btn btn-success">Follow</button> {%endif%}
+           {%if post.user_id != current_user.id%} <button class = "btn follow">Follow</button> {%endif%}
           </div>
         </div>
         <div id="carousel{{ post.id }}" class="carousel slide shadow-sm">
