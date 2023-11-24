@@ -9,6 +9,7 @@
             {{ form.hidden_tag() }}
             <div class = "container p-4">
                 <p style = "text-align: left; font-family: Dosis; font-size: 30px;  font-weight: bold; letter-spacing: 1.5px;">New Post</p>
+                <p class="text-info fw-bolder">Add atleast 1 file</p>
                 <div class = "row">
                     <div class ="col-xl-6">
                         {{ form.content(class="form-control my-4 fs-4", style="display:none;", multiple="multiple") }}
@@ -32,14 +33,45 @@
                             </label>                        
                         </div>  
                         {{ form.title(class="form-control my-4 fs-4", style = "textFieldBorder", placeholder = "Add Title", style = "font-weight: 600;") }}
+                        {% if form.title.errors %}
+                            <ul >
+                                {% for error in form.title.errors %}
+                                <p class="text-danger fw-bolder">{{ error }}</p>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
                         {{ form.caption(class="form-control my-4", style = "textFieldBorder", rows="5", placeholder = "A little something about your post") }}
+                        {% if form.caption.errors %}
+                            <ul >
+                                {% for error in form.caption.errors %}
+                                <p class="text-danger fw-bolder">{{ error }}</p>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
                     </div>
                     <div class = "col-xl-6 ps-2">
-                        <p class = "postText">Ingredients:</p>{{ form.ingredients(class="form-control my-4", rows="5", style = "textFieldBorder", placeholder = "List the ingredients here") }}
-                        <p class = "postText">Instructions:</p>{{ form.instructions(class="form-control my-4", rows="10", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}</p>
+                        <p class = "postText">Ingredients:</p>
+                        {% if form.ingredients.errors %}
+                                {% for error in form.ingredients.errors %}
+                                <p class="text-danger fw-bolder">{{ error }}</p>
+                                {% endfor %}
+                        {% endif %}
+                        {{ form.ingredients(class="form-control my-4", rows="5", style = "textFieldBorder", placeholder = "List the ingredients here") }}
+                        <p class = "postText">Instructions:</p>
+                        {% if form.instructions.errors %}
+                                {% for error in form.instructions.errors %}
+                                <p class="text-danger fw-bolder">{{ error }}</p>
+                                {% endfor %}
+                        {% endif %}
+                        {{ form.instructions(class="form-control my-4", rows="10", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}</p>
                         <div class = "row">
                             <div class = "col-sm-3 mb-4">
                                 <p class="postText">Tag:</p>
+                                {% if form.tag.errors %}
+                                    {% for error in form.tag.errors %}
+                                        <p class="text-danger fw-bolder">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
                                 <select class="form-control course" name="tag">
                                     {% for subfield in form.tag %}
                                     <option value="{{subfield.data}}">{{subfield.label.text}}</option>
@@ -48,6 +80,11 @@
                             </div>
                             <div class = "col">
                                 <p class="postText mb-4 fw-6 fw-light">Subtags:</p>
+                                {% if form.subtag.errors %}
+                                    {% for error in form.subtag.errors %}
+                                        <p class="text-danger fw-bolder">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
                                 <div class="form-row">
                                     {% for subfield in form.subtag %}
                                         <div class="form-check form-check-inline">

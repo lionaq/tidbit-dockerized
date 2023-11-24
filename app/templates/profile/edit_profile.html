@@ -119,7 +119,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="website" class="form-label" style="margin-top: 15px; font-weight: 500">Website</label>
+                        <label for="website" class="form-label" style="margin-top: 30px; font-weight: 500">Website</label>
                         {% if current_user.website %}
                             <input type="url"  class="form-control" style="margin-bottom: 25px;  max-width:500px; border-color: gray" id="website" name="website" value="{{ current_user.website }}">
                         {% elif not current_user.website %}
@@ -127,8 +127,9 @@
                         {% endif %}
                     </div>
 
-                    <div>
-                    <button type="submit" class="btn btn-primary" style="margin-top: 15px; margin-left: 200px; max-width: 80px; background-color: #d17a5e; border-color: #8a4d39">Save</button>
+                    <div class="d-flex justify-content-around w-50">
+                        <button class="btn mt-3 mx-1" style="background-color: rgba(182, 120, 99, 0.349);color: black"><a href="{{ url_for('profile_bp.profile', username=current_user.username) }}">Cancel</a></button>
+                        <button type="submit" class="btn mt-3 mx-1" style="background-color: #d17a5e; border-color: #8a4d39">Save</button>
                     </div> 
 
                 </form>
