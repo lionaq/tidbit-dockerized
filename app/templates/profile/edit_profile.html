@@ -62,7 +62,7 @@
             </div>
 
             <div style="margin-top: 30px; margin-bottom: 200px">
-                <form method="POST" action="/settings/edit-profile" enctype="multipart/form-data">
+                <form method="POST" id="postForm" action"{{url_for('profile_bp.edit_profile')}}" enctype="multipart/form-data">
                     <input name="csrf_token" value="{{ csrf_token() }}" hidden />
 
                     <div id="cover-pic-upload-container" class="file-upload-container" style = "position:relative;">
@@ -137,6 +137,23 @@
         </div>
     </main>
 
+    <style>
+
+        .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        z-index: 99999;
+        align-items: center;
+        justify-content: center;
+    }
+
+    </style>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var navLinks = document.querySelectorAll('.navbar-nav .nav-link');
@@ -189,7 +206,7 @@
             let bioCount = document.getElementById('bio-count');
             let bioCounter = document.getElementById('bio-counter');
             let bioErrorMessage = document.getElementById('bio-error-message');
-        
+            console.log("READY");
             function updateCharCount() {
                 let bioLength = bioTextarea.value.length;
                 bioCount.innerText = bioLength;
@@ -208,8 +225,26 @@
             updateCharCount();
         
             bioTextarea.addEventListener('input', updateCharCount);
+
+            $("#postForm").submit(function (event) {
+            
+                console.log("TEST");
+                // Display the loading overlay
+                $('body').append('<div class="loading-overlay"> <div class="spinner-border me-3" style="width: 3rem; height: 3rem;"> <span class="visually-hidden">Loading...</span></div><h2> This should only take a minute... </h2></div>');
+                console.log("appended");
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method'),
+                    data: FormData($(this)[0]),
+                    contentType: false,
+                    processData: false,
+                    complete: function () {
+                        // Remove the loading overlay when the request is complete
+                        $('.loading-overlay').remove();
+                    }
+                });
+            });
         });        
     </script>
-
 </body>
 {% endblock %}
