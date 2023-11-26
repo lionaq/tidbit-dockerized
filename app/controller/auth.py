@@ -22,7 +22,7 @@ def login():
             login_user(user)
             return redirect(url_for('main_bp.home'))#You can change this so it redirects to wherever after login
         else:
-            flash("Invalid username or password", 'danger')
+            flash("Invalid username or password", 'message')
     return render_template('auth/login.html', form=form)
 
 
