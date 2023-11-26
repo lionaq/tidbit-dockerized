@@ -51,6 +51,11 @@
     color: #D17A5E;
 }
 
+.baseFlash {
+    opacity: 0;
+    display: none;
+}
+
 .d-flex a {
     color: black;
     text-decoration: none;
