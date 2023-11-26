@@ -10,7 +10,7 @@
 
 
 <p>Hello</p>
-<a href="/register">Register</a>
-<a href="/login">Login</a>
-<a href="/create-post">Create Post</a>
+<a href="{{url_for('auth_bp.register')}}">Register</a>
+<a href="{{url_for('auth_bp.login')}}">Login</a>
+<a href="{{url_for('post_bp.create', user_name='1')}}">Create Post</a>
 {% endblock %}

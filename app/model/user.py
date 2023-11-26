@@ -96,17 +96,17 @@ class User(UserMixin):
     @classmethod
     def fetch_user_posts(cls, user_id):
         cursor = mysql.connection.cursor(dictionary=True)
-        sql = "SELECT * FROM post WHERE user_id = %s"
+        sql = "SELECT post.*, user.username, user.fullname, user.profilepic FROM post JOIN user ON post.user_id = user.id WHERE user_id = %s"
         cursor.execute(sql, (user_id,))
         posts = cursor.fetchall()
         cursor.close()
         return posts
     
     @classmethod
-    def fetch_user_post_content(cls, user_id):
+    def fetch_user_post_content(cls):
         cursor = mysql.connection.cursor(dictionary=True)
-        sql = "SELECT post.id, post_url.url, post_url.type FROM user INNER JOIN post ON user.id = post.user_id INNER JOIN post_url ON post.id = post_url.post_id WHERE user.id = %s"
-        cursor.execute(sql, (user_id,))
+        sql = "SELECT post.id, post_url.url, post_url.type FROM user INNER JOIN post ON user.id = post.user_id INNER JOIN post_url ON post.id = post_url.post_id"
+        cursor.execute(sql)
         content = cursor.fetchall()
 
         cursor.close()

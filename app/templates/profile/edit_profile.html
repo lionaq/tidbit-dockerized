@@ -62,12 +62,12 @@
             </div>
 
             <div style="margin-top: 30px; margin-bottom: 200px">
-                <form method="POST" action="/settings/edit-profile" enctype="multipart/form-data">
+                <form method="POST" id="postForm" action"{{url_for('profile_bp.edit_profile')}}" enctype="multipart/form-data">
                     <input name="csrf_token" value="{{ csrf_token() }}" hidden />
 
                     <div id="cover-pic-upload-container" class="file-upload-container" style = "position:relative;">
                         <input type="file" id="cover_pic" name="cover_pic" accept="image/*" style="display: none;">
-                        <img id="cover-pic-preview" {% if 'static' in current_user.coverpic %}src = "{{url_for('static', filename=current_user.coverpic[7:])}}"{%else%}src="{{ current_user.coverpic }}"{%endif%} alt="Cover Picture Preview" class="cover-pic-edit img-thumbnail">
+                        <img loading="lazy" id="cover-pic-preview" {% if 'static' in current_user.coverpic %}src = "{{url_for('static', filename=current_user.coverpic[7:])}}"{%else%}src="{{ current_user.coverpic }}"{%endif%} alt="Cover Picture Preview" class="cover-pic-edit img-thumbnail">
                         <div style="position: absolute; top: 110px; left: 450px;">
                             <button type="button" onclick="document.getElementById('cover_pic').click();" class="btn btn-secondary btn-sm" style="opacity: 0.65">
                                 <i class="fa-solid fa-camera"></i>
@@ -77,7 +77,7 @@
 
                     <div id="profile-pic-upload-container" class="file-upload-container" style = "position:relative;">
                         <input type="file" id="profile_pic" name="profile_pic" accept="image/*" style="display: none;">
-                        <img id="profile-pic-preview" {% if 'static' in current_user.profilepic %}src = "{{url_for('static', filename=current_user.profilepic[7:])}}"{%else%}src="{{ current_user.profilepic }}"{%endif%} alt="Profile Picture Preview" class="profile-pic-edit img-thumbnail">
+                        <img loading="lazy" id="profile-pic-preview" {% if 'static' in current_user.profilepic %}src = "{{url_for('static', filename=current_user.profilepic[7:])}}"{%else%}src="{{ current_user.profilepic }}"{%endif%} alt="Profile Picture Preview" class="profile-pic-edit img-thumbnail">
                         <div style="position: absolute; top: -85px; left: 239px;">
                             <button type="button" onclick="document.getElementById('profile_pic').click();" class="btn btn-secondary btn-sm" style="opacity: 0.65">
                                 <i class="fa-solid fa-camera"></i>
@@ -119,7 +119,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="website" class="form-label" style="margin-top: 15px; font-weight: 500">Website</label>
+                        <label for="website" class="form-label" style="margin-top: 30px; font-weight: 500">Website</label>
                         {% if current_user.website %}
                             <input type="url"  class="form-control" style="margin-bottom: 25px;  max-width:500px; border-color: gray" id="website" name="website" value="{{ current_user.website }}">
                         {% elif not current_user.website %}
@@ -127,14 +127,32 @@
                         {% endif %}
                     </div>
 
-                    <div>
-                    <button type="submit" class="btn btn-primary" style="margin-top: 15px; margin-left: 200px; max-width: 80px; background-color: #d17a5e; border-color: #8a4d39">Save</button>
+                    <div class="d-flex justify-content-around w-50">
+                        <button class="btn mt-3 mx-1" style="background-color: rgba(182, 120, 99, 0.349);color: black"><a href="{{ url_for('profile_bp.profile', username=current_user.username) }}">Cancel</a></button>
+                        <button type="submit" class="btn mt-3 mx-1" style="background-color: #d17a5e; border-color: #8a4d39">Save</button>
                     </div> 
 
                 </form>
             </div>
         </div>
     </main>
+
+    <style>
+
+        .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        z-index: 99999;
+        align-items: center;
+        justify-content: center;
+    }
+
+    </style>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -188,7 +206,7 @@
             let bioCount = document.getElementById('bio-count');
             let bioCounter = document.getElementById('bio-counter');
             let bioErrorMessage = document.getElementById('bio-error-message');
-        
+            console.log("READY");
             function updateCharCount() {
                 let bioLength = bioTextarea.value.length;
                 bioCount.innerText = bioLength;
@@ -207,8 +225,26 @@
             updateCharCount();
         
             bioTextarea.addEventListener('input', updateCharCount);
+
+            $("#postForm").submit(function (event) {
+            
+                console.log("TEST");
+                // Display the loading overlay
+                $('body').append('<div class="loading-overlay"> <div class="spinner-border me-3" style="width: 3rem; height: 3rem;"> <span class="visually-hidden">Loading...</span></div><h2> This should only take a minute... </h2></div>');
+                console.log("appended");
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method'),
+                    data: FormData($(this)[0]),
+                    contentType: false,
+                    processData: false,
+                    complete: function () {
+                        // Remove the loading overlay when the request is complete
+                        $('.loading-overlay').remove();
+                    }
+                });
+            });
         });        
     </script>
-
 </body>
 {% endblock %}

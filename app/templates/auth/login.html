@@ -15,8 +15,9 @@
       display:none;
     }
     
-    .flashes{
-      display:none;
+    .baseFlash{
+      opacity: 0;
+      display: none;
     }
 
 </style>
@@ -26,18 +27,26 @@
 
 <div
     class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center min-vh-100 pe-5">
-    <img src="{{ url_for('static', filename='img/Tidbit.png') }}" class="img" alt="tidbit logo">
+    <img src="{{ url_for('static', filename='img/Tidbit.png') }}" class="img" alt="tidbit logo" loading="lazy">
     <h1 class="fw-bold">Welcome back to TidBit!</h1>
     <p class="pb-3">Explore Flavor, Discover Tidbits</p>
     {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-    <div class="alert alert-{{category}} w-50" role="alert">
-        {{message}}
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {%if category =='message'%} 
+            <div class="alert alert-danger w-50" role="alert">
+              {{message}}
+            </div>
+          {%endif%}
+          {%if category =='register'%} 
+            <div class="alert alert-success w-50" role="alert">
+              {{message}}
+            </div>
+          {%endif%}
+          
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
     <form method="POST" novalidate class="w-50 pb-5">
         {{ form.hidden_tag() }}
         {{ render_field(form.username) }}

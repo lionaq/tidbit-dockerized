@@ -9,6 +9,7 @@
             {{ form.hidden_tag() }}
             <div class = "container p-4">
                 <p style = "text-align: left; font-family: Dosis; font-size: 30px;  font-weight: bold; letter-spacing: 1.5px;">New Post</p>
+                <p class="text-info fw-bolder">Add atleast 1 file</p>
                 <div class = "row">
                     <div class ="col-xl-6">
                         {{ form.content(class="form-control my-4 fs-4", style="display:none;", multiple="multiple") }}
@@ -16,7 +17,7 @@
                             <label class="postUpload carousel slide overflow-hidden d-flex justify-content-center" for="{{ form.content.id }}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer;" id = "carousel">
                                 <!-- Add a container for previews -->
                                 <div id="filePreviews" class = "carousel-inner" style = "width:100%; height:350px;">
-                                    <img id="imagePreview" src="{{url_for('static', filename='img/UploadImg.png')}}" alt="File Preview" class="img-thumbnail" style="width:100%; height:350px; opacity:0.2;">
+                                    <img id="imagePreview" src="{{url_for('static', filename='img/UploadImg.png')}}" alt="File Preview" class="img-thumbnail" style="width:100%; height:350px; opacity:0.2;" loading="lazy">
                                 </div>
                                 <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -27,19 +28,50 @@
                                     <span class="visually-hidden">Next</span>
                                 </button>
                                 <button class="btn z-5" type="button" id="clearFiles" style="visibility:hidden">&times;</button>
-                                <img id="uploadIcon" src="{{url_for('static', filename='img/UploadIcon.png')}}" style="width:150px; height:150px;">
+                                <img id="uploadIcon" src="{{url_for('static', filename='img/UploadIcon.png')}}" style="width:150px; height:150px;" loading="lazy">
                                 <a id="uploadCaption"> Click in this area to upload images and/or videos </a>
                             </label>                        
                         </div>  
                         {{ form.title(class="form-control my-4 fs-4", style = "textFieldBorder", placeholder = "Add Title", style = "font-weight: 600;") }}
+                        {% if form.title.errors %}
+                            <ul >
+                                {% for error in form.title.errors %}
+                                <p class="text-danger fw-bolder">{{ error }}</p>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
                         {{ form.caption(class="form-control my-4", style = "textFieldBorder", rows="5", placeholder = "A little something about your post") }}
+                        {% if form.caption.errors %}
+                            <ul >
+                                {% for error in form.caption.errors %}
+                                <p class="text-danger fw-bolder">{{ error }}</p>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
                     </div>
                     <div class = "col-xl-6 ps-2">
-                        <p class = "postText">Ingredients:</p>{{ form.ingredients(class="form-control my-4", rows="5", style = "textFieldBorder", placeholder = "List the ingredients here") }}
-                        <p class = "postText">Instructions:</p>{{ form.instructions(class="form-control my-4", rows="10", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}</p>
+                        <p class = "postText">Ingredients:</p>
+                        {% if form.ingredients.errors %}
+                                {% for error in form.ingredients.errors %}
+                                <p class="text-danger fw-bolder">{{ error }}</p>
+                                {% endfor %}
+                        {% endif %}
+                        {{ form.ingredients(class="form-control my-4", rows="5", style = "textFieldBorder", placeholder = "List the ingredients here") }}
+                        <p class = "postText">Instructions:</p>
+                        {% if form.instructions.errors %}
+                                {% for error in form.instructions.errors %}
+                                <p class="text-danger fw-bolder">{{ error }}</p>
+                                {% endfor %}
+                        {% endif %}
+                        {{ form.instructions(class="form-control my-4", rows="10", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}</p>
                         <div class = "row">
                             <div class = "col-sm-3 mb-4">
                                 <p class="postText">Tag:</p>
+                                {% if form.tag.errors %}
+                                    {% for error in form.tag.errors %}
+                                        <p class="text-danger fw-bolder">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
                                 <select class="form-control course" name="tag">
                                     {% for subfield in form.tag %}
                                     <option value="{{subfield.data}}">{{subfield.label.text}}</option>
@@ -48,6 +80,11 @@
                             </div>
                             <div class = "col">
                                 <p class="postText mb-4 fw-6 fw-light">Subtags:</p>
+                                {% if form.subtag.errors %}
+                                    {% for error in form.subtag.errors %}
+                                        <p class="text-danger fw-bolder">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
                                 <div class="form-row">
                                     {% for subfield in form.subtag %}
                                         <div class="form-check form-check-inline">
@@ -61,8 +98,8 @@
                     </div>
                 </div>
                 <div class = "d-flex flex-row-reverse mt-3">
-                    <a class = "btn  rounded-pill ms-3 fw-bold" style="background-color: rgba(210, 122, 94, 0.15); color: black;" href = "login">Cancel</a>
-                    {{ form.submit(class="btn rounded-pill fw-bold", style="background-color: rgba(210, 122, 94, 0.15); color: black;") }}
+                    <a class = "btn  rounded-pill ms-3 fw-bold" style="background-color: rgba(182, 120, 99, 0.349); color: black;" href = "{{url_for('main_bp.home')}}">Cancel</a>
+                    {{ form.submit(class="btn rounded-pill fw-bold", style="background-color: #d17a5e; color: black;") }}
                 </div>
             </div>
         </form>

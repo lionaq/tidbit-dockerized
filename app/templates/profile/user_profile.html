@@ -8,8 +8,6 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body>
-  <main>
 
     <!-- Section: White bg -->
     <section>
@@ -18,13 +16,13 @@
         <!-- ProfilePic and CoverPic -->
         <section>
           <div class="d-flex justify-content-center cover-pic-container rounded-bottom">
-            <img 
+            <img loading="lazy"
               {% if 'static' in user.coverpic %}src = "{{url_for('static', filename=user.coverpic[7:])}}"{%else%}src="{{ user.coverpic }}"{%endif%}
               class="cover-pic" 
             />
           </div>
           <div class="d-flex justify-content-center">
-            <img 
+            <img loading="lazy"
             {% if 'static' in user.profilepic %}src = "{{url_for('static', filename=user.profilepic[7:])}}"{%else%}src="{{ user.profilepic }}"{%endif%}
               class="profile-pic rounded-circle" 
               />
@@ -36,9 +34,8 @@
           <div class=" justify-content-center text-center" style="margin-top: 68px">
             <div class = "userTop container-fluid">
               {% if current_user != user %}
-                <button type="submit" class="followBtn btn btn-lg btn-secondary btn-sm" style="background-color: #D17A5E; border: none">Follow</button>
+                <button type="submit" class="followBtn btn btn-lg btn-secondary btn-sm fw-bold" style="background-color: #D17A5E; border: none">Follow</button>
               {% endif %}
-
               <h5 style="margin-bottom:2px">{{ user.fullname }}</h5>
               <p class="small text-muted" style="margin-bottom: 8px">@{{ user.username }}</p>
           </div>
@@ -89,17 +86,18 @@
         <div class="img-container">
           <div class="row">
             {% for post, first_image_info in posts_with_images %}
-              <div class="col-lg-3 col-md-6 mb-4">
+            <div class="col-lg-3 col-md-6 mb-4">
                 <div class="image-container">
-                  {% if first_image_info['type'] == 'image' %}
-                    <img src="{{ first_image_info['url'] }}" class="gallery-image" alt="{{ post['title'] }}">
-                  {% elif first_image_info['type'] == 'video' %}
+                  <a href="{{url_for('post_bp.view_post',postid=post.id)}}">
+                    {% if first_image_info['type'] == 'image' %}
+                    <img loading="lazy"src="{{ first_image_info['url'] }}" class="gallery-image" alt="{{ post['title'] }}">
+                    {% elif first_image_info['type'] == 'video' %}
                     <video class="gallery-video">
                       <source src="{{ first_image_info['url'] }}" type="video/mp4">
                       Your browser does not support the video tag.
                     </video>
-                  {% endif %}
-
+                    {% endif %}
+                  </a>
                   {% if post['user_id'] == current_user.id %}
                     <div class="image-overlay">
                       <form action="{{ url_for('post_bp.edit', user_name=user.username, post_id=post['id']) }}" method="POST" style="border: none;">
@@ -108,16 +106,17 @@
                           <i class="fa-solid fa-pen-to-square" id="editPost"></i>
                         </button>
                       </form>
-                      <form action="{{ url_for('post_bp.delete', user_name=user.username, post_id=post['id']) }}" method="POST" style="border: none;">
+                      <form id="deletePostForm" action="{{ url_for('post_bp.delete', user_name=user.username, post_id=post['id']) }}" method="POST" style="border: none;">
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit" onclick="return confirm('Are you sure you want to delete this post?')" class="overlay-link delete-button">
-                            <i class="fa-solid fa-trash" id="deletePost"></i>
+                        <button type="button" class="overlay-link delete-button">
+                            <i class="fa-solid fa-trash" id="deletePost" style="color: red;" data-bs-toggle="modal" data-bs-target="#deleteConfirm"></i>
                         </button>
                       </form>
                     </div>
                   {% endif %}
                 </div>
-              </div>
+             
+            </div>
             {% endfor %}
           </div>
         </div>
@@ -125,25 +124,43 @@
         <!-- Create post icon -->
         <a href="{{ url_for('post_bp.create', user_name = current_user.username) }}">
           <div class="floating-icon">
-              <i class="fa-solid fa-plus"></i>
+            <i class="fa-solid fa-plus"></i>
           </div>
         </a>
         
       </div>
     </section>
-  </main>
 
-  <script>
-    let path = window.location.pathname;
+    <!-- DELETE CONFIRM MODAL -->
+<div class="modal fade" id="deleteConfirm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteConfirmLabel" aria-hidden="true" data-bs-theme="dark">
+  <div class="modal-dialog text-light">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-center">
+        <h1 class="modal-title fs-5" id="deleteConfirmLabel">Delete Post</h1>
+      </div>
+      <div class="modal-body">
+          <div class="d-flex justify-content-between flex-column align-items-center">
+            <p>Are you sure you want to <strong> delete this post?</strong></p>
+          </div>
+          <div class="alert alert-danger" id="errordelete" name="errordelete" role="alert" style="display: none"></div>      
+          <div class="d-flex justify-content-end gap-3">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="color: black;">Cancel</button>
+            <button type="submit" class="btn btn-danger" form="deletePostForm">Delete</button>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  let path = window.location.pathname;
 
-    let links = document.querySelectorAll('.nav a');
-    for (let i = 0; i < links.length; i++) {
-      if (links[i].getAttribute('href') === path) {
-        links[i].classList.add('active');
-      }
+  let links = document.querySelectorAll('.nav a');
+  for (let i = 0; i < links.length; i++) {
+    if (links[i].getAttribute('href') === path) {
+      links[i].classList.add('active');
     }
-  </script>
-  <script src="{{ url_for('static', filename='js/create.js') }}"></script>
-</body>
+  }
+</script>
+<script src="{{ url_for('static', filename='js/create.js') }}"></script>
 
 {% endblock %}

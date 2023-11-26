@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask import render_template, request, redirect, flash, abort
+from flask import render_template, request, redirect, flash, abort, url_for
 from datetime import date
 from flask_login import current_user, login_required
 from app.model.posts import Post
@@ -30,9 +30,9 @@ def profile(username):
                 first_images[cont['id']]['type'] = cont.get('type', 'image')
 
         posts_with_images = zip(reversed(posts), reversed(first_images.values()))
-        return render_template('user_profile.html', user=user, posts_with_images=posts_with_images)
+        return render_template('profile/user_profile.html', user=user, posts_with_images=posts_with_images)
     
-    return render_template('user_profile.html')
+    return render_template('profile/user_profile.html')
 
 @profile_bp.route('/settings/edit-profile', methods=['GET', 'POST'])
 @login_required
@@ -77,6 +77,6 @@ def edit_profile():
         else:
             flash('Failed to update profile', 'error')
 
-        return redirect('/settings/edit-profile')
+        return redirect(url_for('profile_bp.edit_profile'))
 
-    return render_template('edit_profile.html', form=form)
+    return render_template('profile/edit_profile.html', form=form)

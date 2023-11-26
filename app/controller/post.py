@@ -5,8 +5,9 @@ from flask import Blueprint
 from flask import render_template, request, redirect, flash, url_for, abort
 from datetime import date
 from flask_login import current_user, login_required
-from app.forms.forms import CreatePost, EditPost
+from app.forms.forms import CreatePost, EditPost, SubmitForm
 from app.model.posts import Post
+from app.model.user import User
 
 post_bp = Blueprint(
     "post_bp",
@@ -48,12 +49,9 @@ def create(user_name):
 
         # Add the post to the database
         post.add()
-        flash("Post created successfully!", 'info')
+        flash("Post created successfully!", 'success')
         return redirect(url_for('profile_bp.profile', username = user_name))
 
-    for field, errors in form.errors.items():
-        for error in errors:
-            flash(f'{error}', 'error')
 
     return render_template('posts/create.html', form=form)
 
@@ -128,7 +126,7 @@ def edit(user_name, post_id):
             post.edit()
 
         flash("Post modified successfully!", 'info')
-        return redirect(request.url)
+        return redirect(url_for('profile_bp.profile',username = current_user.username))
                         
         
     else:
@@ -144,11 +142,6 @@ def edit(user_name, post_id):
         form.subtag.data = post['subtags'].split(',') if post['subtags'] else []
 
         userName = current_user.username
-    
-        for field, errors in form.errors.items():
-            if not any('This field is required' in error for error in errors):
-                for error in errors:
-                    flash(f'{error}', 'error')
                 
         return render_template('posts/edit.html', form=form, post=post, content=content, userName = userName)
 
@@ -183,7 +176,7 @@ def delete(user_name, post_id):
             if goods == True:
                 # Delete post from post table
                 Post.delete(post_id)
-                flash("Post Successfully Deleted!", 'info')
+                flash("Post Successfully Deleted!", 'danger')
                 return redirect(url_for('profile_bp.profile', username = user_name))
             else:
                 print(public_id)
@@ -197,6 +190,13 @@ def delete(user_name, post_id):
 
 
 
-
+@post_bp.route('/<int:postid>/viewpost', methods=['GET', 'POST'])
+@login_required
+def view_post(postid):
+    form = SubmitForm()
+    post = Post.get_by_id(postid)
+    user = User.search_by_id(post.user_id)
+    content = Post.fetch_view_post_img(post.id)
+    return render_template('posts/viewpost.html', post=post, user=user, content=content, form=form)
 
 

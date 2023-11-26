@@ -51,6 +51,11 @@
     color: #D17A5E;
 }
 
+.baseFlash {
+    opacity: 0;
+    display: none;
+}
+
 .d-flex a {
     color: black;
     text-decoration: none;
@@ -235,6 +240,11 @@ textarea {
     -ms-transform: translate(-50%, -50%);
     border: none;
     cursor: pointer;
+    transition: all 0.3s ease;
+}
+.userTop .followBtn:hover {
+    box-shadow: 0px 0px 10px 0px #D17A5E;
+
 }
 /* Add this to your CSS file or style tag */
 .overlay-link {
