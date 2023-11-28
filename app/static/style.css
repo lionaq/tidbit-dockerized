@@ -257,3 +257,9 @@ textarea {
     border: none;
     cursor: pointer;
 }
+
+.custom-dropdown-menu {
+    width: auto !important;
+    display: block !important;
+}
+

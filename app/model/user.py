@@ -141,6 +141,13 @@ class User(UserMixin):
         mysql.connection.commit()
         cursor.close()
 
+    def unfollow(follower, following):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "DELETE FROM follow WHERE follower = %s AND following = %s"
+        cursor.execute(sql,(follower,following))
+        mysql.connection.commit()
+        cursor.close()
+
     def fetch_following(id):
         cursor = mysql.connection.cursor(dictionary=True)
         sql = "SELECT following FROM follow WHERE follower = %s"

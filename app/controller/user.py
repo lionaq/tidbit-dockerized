@@ -15,12 +15,21 @@ def follow(following):
     if request.method == 'POST':
         follower = current_user.id
 
-        # Assuming your User.follow method is in a class method or static method
         User.follow(follower, following)
 
         flash("You are now following this user.", "success")
 
-        # Redirect back to the page the user came from
         return redirect(request.referrer)
     else:
-        abort(405)  # Method Not Allowed
+        abort(405)
+
+@user_bp.route('/unfollow/<int:following>', methods=['POST'])
+@login_required
+def unfollow(following):
+    if request.method == 'POST':
+        follower = current_user.id
+        User.unfollow(follower, following)
+
+        return redirect(request.referrer)
+    else:
+        abort(405)
