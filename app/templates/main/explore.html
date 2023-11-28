@@ -49,10 +49,21 @@
               </div>
             </div>
           </div>
-          <div class = "col d-flex align-items-center justify-content-end">
-            {%if post.user_id != current_user.id%}<button class = "btn follow">Follow</button> {%endif%}
+          <!-- Inside the loop for posts -->
+          <div class="col d-flex align-items-center justify-content-end">
+            {% if post.user_id != current_user.id %}
+                {% if post.user_id in following %}
+                    <!-- User is already followed -->
+                    <button class="btn follow" style="background-color: #D17A5E; color: white;" disabled>Followed</button>
+                {% else %}
+                    <!-- User is not followed, show follow button -->
+                    <form action="{{ url_for('user_bp.follow', following=post['user_id']) }}" method="POST" style="border: none;">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn follow">Follow</button>
+                    </form>
+                {% endif %}
+            {% endif %}
           </div>
-        </div>
         <div id="carousel{{ post.id }}" class="carousel slide shadow-sm">
           <div class="carousel-inner rounded-1">
             {% set ns.firstItem = 1 %}

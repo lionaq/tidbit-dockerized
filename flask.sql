@@ -37,3 +37,17 @@ CREATE TABLE IF NOT EXISTS post_url (
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS follow (
+    id INT auto_increment PRIMARY KEY,
+    follower INT,
+    following INT,
+    FOREIGN KEY (follower)
+        REFERENCES user(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (following)
+        REFERENCES user(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);

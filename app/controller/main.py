@@ -23,8 +23,8 @@ def home():
 @main_bp.route('/explore')
 @login_required
 def explore():
-
-        data = User.fetch_ALL_posts_except_user(current_user.username)
-        cont = User.fetch_ALL_content_except_user(current_user.username)
-        random.shuffle(data)
-        return render_template('main/explore.html', postData = data, postCont = cont)
+    data = User.fetch_ALL_posts_except_user(current_user.username)
+    cont = User.fetch_ALL_content_except_user(current_user.username)
+    following = User.fetch_following(current_user.id)
+    random.shuffle(data)
+    return render_template('main/explore.html', postData = data, postCont = cont, following = following)
