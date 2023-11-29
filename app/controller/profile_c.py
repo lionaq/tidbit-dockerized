@@ -1,12 +1,13 @@
 from flask import Blueprint
 from flask import render_template, request, redirect, flash, abort, url_for
-from datetime import date
 from flask_login import current_user, login_required
 from app.model.posts import Post
 from app.model.profile_m import Profile
+from app.model.user import User
 from app.forms.forms import EditProfileForm
 from cloudinary import uploader
 from cloudinary.uploader import upload
+
 profile_bp = Blueprint(
     "profile_bp",
     __name__
@@ -21,6 +22,7 @@ def profile(username):
     if user:
         posts = Profile.fetch_user_posts(user.id)
         content = Profile.fetch_post_content(user.id)
+        following = User.fetch_following(current_user.id)
 
         first_images = {post['id']: {'url': None, 'type': 'image'} for post in posts}
 
@@ -30,7 +32,7 @@ def profile(username):
                 first_images[cont['id']]['type'] = cont.get('type', 'image')
 
         posts_with_images = zip(reversed(posts), reversed(first_images.values()))
-        return render_template('profile/user_profile.html', user=user, posts_with_images=posts_with_images)
+        return render_template('profile/user_profile.html', user=user, posts_with_images=posts_with_images, following=following)
     
     return render_template('profile/user_profile.html')
 

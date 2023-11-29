@@ -34,11 +34,30 @@
           <div class=" justify-content-center text-center" style="margin-top: 68px">
             <div class = "userTop container-fluid">
               {% if current_user != user %}
-                <button type="submit" class="followBtn btn btn-lg btn-secondary btn-sm fw-bold" style="background-color: #D17A5E; border: none">Follow</button>
+                {% if following and user.id in following %}
+                    <!-- User is already followed -->
+                    <div class="dropdown custom-dropdown">
+                      <button class="btn btn-sm btn-secondary dropdown-toggle custom-follow-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Following
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <form action="{{ url_for('user_bp.unfollow', following=user.id) }}" method="POST" style="border: none;">
+                              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                              <button class="dropdown-item">Unfollow</button>
+                          </form>
+                      </div>
+                    </div>
+                {% else %}
+                    <!-- User is not followed, show follow button -->
+                    <form action="{{ url_for('user_bp.follow', following=user.id) }}" method="POST" style="border: none;">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                        <button class="followBtn btn btn-lg btn-secondary btn-sm fw-bold" style="background-color: #D17A5E; border: none">Follow</button>
+                    </form>
+                {% endif %}
               {% endif %}
               <h5 style="margin-bottom:2px">{{ user.fullname }}</h5>
               <p class="small text-muted" style="margin-bottom: 8px">@{{ user.username }}</p>
-          </div>
+            </div>
             {% if user.bio %}
               <p class="small py-3 bio-text">{{ user.bio }}</p>
             {% elif not user.bio %}
@@ -85,48 +104,54 @@
         <!-- User Posts Gallery -->
         <div class="img-container">
           <div class="row">
-            {% for post, first_image_info in posts_with_images %}
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="image-container">
-                  <a href="{{url_for('post_bp.view_post',postid=post.id)}}">
-                    {% if first_image_info['type'] == 'image' %}
-                    <img loading="lazy"src="{{ first_image_info['url'] }}" class="gallery-image" alt="{{ post['title'] }}">
-                    {% elif first_image_info['type'] == 'video' %}
-                    <video class="gallery-video">
-                      <source src="{{ first_image_info['url'] }}" type="video/mp4">
-                      Your browser does not support the video tag.
-                    </video>
-                    {% endif %}
-                  </a>
-                  {% if post['user_id'] == current_user.id %}
-                    <div class="image-overlay">
-                      <form action="{{ url_for('post_bp.edit', user_name=user.username, post_id=post['id']) }}" method="POST" style="border: none;">
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit" class="overlay-link delete-button">
-                          <i class="fa-solid fa-pen-to-square" id="editPost"></i>
-                        </button>
-                      </form>
-                      <form id="deletePostForm" action="{{ url_for('post_bp.delete', user_name=user.username, post_id=post['id']) }}" method="POST" style="border: none;">
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                        <button type="button" class="overlay-link delete-button">
-                            <i class="fa-solid fa-trash" id="deletePost" style="color: red;" data-bs-toggle="modal" data-bs-target="#deleteConfirm"></i>
-                        </button>
-                      </form>
-                    </div>
-                  {% endif %}
-                </div>
-             
-            </div>
-            {% endfor %}
+              {% if posts_with_images %}
+                  {% for post, first_image_info in posts_with_images %}
+                      <div class="col-lg-3 col-md-6 mb-4">
+                          <div class="image-container">
+                              <a href="{{url_for('post_bp.view_post',postid=post.id)}}">
+                                  {% if first_image_info['type'] == 'image' %}
+                                      <img loading="lazy" src="{{ first_image_info['url'] }}" class="gallery-image" alt="{{ post['title'] }}">
+                                  {% elif first_image_info['type'] == 'video' %}
+                                      <video class="gallery-video">
+                                          <source src="{{ first_image_info['url'] }}" type="video/mp4">
+                                          Your browser does not support the video tag.
+                                      </video>
+                                  {% endif %}
+                              </a>
+                              {% if post['user_id'] == current_user.id %}
+                                  <div class="image-overlay">
+                                      <form action="{{ url_for('post_bp.edit', user_name=user.username, post_id=post['id']) }}" method="POST" style="border: none;">
+                                          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                                          <button type="submit" class="overlay-link delete-button">
+                                              <i class="fa-solid fa-pen-to-square" id="editPost"></i>
+                                          </button>
+                                      </form>
+                                      <form id="deletePostForm" action="{{ url_for('post_bp.delete', user_name=user.username, post_id=post['id']) }}" method="POST" style="border: none;">
+                                          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                                          <button type="button" class="overlay-link delete-button">
+                                              <i class="fa-solid fa-trash" id="deletePost" style="color: red;" data-bs-toggle="modal" data-bs-target="#deleteConfirm"></i>
+                                          </button>
+                                      </form>
+                                  </div>
+                              {% endif %}
+                          </div>
+                      </div>
+                  {% endfor %}
+              {% else %}
+                  <p>No posts available.</p>
+              {% endif %}
           </div>
         </div>
 
+
         <!-- Create post icon -->
-        <a href="{{ url_for('post_bp.create', user_name = current_user.username) }}">
-          <div class="floating-icon">
-            <i class="fa-solid fa-plus"></i>
-          </div>
-        </a>
+        {% if current_user == user %}
+          <a href="{{ url_for('post_bp.create', user_name = current_user.username) }}">
+            <div class="floating-icon">
+              <i class="fa-solid fa-plus"></i>
+            </div>
+          </a>
+        {% endif %}
         
       </div>
     </section>
