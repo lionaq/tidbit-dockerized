@@ -36,17 +36,17 @@
               {% if current_user != user %}
                 {% if following and user.id in following %}
                     <!-- User is already followed -->
-                    <div class="dropdown">
-                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 2px solid #D17A5E;">
+                    <div class="dropdown custom-dropdown">
+                      <button class="btn btn-sm btn-secondary dropdown-toggle custom-follow-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Following
                       </button>
-                      <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <form action="{{ url_for('user_bp.unfollow', following=user.id) }}" method="POST" style="border: none;">
-                          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                          <button class="dropdown-item">Unfollow</button>
-                        </form>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <form action="{{ url_for('user_bp.unfollow', following=user.id) }}" method="POST" style="border: none;">
+                              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                              <button class="dropdown-item">Unfollow</button>
+                          </form>
                       </div>
-                    </div>  
+                    </div>
                 {% else %}
                     <!-- User is not followed, show follow button -->
                     <form action="{{ url_for('user_bp.follow', following=user.id) }}" method="POST" style="border: none;">
@@ -57,7 +57,7 @@
               {% endif %}
               <h5 style="margin-bottom:2px">{{ user.fullname }}</h5>
               <p class="small text-muted" style="margin-bottom: 8px">@{{ user.username }}</p>
-          </div>
+            </div>
             {% if user.bio %}
               <p class="small py-3 bio-text">{{ user.bio }}</p>
             {% elif not user.bio %}
