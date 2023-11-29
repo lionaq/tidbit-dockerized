@@ -36,10 +36,17 @@
               {% if current_user != user %}
                 {% if following and user.id in following %}
                     <!-- User is already followed -->
-                    <form action="{{ url_for('user_bp.unfollow', following=user.id) }}" method="POST" style="border: none;">
-                      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                      <button class="followBtn btn btn-lg btn-secondary btn-sm fw-bold" style="background-color: #ffffff; color: #D17A5E; border: 2px solid #D17A5E;">Unfollow</button>
-                    </form>
+                    <div class="dropdown">
+                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 2px solid #D17A5E;">
+                          Following
+                      </button>
+                      <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <form action="{{ url_for('user_bp.unfollow', following=user.id) }}" method="POST" style="border: none;">
+                          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                          <button class="dropdown-item">Unfollow</button>
+                        </form>
+                      </div>
+                    </div>  
                 {% else %}
                     <!-- User is not followed, show follow button -->
                     <form action="{{ url_for('user_bp.follow', following=user.id) }}" method="POST" style="border: none;">
