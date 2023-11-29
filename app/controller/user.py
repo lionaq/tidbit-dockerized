@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask import Blueprint
-from flask import render_template, request, redirect, flash, abort, url_for
+from flask import request, redirect, flash, abort, render_template
 from flask_login import current_user, login_required
 from app.model.user import User
 
@@ -33,3 +33,13 @@ def unfollow(following):
         return redirect(request.referrer)
     else:
         abort(405)
+
+@user_bp.route('/<string:username>/following', methods=['GET'])
+@login_required
+def following(username):
+    userID = User.fetch_id(username)
+    user = User.search_by_id(userID['id'])
+    following = User.fetch_following(userID['id'])
+    following_num = len(following)
+
+    return render_template('profile/following.html', user=user, following=following, following_num=following_num)

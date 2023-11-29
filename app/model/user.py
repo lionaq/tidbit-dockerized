@@ -86,7 +86,15 @@ class User(UserMixin):
             )
         else:
             return None
+        
+    def fetch_id(username):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT id FROM user WHERE username = %s"
+        cursor.execute(sql,(username,))
+        id = cursor.fetchone()
+        cursor.close()
 
+        return id
 
     def add(self):
         cursor = mysql.connection.cursor(dictionary=True)
@@ -149,6 +157,14 @@ class User(UserMixin):
         cursor.close()
 
     def fetch_following(id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT user.id, user.username, user.fullname, user.profilepic, follow.following FROM user INNER JOIN follow ON user.id = follow.following WHERE follower = %s"
+        cursor.execute(sql,(id,))
+        following = cursor.fetchall()
+
+        return following
+
+    def fetch_following_ids(id):
         cursor = mysql.connection.cursor(dictionary=True)
         sql = "SELECT following FROM follow WHERE follower = %s"
         cursor.execute(sql,(id,))

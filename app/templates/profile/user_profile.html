@@ -80,9 +80,9 @@
                     <h6 class="small text-muted">Followers</h6>
                 </div>
             </a>
-            <a href="">
+            <a href="{{ url_for('user_bp.following', username=user.username) }}">
                 <div class="d-flex px-3 py-3">
-                    <h6 class="px-2" id="userFollowing">100</h6>
+                    <h6 class="px-2" id="userFollowing">{{ following_num }}</h6>
                     <h6 class="small text-muted">Following</h6>
                 </div>
             </a>
