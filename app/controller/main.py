@@ -25,7 +25,7 @@ def home():
             # Check if following_posts is not empty before extending posts
             if following_posts:
                 posts.extend(following_posts)
-
+                random.shuffle(posts)
         return render_template('main/loggedin.html', name=username, user=user, posts=posts, content=content, following=user_following)
     
 @main_bp.route('/explore')
