@@ -34,7 +34,7 @@
           <div class=" justify-content-center text-center" style="margin-top: 68px">
             <div class = "userTop container-fluid">
               {% if current_user != user %}
-                {% if following and user.id in following %}
+                {% if user_following and user.id in user_following %}
                     <!-- User is already followed -->
                     <div class="dropdown custom-dropdown">
                       <button class="btn btn-sm btn-secondary dropdown-toggle custom-follow-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -80,9 +80,9 @@
                     <h6 class="small text-muted">Followers</h6>
                 </div>
             </a>
-            <a href="">
+            <a href="{{ url_for('user_bp.following', username=user.username) }}">
                 <div class="d-flex px-3 py-3">
-                    <h6 class="px-2" id="userFollowing">100</h6>
+                    <h6 class="px-2" id="userFollowing">{{ following_num }}</h6>
                     <h6 class="small text-muted">Following</h6>
                 </div>
             </a>

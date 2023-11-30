@@ -295,3 +295,15 @@ textarea {
     display: block !important;
 }
 
+.underline-text {
+    /* Set the color to black */
+    color: black;
+    /* Set the underline color to black */
+    text-decoration-color: #D17A5E;
+    /* Set the thickness of the underline */
+    border-bottom: 2px solid #D17A5E;
+    /* Optionally, you can adjust the space between the text and the underline */
+    padding-bottom: 2px;
+}
+
+

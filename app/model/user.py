@@ -86,7 +86,15 @@ class User(UserMixin):
             )
         else:
             return None
+        
+    def fetch_id(username):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT id FROM user WHERE username = %s"
+        cursor.execute(sql,(username,))
+        id = cursor.fetchone()
+        cursor.close()
 
+        return id
 
     def add(self):
         cursor = mysql.connection.cursor(dictionary=True)
@@ -142,13 +150,41 @@ class User(UserMixin):
         cursor.close()
 
     def unfollow(follower, following):
-        cursor = mysql.connection.cursor(dictionary=True)
-        sql = "DELETE FROM follow WHERE follower = %s AND following = %s"
-        cursor.execute(sql,(follower,following))
-        mysql.connection.commit()
-        cursor.close()
+        try:
+            cursor = mysql.connection.cursor(dictionary=True)
+            check = "SELECT * FROM follow WHERE follower = %s AND following = %s"
+            sql = "DELETE FROM follow WHERE follower = %s AND following = %s"
+
+            cursor.execute(check, (follower, following))
+            checking = cursor.fetchone()
+
+            if checking:
+                cursor.execute(sql, (follower, following))
+                mysql.connection.commit()
+                cursor.close()
+            else:
+                # Handle the case where the relationship does not exist
+                # You can raise a custom exception or log a message, depending on your needs
+                raise Exception("The relationship does not exist.")
+        except Exception as e:
+            # Log the error or handle it as needed
+            print(f"Error: {e}")
+            # You might want to rollback the transaction in case of an error
+            mysql.connection.rollback()
+        finally:
+            # Close the cursor in the 'finally' block to ensure it happens regardless of success or failure
+            if cursor:
+                cursor.close()
 
     def fetch_following(id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT user.id, user.username, user.fullname, user.profilepic, follow.following FROM user INNER JOIN follow ON user.id = follow.following WHERE follower = %s"
+        cursor.execute(sql,(id,))
+        following = cursor.fetchall()
+
+        return following
+
+    def fetch_following_ids(id):
         cursor = mysql.connection.cursor(dictionary=True)
         sql = "SELECT following FROM follow WHERE follower = %s"
         cursor.execute(sql,(id,))
@@ -157,3 +193,12 @@ class User(UserMixin):
         following_ids = [entry['following'] for entry in following]
 
         return following_ids
+    
+    def fetch_following_posts(id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT post.*, user.username, user.fullname, user.profilepic FROM post JOIN follow ON post.user_id = follow.following JOIN user ON post.user_id = user.id WHERE follow.follower = %s;"
+        cursor.execute(sql, (id,))
+        posts = cursor.fetchall()
+        cursor.close()
+
+        return posts
