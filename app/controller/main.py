@@ -17,8 +17,16 @@ def home():
     if user:
         posts = User.fetch_user_posts(user.id)
         content = User.fetch_user_post_content()
+        user_following = User.fetch_following_ids(user.id)
 
-        return render_template('main/loggedin.html', name = username, user=user, posts=posts, content=content)
+        if user_following:
+            following_posts = User.fetch_following_posts(user.id)
+            print(following_posts)
+            # Check if following_posts is not empty before extending posts
+            if following_posts:
+                posts.extend(following_posts)
+
+        return render_template('main/loggedin.html', name=username, user=user, posts=posts, content=content, following=user_following)
     
 @main_bp.route('/explore')
 @login_required

@@ -111,7 +111,24 @@
     </a>
 
     {% if current_user.id != post.user_id%}
-    <button class="btn flex-shrink-0 align-self-center m-1 follow">FOLLOW</button>
+      {% if user_following and post.user_id in user_following %}
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
+              Following
+          </button>
+          <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <form action="{{ url_for('user_bp.unfollow', following=post['user_id']) }}" method="POST" style="border: none;">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+              <button class="dropdown-item">Unfollow</button>
+            </form>
+          </div>
+        </div>
+      {% else %} 
+        <form action="{{ url_for('user_bp.follow', following=post['user_id']) }}" method="POST" style="border: none;">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          <button class="btn follow">Follow</button>
+        </form>
+      {% endif %}
     {% else %}
     <div class="dropdown pt-3">
       <button class="btn" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical" style="color: #d17a5e;"></i></button>

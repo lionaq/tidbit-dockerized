@@ -119,6 +119,7 @@ class Post(UserMixin):
         post = cursor.fetchone()
         cursor.close()
         return cls(**post) if post else None
+    
     def get_public_id_from_url(url):
         match = re.search(r'/v\d+/(Tidbit-web/[^/]+)\.\w+', url)  # for images in Tidbit-web
         if not match:
