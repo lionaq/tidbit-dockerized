@@ -14,10 +14,12 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 class RegisterForm(FlaskForm):
+    strongPasswordRegEx = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.,_])[A-Za-z\d@$!%*?&.,_]{8,}$" 
+
     email = StringField('Email', [validators.DataRequired(), validators.Email(message="Please enter a valid email")])
     fullname = StringField('Fullname', [validators.DataRequired(), validators.Length(min=5,message="Minumum of 5 Characters")])
     username = StringField('Username', [validators.DataRequired(), validators.Length(min=5,max=20,message="Username must be between 5-20 Characters")])
-    password = PasswordField('Password', [validators.InputRequired(),validators.EqualTo('password2', message='Password must match')])
+    password = PasswordField('Password', [validators.InputRequired(),validators.EqualTo('password2', message='Password must match'), validators.Regexp(strongPasswordRegEx,message='Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character. (@$!%*?&.,_)')])
     password2 = PasswordField('Repeat Password', [validators.InputRequired()]) 
     submit = SubmitField('Sign up')
 
