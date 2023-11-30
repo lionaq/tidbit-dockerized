@@ -24,6 +24,7 @@ def profile(username):
         content = Profile.fetch_post_content(user.id)
         following = User.fetch_following_ids(user.id)
         following_num = len(following)
+        user_following = User.fetch_following_ids(current_user.id)
 
         first_images = {post['id']: {'url': None, 'type': 'image'} for post in posts}
 
@@ -33,7 +34,7 @@ def profile(username):
                 first_images[cont['id']]['type'] = cont.get('type', 'image')
 
         posts_with_images = zip(reversed(posts), reversed(first_images.values()))
-        return render_template('profile/user_profile.html', user=user, posts_with_images=posts_with_images, following=following, following_num=following_num)
+        return render_template('profile/user_profile.html', user=user, posts_with_images=posts_with_images, following=following, following_num=following_num, user_following=user_following)
     
     return render_template('profile/user_profile.html')
 
