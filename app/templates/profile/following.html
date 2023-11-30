@@ -91,6 +91,8 @@
           </div>
         </section>
 
+        <div class="separator-bar"></div>
+
         <!-- User following table -->
         {% if following %}
           <table class="table" id="students">
@@ -99,7 +101,7 @@
               <th scope="col"></th>
               <th scope="col"></th>
               <th scope="col"></th>
-              <th scope="col">Following</th>
+              <th scope="col">&#12288</th>
               <th scope="col"></th>
               <th scope="col"></th>
               <th scope="col"></th>
@@ -109,26 +111,32 @@
                 {% for follow in following %}
                 <tr>
                   <!-- Display information about the user being followed -->
-                  <td><img loading="lazy" class="img rounded-pill" src="{{ follow.profilepic }}" alt="Profile Picture" style="height: 35px; width: 35px;" /></td>
+                  <td>&#12288</td>
+                  <td>&#12288</td>
+                  <td>&#12288</td>
                   <td>
-                    <div>
-                      <h5>{{ follow.fullname }}</h5>
-                      <p>@{{ follow.username }}</p>
+                    <div style="display: flex; align-items: center;">
+                      <img loading="lazy" class="img rounded-pill" src="{{ follow.profilepic }}" alt="Profile Picture" style="height: 65px; width: 65px; margin-right: 10px;" />
+                      <div>
+                        <h5 style="margin: 0;">{{ follow.fullname }}</h5>
+                        <p style="margin: 0;">@{{ follow.username }}</p>
+                      </div>
                     </div>
                   </td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  <td>&#12288</td>
+                  <td>&#12288</td>
+                  <td>&#12288</td>
+                  <td>&#12288</td>
                   {% if user.id == current_user.id %}
                   <td>
+                    <p></p>
                     <form action="{{ url_for('user_bp.unfollow', following=follow.id) }}" method="POST" style="border: none;">
                       <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                       <button class="btn follow" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">Unfollow</button>
                     </form>
                   </td>
                   {% endif %}
+                  <td>&#12288</td>
                   <!-- Add more details or actions as needed -->
                 </tr>
                 {% endfor %}
@@ -139,6 +147,24 @@
           </table>
         {% endif %}
     </section>
+
+    <style>
+      /* Add the separator bar styling */
+      .separator-bar {
+        width: 80%;
+        height: 3px;
+        background-color: #837d7d; /* Dark grey color */
+        border-radius: 3px; /* Rounded corners */
+        margin-top: 20px; /* Adjust the margin-top as needed */
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .table tbody tr td,
+      .table thead tr th {
+        border: none;
+      }
+    </style>
 
 <script>
   let path = window.location.pathname;
