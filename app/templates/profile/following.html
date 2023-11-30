@@ -97,7 +97,11 @@
         {% if following %}
           <table class="table" id="students">
             <thead>
-              <th scope="col"></th>
+              <th scope="col">  
+                <a class="btn btn-dark text-light z-3 rounded " href="javascript:history.go(-1)">
+                <i class="fa-solid fa-angle-left fa-beat" style="color: #DAD6BF;"></i>
+                </a>
+              </th>
               <th scope="col"></th>
               <th scope="col"></th>
               <th scope="col"></th>
@@ -116,7 +120,8 @@
                   <td>&#12288</td>
                   <td>
                     <div style="display: flex; align-items: center;">
-                      <img loading="lazy" class="img rounded-pill" src="{{ follow.profilepic }}" alt="Profile Picture" style="height: 65px; width: 65px; margin-right: 10px;" />
+                      <a href="{{ url_for('profile_bp.profile', username=follow.username) }}">
+                      <img loading="lazy" class="img rounded-pill" src="{{ follow.profilepic }}" alt="Profile Picture" style="height: 65px; width: 65px; margin-right: 10px;" /></a>
                       <div>
                         <h5 style="margin: 0;">{{ follow.fullname }}</h5>
                         <p style="margin: 0;">@{{ follow.username }}</p>
