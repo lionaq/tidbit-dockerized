@@ -194,6 +194,24 @@ class User(UserMixin):
 
         return following_ids
     
+    def fetch_followers(id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT user.id, user.username, user.fullname, user.profilepic, follow.follower FROM user INNER JOIN follow ON user.id = follow.follower WHERE following = %s"
+        cursor.execute(sql,(id,))
+        followers = cursor.fetchall()
+
+        return followers
+
+    def fetch_followers_ids(id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT follower FROM follow WHERE following = %s"
+        cursor.execute(sql,(id,))
+        followers = cursor.fetchall()
+
+        follower_ids = [entry['follower'] for entry in followers]
+
+        return follower_ids
+    
     def fetch_following_posts(id):
         cursor = mysql.connection.cursor(dictionary=True)
         sql = "SELECT post.*, user.username, user.fullname, user.profilepic FROM post JOIN follow ON post.user_id = follow.following JOIN user ON post.user_id = user.id WHERE follow.follower = %s;"

@@ -33,14 +33,3 @@ def unfollow(following):
         return redirect(request.referrer)
     else:
         abort(405)
-
-@user_bp.route('/<string:username>/following', methods=['GET'])
-@login_required
-def following(username):
-    userID = User.fetch_id(username)
-    user = User.search_by_id(userID['id'])
-    following = User.fetch_following(userID['id'])
-    following_num = len(following)
-    user_following = User.fetch_following_ids(current_user.id)
-
-    return render_template('profile/following.html', user=user, following=following, following_num=following_num, user_following=user_following)
