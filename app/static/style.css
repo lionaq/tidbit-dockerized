@@ -2,14 +2,15 @@
 /* ProfilePic and CoverPic */
 .profile-pic {
     position: absolute;
-    margin-top: -90px;
-    width: 150px;
-    height: 145px;
+    margin-top: -80px;
+    width: 135px;
+    height: 130px;
     border: 5px solid white;
 }
 
 .cover-pic-container {
-    height: 250px;
+    width: 100%;
+    height: 200px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }   
