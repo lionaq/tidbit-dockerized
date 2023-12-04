@@ -5,32 +5,33 @@
 {% block content%}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-    <div class = "container-md my-4 p-3" style = "border-radius: 15px; border: 1px solid rgba(0, 0, 0, 0.20); background: #FFF;">
+    <div class = "container-md my-4 p-2" style = "border-radius: 15px; border: 1px solid rgba(0, 0, 0, 0.20); background: #FFF; width: 1250px;">
         <form id="postForm" method="POST" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
-            <div class = "container p-4">
+            <div class = "container p-4" style="margin-left: 20px;">
                 <p style = "text-align: left; font-family: Dosis; font-size: 30px;  font-weight: bold; letter-spacing: 1.5px;">Edit Post</p>
                 <div class = "row">
-                    <div class ="col-xl-6">
-                        {{ form.title(class="form-control my-4 fs-4", style = "textFieldBorder", placeholder = "Add Title", style = "font-weight: 600;") }}
+                    <div class ="col-xl-5">
+                        <p class = "postText">Title:</p>
                         {% if form.title.errors %}
-                            <ul >
-                                {% for error in form.title.errors %}
-                                <p class="text-danger fw-bolder">{{ error }}</p>
-                                {% endfor %}
-                            </ul>
+                        <ul >
+                            {% for error in form.title.errors %}
+                            <p class="text-danger fw-bolder" style="position: relative; margin-bottom: -10px; margin-left: -30px">{{ error }}</p>
+                            {% endfor %}
+                        </ul>
                         {% endif %}
+                        {{ form.title(class="form-control my-3 fs-4", style = "textFieldBorder", placeholder = "Add Title", style = "font-weight: 600; width: 430px;") }}
                         <div class="form-group">
                             <!-- Existing content carousel -->
-                            <div id="existingContentCarousel" class="carousel slide" data-bs-ride="carousel" style="width: 100%; height: 350px; margin-bottom: 20px; overflow: hidden;">
+                            <div id="existingContentCarousel" class="carousel slide" data-bs-ride="carousel" style="width: 89%; height: 250px; margin-bottom: 20px; overflow: hidden;">
                                 <div class="carousel-inner">
                                     <!-- Loop through existing content images and videos -->
                                     {% for cont in content %}
                                         <div class="carousel-item {% if loop.first %}active{% endif %}">
                                             {% if cont['type'] == 'image' %}
-                                                <img src="{{ cont['url'] }}" class="object-fit-cover" alt="Existing Content" width = "100%" height="350px" loading="lazy">
+                                                <img src="{{ cont['url'] }}" class="object-fit-cover" alt="Existing Content" width = "100%" height="250px" loading="lazy">
                                             {% elif cont['type'] == 'video' %}
-                                                <video controls width="100%" height="350px" class="object-fit-cover">
+                                                <video controls width="100%" height="250px" class="object-fit-cover">
                                                     <source src="{{ cont['url'] }}" type="video/mp4">
                                                     Your browser does not support the video tag.
                                                 </video>
@@ -51,10 +52,10 @@
                             <!-- Upload area carousel -->
                             {{ form.content(class="form-control my-4 fs-4", style="display:none;", multiple="multiple") }}
                             <div class="form-group">
-                                <label class="postUpload carousel slide overflow-hidden d-flex justify-content-center" for="{{ form.content.id }}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer;" id = "carousel">
+                                <label class="postUpload carousel slide overflow-hidden d-flex justify-content-center" for="{{ form.content.id }}" style="width: 89%; border-radius: 5px; border: 3px dashed #000; cursor:pointer;" id = "carousel">
                                     <!-- Add a container for previews -->
-                                    <div id="filePreviews" class = "carousel-inner" style = "width:100%; height:350px;">
-                                        <img id="imagePreview" src="{{ url_for('static', filename='img/UploadImg.png') }}"alt="File Preview" class="img-thumbnail" style="width:100%; height:350px; opacity:0.2;" loading="lazy">
+                                    <div id="filePreviews" class = "carousel-inner" style = "width:100%; height:250px;">
+                                        <img id="imagePreview" src="{{ url_for('static', filename='img/UploadImg.png') }}"alt="File Preview" class="img-thumbnail" style="width:100%; height:245px; opacity:0.2;" loading="lazy">
                                     </div>
                                     <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
                                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -65,18 +66,18 @@
                                         <span class="visually-hidden">Next</span>
                                     </button>
                                     <button class="btn z-5" type="button" id="clearFiles" style="visibility:hidden">&times;</button>
-                                    <img id="uploadIcon" src="{{ url_for('static', filename='img/UploadIcon.png') }}" style="width:150px; height:150px;" loading="lazy">
+                                    <img id="uploadIcon" src="{{ url_for('static', filename='img/UploadIcon.png') }}" style="width:80px; height:80px;" loading="lazy">
                                     <a id="uploadCaption"> Click here to replace post images and/or videos </a>
                                 </label>                        
                             </div>
                         </div>
                     </div>
-                    <div class = "col-xl-6 ps-2">
+                    <div class = "col-xl-7 ps-2" style="margin-left: -35px">
                         <p class = "postText">Caption:</p>
                         {% if form.caption.errors %}
                             <ul >
                                 {% for error in form.caption.errors %}
-                                <p class="text-danger fw-bolder">{{ error }}</p>
+                                <p class="text-danger fw-bolder" style="position: relative; margin-bottom: -15px; margin-left: -30px;">{{ error }}</p>
                                 {% endfor %}
                             </ul>
                         {% endif %}
@@ -84,17 +85,17 @@
                         <p class = "postText">Ingredients:</p>
                         {% if form.ingredients.errors %}
                                 {% for error in form.ingredients.errors %}
-                                <p class="text-danger fw-bolder">{{ error }}</p>
+                                <p class="text-danger fw-bolder" style="position: relative; margin-bottom: -15px;">{{ error }}</p>
                                 {% endfor %}
                         {% endif %}
                         {{ form.ingredients(class="form-control my-4", rows="5", style = "textFieldBorder", placeholder = "List the ingredients here") }}
                         <p class = "postText">Instructions:</p>
                         {% if form.instructions.errors %}
                                 {% for error in form.instructions.errors %}
-                                <p class="text-danger fw-bolder">{{ error }}</p>
+                                <p class="text-danger fw-bolder" style="position: relative; margin-bottom: -15px;">{{ error }}</p>
                                 {% endfor %}
                         {% endif %}
-                        {{ form.instructions(class="form-control my-4", rows="10", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}</p>
+                        {{ form.instructions(class="form-control my-4", rows="5", style = "textFieldBorder", placeholder = "Write the steps for your recipe here") }}</p>
                         <div class = "row">
                             <div class = "col-sm-3 mb-4">
                                 <!-- Tag field -->
@@ -115,7 +116,7 @@
                                 <p class="postText mb-4 fw-6 fw-light">Subtags:</p>
                                 {% if form.subtag.errors %}
                                     {% for error in form.subtag.errors %}
-                                        <p class="text-danger fw-bolder">{{ error }}</p>
+                                        <p class="text-danger fw-bolder" style="margin-top: -8px;">{{ error }}</p>
                                     {% endfor %}
                                 {% endif %}
                                 <div class="form-row">
@@ -130,7 +131,7 @@
                         </div>
                     </div>
                 </div>
-                <div class = "d-flex flex-row-reverse mt-3">
+                <div class = "d-flex flex-row-reverse mt-2" style="margin-right: 50px;">
                     <a class = "btn  rounded-pill ms-3 fw-bold" style="background-color: rgba(182, 120, 99, 0.349); color: black;" href = "{{url_for('post_bp.view_post', postid=post.id)}}">Cancel</a>
                     {{ form.submit(class="btn rounded-pill fw-bold", style="background-color: #d17a5e; color: black;") }}
                 </div>

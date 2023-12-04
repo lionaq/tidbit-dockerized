@@ -60,7 +60,7 @@ body {
 }
 
 .carousel-control-prev, .carousel-control-next {
-    height: 5vh%; /* Adjust the width as needed */
+    height: 5vh; /* Adjust the width as needed */
     top: 50%;
     transform: translateY(-50%);
 }
