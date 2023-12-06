@@ -3,7 +3,7 @@ from flask_login import UserMixin
 import re
 
 class Post(UserMixin):
-    def __init__(self, id=None, user_id=None, date=None, title=None, content=None, caption=None, ingredients=None, instructions=None, tag=None, subtags=None, type=None):
+    def __init__(self, id=None, user_id=None, date=None, title=None, content=None, caption=None, ingredients=None, instructions=None, tag=None, subtags=None, type=None, likes = None):
         self.id = id
         self.user_id = user_id
         self.date = date
@@ -15,7 +15,7 @@ class Post(UserMixin):
         self.tag = tag
         self.subtags = subtags
         self.type = type  # Add the type field
-
+        self.likes = likes
     def add(self):
         cursor = mysql.connection.cursor(dictionary=True)
         sql_post = "INSERT INTO post(user_id, date, title, caption, ingredients, instructions, tag, subtags) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
@@ -131,33 +131,44 @@ class Post(UserMixin):
 
         return match.group(1) if match else None
 
-    def like(liker, post):
+
+    def fetch_liked_posts(id):
         cursor = mysql.connection.cursor(dictionary=True)
-        sql = "INSERT INTO like_post(liker, post) VALUES (%s,%s)"
-        cursor.execute(sql,(liker,post))
-        mysql.connection.commit()
+        sql = "SELECT post_id FROM like_post WHERE liker_id = %s"
+        cursor.execute(sql,(id,))
+        likes = cursor.fetchall()
 
-        update = "UPDATE post SET likes = likes+1 WHERE id = %s"
-        cursor.execute(update,post)
-        mysql.connection.commit()
+        liked_posts = [entry['post_id'] for entry in likes]
 
-        cursor.close()
+        return liked_posts
+
+
+
+    def like(liker, post):
+        try:
+            cursor = mysql.connection.cursor(dictionary=True)
+            sql = "INSERT INTO like_post(liker_id, post_id) VALUES (%s,%s)"
+            cursor.execute(sql,[liker,post])
+            mysql.connection.commit()
+
+            update = "UPDATE post SET likes = likes+1 WHERE id = %s"
+            cursor.execute(update,[post])
+            mysql.connection.commit()
+            cursor.close()
+        except:
+            print("liking post failed!")
 
     def unlike(liker, post):
         try:
             cursor = mysql.connection.cursor(dictionary=True)
-            check = "SELECT * FROM like_post WHERE liker = %s AND post = %s"
-            sql = "DELETE FROM like_post WHERE liker = %s AND post = %s"
+            sql = "DELETE FROM like_post WHERE liker_id = %s AND post_id = %s"
 
-            cursor.execute(check, (liker, post))
-            checking = cursor.fetchone()
+            checking = Post.like_check(liker,post)
 
             if checking:
                 cursor.execute(sql, (liker, post))
-                mysql.connection.commit()
-
                 update = "UPDATE post SET likes = likes-1 WHERE id = %s"
-                cursor.execute(update,post)
+                cursor.execute(update,[post])
                 mysql.connection.commit()
 
                 cursor.close()
@@ -174,3 +185,23 @@ class Post(UserMixin):
             # Close the cursor in the 'finally' block to ensure it happens regardless of success or failure
             if cursor:
                 cursor.close()
+
+    def like_check(liker,post):
+        cursor = mysql.connection.cursor(dictionary=True)
+        check = "SELECT * FROM like_post WHERE liker_id = %s AND post_id = %s"
+        cursor.execute(check, (liker, post))
+        checking = cursor.fetchone()
+
+        if checking:
+            return True
+        else:
+            return False
+        
+    def like_amount(post_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT likes FROM post WHERE id = %s"
+        cursor.execute(sql, (post_id,))
+        post = cursor.fetchone()
+        cursor.close()
+
+        return post

@@ -3,6 +3,7 @@ from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 from flask import Blueprint
 from flask import render_template, request, redirect, flash, url_for, abort
+from flask import jsonify
 from datetime import date
 from flask_login import current_user, login_required
 from app.forms.forms import CreatePost, EditPost, SubmitForm
@@ -200,19 +201,39 @@ def view_post(postid):
     user_following = User.fetch_following_ids(current_user.id)
     return render_template('posts/viewpost.html', post=post, user=user, content=content, form=form, user_following=user_following)
 
-@post_bp.route('/like/<int:post>', methods=['POST'])
+@post_bp.route('/like/<int:post>', methods=['POST', 'GET'])
 @login_required
 def like(post):
     if request.method == 'POST':
         liker = current_user.id
+        liked = Post.like_check(liker,post)
+        if liked != True:
+            print("like")
 
-        Post.like(liker, post)
-
-        flash("Liked Post.", "success")
-
-        return redirect(request.referrer)
+            Post.like(liker, post)
+            likeAmount = Post.like_amount(post)
+            return jsonify({"likes": likeAmount.get('likes'), "liked": True})
+        else:
+            print("unlike")
+            liker = current_user.id
+            Post.unlike(liker, post)
+            likeAmount = Post.like_amount(post)
+            return jsonify({"likes": likeAmount.get('likes'), "liked": False})
     else:
-        abort(405)
+        liker = current_user.id
+        liked = Post.like_check(liker,post)
+        if liked != True:
+            print("like")
+
+            Post.like(liker, post)
+            likeAmount = Post.like_amount(post)
+            return jsonify({"likes": likeAmount.get('likes'), "liked": True})
+        else:
+            print("unlike")
+            liker = current_user.id
+            Post.unlike(liker, post)
+            likeAmount = Post.like_amount(post)
+            return jsonify({"likes": likeAmount.get('likes'), "liked": False})
 
 @post_bp.route('/unlike/<int:post>', methods=['POST'])
 @login_required

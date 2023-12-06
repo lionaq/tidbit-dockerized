@@ -2,6 +2,7 @@ from flask import Blueprint
 from flask_login import current_user, login_required
 from flask import render_template, request, redirect, url_for, flash
 from app.model.user import User
+from app.model.posts import Post
 import random
 
 main_bp = Blueprint(
@@ -18,15 +19,17 @@ def home():
         posts = User.fetch_user_posts(user.id)
         content = User.fetch_user_post_content()
         user_following = User.fetch_following_ids(user.id)
+        liked_posts = Post.fetch_liked_posts(user.id)
 
+        print(liked_posts)
         if user_following:
             following_posts = User.fetch_following_posts(user.id)
-            print(following_posts)
+            print(user_following)
             # Check if following_posts is not empty before extending posts
             if following_posts:
                 posts.extend(following_posts)
                 random.shuffle(posts)
-        return render_template('main/loggedin.html', name=username, user=user, posts=posts, content=content, following=user_following)
+        return render_template('main/loggedin.html', name=username, user=user, posts=posts, content=content, following=user_following, liked = liked_posts)
     
 @main_bp.route('/explore')
 @login_required
