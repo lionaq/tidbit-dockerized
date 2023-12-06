@@ -200,4 +200,27 @@ def view_post(postid):
     user_following = User.fetch_following_ids(current_user.id)
     return render_template('posts/viewpost.html', post=post, user=user, content=content, form=form, user_following=user_following)
 
+@post_bp.route('/like/<int:post>', methods=['POST'])
+@login_required
+def like(post):
+    if request.method == 'POST':
+        liker = current_user.id
 
+        Post.like(liker, post)
+
+        flash("Liked Post.", "success")
+
+        return redirect(request.referrer)
+    else:
+        abort(405)
+
+@post_bp.route('/unlike/<int:post>', methods=['POST'])
+@login_required
+def unlike(post):
+    if request.method == 'POST':
+        liker = current_user.id
+        Post.unlike(liker, post)
+
+        return redirect(request.referrer)
+    else:
+        abort(405)

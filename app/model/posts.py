@@ -130,3 +130,47 @@ class Post(UserMixin):
             match = re.search(r'/v\d+/(coverpic/[^/]+)\.\w+', url)  # for images in coverpic
 
         return match.group(1) if match else None
+
+    def like(liker, post):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "INSERT INTO like_post(liker, post) VALUES (%s,%s)"
+        cursor.execute(sql,(liker,post))
+        mysql.connection.commit()
+
+        update = "UPDATE post SET likes = likes+1 WHERE id = %s"
+        cursor.execute(update,post)
+        mysql.connection.commit()
+
+        cursor.close()
+
+    def unlike(liker, post):
+        try:
+            cursor = mysql.connection.cursor(dictionary=True)
+            check = "SELECT * FROM like_post WHERE liker = %s AND post = %s"
+            sql = "DELETE FROM like_post WHERE liker = %s AND post = %s"
+
+            cursor.execute(check, (liker, post))
+            checking = cursor.fetchone()
+
+            if checking:
+                cursor.execute(sql, (liker, post))
+                mysql.connection.commit()
+
+                update = "UPDATE post SET likes = likes-1 WHERE id = %s"
+                cursor.execute(update,post)
+                mysql.connection.commit()
+
+                cursor.close()
+            else:
+                # Handle the case where the relationship does not exist
+                # You can raise a custom exception or log a message, depending on your needs
+                raise Exception("The relationship does not exist.")
+        except Exception as e:
+            # Log the error or handle it as needed
+            print(f"Error: {e}")
+            # You might want to rollback the transaction in case of an error
+            mysql.connection.rollback()
+        finally:
+            # Close the cursor in the 'finally' block to ensure it happens regardless of success or failure
+            if cursor:
+                cursor.close()
