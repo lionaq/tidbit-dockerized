@@ -147,10 +147,10 @@
           <div class = "col-sm-2 my-2">
             <div class = "row row-cols-2">
               <div class = "col">
-                <button style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-heart fa-2xl"style="color: #000000;"></i></button>
+                <button style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "like-icon-{{post.id}}" class="fa-regular fa-heart fa-2xl"style="color: #000000;"></i></button>
               </div>
               <div class = "col ps-2">
-                <p class="fs-5">{{ range(1, 599) | random }}</p>
+                <p class="fs-5" id = "like-count-{{post.id}}">{{ post.likes }}</p>
               </div>
             </div>
           </div>
@@ -186,33 +186,7 @@
   </a>
 </section>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const lazyLoadPosts = document.querySelectorAll('.lazy-post');
-
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px',
-      threshold: .3
-    };
-
-    const observer = new IntersectionObserver(callback, observerOptions);
-
-    lazyLoadPosts.forEach(post => {
-      observer.observe(post);
-    });
-
-    function callback(entries, observer) {
-      entries.forEach(entry => {
-        const intersecting = entry.isIntersecting
-        if (intersecting) {
-          entry.target.style.opacity = '1'
-          observer.unobserve(entry.target);
-        }
-      });
-    }
-  });
-</script>
+<script src="{{ url_for('static', filename='js/postsDisplay.js') }}"></script>
 
 
 {% endblock %}
