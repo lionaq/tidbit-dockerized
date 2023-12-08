@@ -94,7 +94,7 @@
           <nav class="nav justify-content-center">
             {% if current_user == user %}
               <a href="{{ url_for('profile_bp.profile', username=user.username) }}" class="nav-link">Posts</a>
-              <a href="" class="nav-link">Liked</a>
+              <a href="{{ url_for('profile_bp.profile_liked', username=user.username) }}" class="nav-link">Liked</a>
               <a href="" class="nav-link">Saved</a>
             {% else %}
               <a href="{{ url_for('profile_bp.profile', username=user.username) }}" class="nav-link">Posts</a>
@@ -102,6 +102,7 @@
           </nav>
         </div>
         <!-- User Posts Gallery -->
+        {%block gallery%}
         <div class="img-container">
           <div class="row">
               {% if posts_with_images %}
@@ -142,6 +143,7 @@
               {% endif %}
           </div>
         </div>
+        {%endblock%}
 
 
         <!-- Create post icon -->

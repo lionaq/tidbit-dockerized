@@ -43,6 +43,14 @@ class Profile(UserMixin):
         content = cursor.fetchall()
         cursor.close()
         return content
+    
+    def fetch_liked_post_content(user_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT post.id, post_url.url, post_url.type FROM user JOIN like_post ON user.id = like_post.liker_id JOIN post ON like_post.post_id = post.id JOIN post_url ON post.id = post_url.post_id WHERE user.id = %s;"
+        cursor.execute(sql, (user_id,))
+        content = cursor.fetchall()
+        cursor.close()
+        return content
         
     @classmethod
     def fetch_user_posts(cls, user_id):
