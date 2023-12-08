@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS user (
     website VARCHAR(255),
     profilepic VARCHAR(255),
     coverpic VARCHAR(255),
-    verified BOOLEAN
+    verified BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS post (
