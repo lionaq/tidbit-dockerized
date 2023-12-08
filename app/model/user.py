@@ -8,7 +8,7 @@ def load_user(id):
     return User.search_by_id(int(id))
 
 class User(UserMixin):
-    def __init__(self, id=None, email = None, fullname = None, username = None, password = None, bio = None, website = None, profilepic = None, coverpic = None, following = None, follower = None):
+    def __init__(self, id=None, email = None, fullname = None, username = None, password = None, bio = None, website = None, profilepic = None, coverpic = None, following = None, follower = None, verified = False ):
         self.id = id
         self.email = email
         self.fullname = fullname
@@ -20,6 +20,7 @@ class User(UserMixin):
         self.coverpic = coverpic if coverpic else url_for('static', filename='img/default_coverpic.jpg')
         self.following = following
         self.follower = follower
+        self.verified = verified
         
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -37,6 +38,13 @@ class User(UserMixin):
         else:
             return False
     
+    def update_verify(self):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "UPDATE user SET verified = True WHERE email = %s"
+        cursor.execute(sql, (self.email,))
+        mysql.connection.commit()
+        cursor.close()
+
     @classmethod
     def check_username(cls, username):
         cursor = mysql.connection.cursor(dictionary=True)
@@ -48,13 +56,13 @@ class User(UserMixin):
 
     
     @classmethod
-    def check_email(self, email):
+    def check_email(cls, email):
         cursor = mysql.connection.cursor(dictionary=True)
         sql = "SELECT * FROM user where email = %s"
         cursor.execute(sql, (email,))
         email = cursor.fetchone()
         cursor.close()
-        return email is not None
+        return cls(**email) if email else None
 
     @classmethod
     def search_by_id(cls, id):

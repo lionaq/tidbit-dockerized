@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS user (
     bio TEXT,
     website VARCHAR(255),
     profilepic VARCHAR(255),
-    coverpic VARCHAR(255)
+    coverpic VARCHAR(255),
+    verified BOOLEAN
 );
 
 CREATE TABLE IF NOT EXISTS post (

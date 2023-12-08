@@ -13,6 +13,8 @@ werkzeug = "2.3.7"
 email-validator = "*"
 jinja2 = "*"
 cloudinary = "*"
+flask-mail = "*"
+itsdangerous = "*"
 
 [dev-packages]
 
