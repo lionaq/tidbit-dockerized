@@ -16,7 +16,7 @@ def follow(following):
         follower = current_user.id
         check_following = User.check_if_following(follower, following)
         # Check if User is already following
-        if  check_following == True:
+        if check_following == False:
             User.follow(follower, following)
             following_list = User.fetch_following_ids(follower)
             response_data = {
