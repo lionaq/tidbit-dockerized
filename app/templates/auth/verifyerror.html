@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='img/Logo.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>Tidbit | VerifyError</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .error-container {
+            background-color: #fff; 
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-message {
+            color: #d9534f;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 10px;
+        }
+
+        .login-link {
+            background-color: #d17a5e; 
+            color: #fff; 
+            padding: 10px 20px; 
+            border-radius: 5px; 
+            display: inline-block; 
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s; 
+        }
+
+        .login-link:hover {
+            background-color: #c1684d; 
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <i class="fa-solid fa-triangle-exclamation fa-2x icon" style="color: #c31d1d;"></i>
+        <div class="error-message">
+            <p>{{ reason }}</p>
+        </div>
+        {% if reason == 'Your Token has expired' %}
+        <p>Try resending the verification to your email by logging in again:</p>
+        <a class="login-link" href="{{ url_for('auth_bp.login') }}">Login</a>
+        {% else %}
+        <p>Please check your email and click on the link properly</p>
+        <p>Note that every token is only valid for 2mins</p>
+        <a class="login-link" href="{{ url_for('auth_bp.login') }}">Login</a>
+        {% endif %}
+    </div>
+</body>
+</html>

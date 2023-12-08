@@ -1,0 +1,12 @@
+<div style="font-family: 'Arial', sans-serif; background-color: #f8f9fa; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fff;">
+        <h1 style="color: #d17a5e;">Tidbit</h1>
+        <p style="font-size: 16px; line-height: 1.5; color: #333;">Hi {{ user.username }},</p>
+        <p style="font-size: 16px; line-height: 1.5; color: #333;">Please click the link below to verify your account email: {{ user.email }}</p>
+        <a style="display: inline-block; margin-top: 10px; padding: 10px 20px; background-color: #d17a5e; color: #fff; text-decoration: none; border-radius: 5px;" href="{{ url }}">Click Here</a>
+        <p style="font-size: 16px; line-height: 1.5; color: #333;">Note that this URL is only valid for 2 minutes.</p>
+        <p style="font-size: 16px; line-height: 1.5; color: #333;">If you didn't request this, please don't mind and let us know.</p>
+        <p style="color: #d17a5e;">Thanks,</p>
+        <p>Tidbit Reserves</p>
+    </div>
+</div>
