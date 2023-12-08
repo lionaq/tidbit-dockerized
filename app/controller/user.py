@@ -14,13 +14,16 @@ user_bp = Blueprint(
 def follow(following):
     if request.method == 'POST':
         follower = current_user.id
-        User.follow(follower, following)
-        following_list = User.fetch_following_ids(follower)
-        response_data = {
-            #'message': 'You are now following this user.',
-            'following_count': len(following_list),
-        }
-        return jsonify(response_data)
+        check_following = User.check_if_following(follower, following)
+        # Check if User is already following
+        if  check_following == True:
+            User.follow(follower, following)
+            following_list = User.fetch_following_ids(follower)
+            response_data = {
+                #'message': 'You are now following this user.',
+                'following_count': len(following_list),
+            }
+            return jsonify(response_data)
     else:
         abort(405)
 

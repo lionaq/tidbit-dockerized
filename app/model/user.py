@@ -194,6 +194,17 @@ class User(UserMixin):
 
         return following_ids
     
+    def check_if_following(follower, following):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT id FROM follow WHERE follower = %s AND following = %s"
+        cursor.execute(sql,(follower,following))
+        check = cursor.fetchone()
+
+        if check:
+            return True
+        else:
+            return False
+    
     def fetch_followers(id):
         cursor = mysql.connection.cursor(dictionary=True)
         sql = "SELECT user.id, user.username, user.fullname, user.profilepic, follow.follower FROM user INNER JOIN follow ON user.id = follow.follower WHERE following = %s"
