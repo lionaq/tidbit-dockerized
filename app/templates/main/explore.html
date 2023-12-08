@@ -52,26 +52,17 @@
           <!-- Inside the loop for posts -->
           <div class="col d-flex align-items-center justify-content-end">
             {% if post.user_id != current_user.id %}
-                {% if post.user_id in following %}
                     <!-- User is already followed -->
-                    <div class="dropdown">
+                    <div id = "unfollow-button-{{post.user_id}}" class="dropdown"  {%if post.user_id not in following%} style = "display:none;" {%else%} style= "display:inline;"{%endif%}>
                       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
                           Following
                       </button>
                       <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <form action="{{ url_for('user_bp.unfollow', following=post['user_id']) }}" method="POST" style="border: none;">
-                          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                          <button class="dropdown-item">Unfollow</button>
-                        </form>
+                        <button onclick="unfollow({{post.user_id}})" class="dropdown-item">Unfollow</button>
                       </div>
                     </div>              
-                {% else %}
                     <!-- User is not followed, show follow button -->
-                    <form action="{{ url_for('user_bp.follow', following=post['user_id']) }}" method="POST" style="border: none;">
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                        <button class="btn follow">Follow</button>
-                    </form>
-                {% endif %}
+                    <button id = "follow-button-{{post.user_id}}"onclick="follow({{post.user_id}})"class="btn follow" {% if post.user_id in following %} style = "display:none;" {%else%} style= "display:inline;"{%endif%}>Follow</button>
             {% endif %}
           </div>
         </div>
@@ -161,4 +152,5 @@
 </section>
 <script src="{{ url_for('static', filename='js/lazyLoad.js') }}"></script>
 <script src="{{ url_for('static', filename='js/like.js') }}"></script>
+<script src="{{ url_for('static', filename='js/follow.js') }}"></script>
 {% endblock %}
