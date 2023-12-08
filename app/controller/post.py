@@ -199,9 +199,10 @@ def view_post(postid):
     user = User.search_by_id(post.user_id)
     content = Post.fetch_view_post_img(post.id)
     user_following = User.fetch_following_ids(current_user.id)
-    return render_template('posts/viewpost.html', post=post, user=user, content=content, form=form, user_following=user_following)
+    liked_posts = Post.fetch_liked_posts(current_user.id)
+    return render_template('posts/viewpost.html', post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts)
 
-@post_bp.route('/like/<int:post>', methods=['POST', 'GET'])
+@post_bp.route('/like/<int:post>', methods=['POST'])
 @login_required
 def like(post):
     if request.method == 'POST':
@@ -220,28 +221,4 @@ def like(post):
             likeAmount = Post.like_amount(post)
             return jsonify({"likes": likeAmount.get('likes'), "liked": False})
     else:
-        liker = current_user.id
-        liked = Post.like_check(liker,post)
-        if liked != True:
-            print("like")
-
-            Post.like(liker, post)
-            likeAmount = Post.like_amount(post)
-            return jsonify({"likes": likeAmount.get('likes'), "liked": True})
-        else:
-            print("unlike")
-            liker = current_user.id
-            Post.unlike(liker, post)
-            likeAmount = Post.like_amount(post)
-            return jsonify({"likes": likeAmount.get('likes'), "liked": False})
-
-@post_bp.route('/unlike/<int:post>', methods=['POST'])
-@login_required
-def unlike(post):
-    if request.method == 'POST':
-        liker = current_user.id
-        Post.unlike(liker, post)
-
-        return redirect(request.referrer)
-    else:
-        abort(405)
+        abort(400)
