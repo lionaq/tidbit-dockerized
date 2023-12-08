@@ -86,7 +86,7 @@
                 <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <form action="{{ url_for('user_bp.unfollow', following=post['user_id']) }}" method="POST" style="border: none;">
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                    <button class="dropdown-item">Unfollow</button>
+                    <button class="dropdown-item" onclick="unfollow({{ post['user_id'] }}, event)">Unfollow</button>
                   </form>
                 </div>
               </div>              
@@ -94,7 +94,7 @@
                 <!-- User is not followed, show follow button -->
                 <form action="{{ url_for('user_bp.follow', following=post['user_id']) }}" method="POST" style="border: none;">
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn follow">Follow</button>
+                    <button class="btn follow" onclick="follow({{ post['user_id'] }}, event)">Follow</button>
                 </form>
             {% endif %}
            {%endif%}
