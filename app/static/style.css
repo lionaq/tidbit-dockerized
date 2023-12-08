@@ -153,6 +153,38 @@
     font-size: 35px;
 }
 
+.custom-follow-button {
+    background-color: transparent;
+    color: #D17A5E;
+    border: 1px solid #D17A5E;
+    position: absolute;
+    top: 55%;
+    left: 90%;
+    height:33px;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.custom-follow-button:hover {
+    background-color: gray;
+    border: 1px solid gray;
+}
+
+.custom-dropdown .btn-secondary {
+    width: 11%;
+}
+
+.custom-dropdown .dropdown-menu {
+    min-width: 11%;
+}
+
+.custom-dropdown .dropdown-item {
+    font-size: 14px;
+    background-color: whitesmoke;
+}
+
 /* Edit Profile */
 .sidenav a:hover {
     border-bottom: 2px solid #2a2a2a;
@@ -258,3 +290,21 @@ textarea {
     border: none;
     cursor: pointer;
 }
+
+.custom-dropdown-menu {
+    width: auto !important;
+    display: block !important;
+}
+
+.underline-text {
+    /* Set the color to black */
+    color: black;
+    /* Set the underline color to black */
+    text-decoration-color: #D17A5E;
+    /* Set the thickness of the underline */
+    border-bottom: 2px solid #D17A5E;
+    /* Optionally, you can adjust the space between the text and the underline */
+    padding-bottom: 2px;
+}
+
+

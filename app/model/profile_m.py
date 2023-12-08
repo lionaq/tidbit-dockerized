@@ -1,4 +1,4 @@
-from app import mysql, login
+from app import mysql
 from flask_login import UserMixin
 from flask import url_for
 class Profile(UserMixin):

@@ -197,6 +197,7 @@ def view_post(postid):
     post = Post.get_by_id(postid)
     user = User.search_by_id(post.user_id)
     content = Post.fetch_view_post_img(post.id)
-    return render_template('posts/viewpost.html', post=post, user=user, content=content, form=form)
+    user_following = User.fetch_following_ids(current_user.id)
+    return render_template('posts/viewpost.html', post=post, user=user, content=content, form=form, user_following=user_following)
 
 

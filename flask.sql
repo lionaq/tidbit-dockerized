@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS user (
     bio TEXT,
     website VARCHAR(255),
     profilepic VARCHAR(255),
-    coverpic VARCHAR(255)
+    coverpic VARCHAR(255),
+    verified BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS post (
@@ -34,6 +35,20 @@ CREATE TABLE IF NOT EXISTS post_url (
     type VARCHAR(10),
     FOREIGN KEY (post_id) 
         REFERENCES post(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS follow (
+    id INT auto_increment PRIMARY KEY,
+    follower INT,
+    following INT,
+    FOREIGN KEY (follower)
+        REFERENCES user(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (following)
+        REFERENCES user(id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );

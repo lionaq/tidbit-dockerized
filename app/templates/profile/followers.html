@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block title %}Followers{% endblock %}
+
+{% block content %}
+
+<head>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+
+    <!-- Section: White bg -->
+    <section>
+      <div class="container">
+
+        <!-- ProfilePic and CoverPic -->
+        <section>
+          <div class="d-flex justify-content-center cover-pic-container rounded-bottom">
+            <img loading="lazy"
+              {% if 'static' in user.coverpic %}src = "{{url_for('static', filename=user.coverpic[7:])}}"{%else%}src="{{ user.coverpic }}"{%endif%}
+              class="cover-pic" 
+            />
+          </div>
+          <div class="d-flex justify-content-center">
+            <img loading="lazy"
+            {% if 'static' in user.profilepic %}src = "{{url_for('static', filename=user.profilepic[7:])}}"{%else%}src="{{ user.profilepic }}"{%endif%}
+              class="profile-pic rounded-circle" 
+              />
+          </div>
+        </section>
+
+        <!-- User Data -->
+        <section>
+          <div class=" justify-content-center text-center" style="margin-top: 68px">
+            <div class = "userTop container-fluid">
+              {% if current_user != user %}
+                {% if user_following and user.id in user_following %}
+                    <!-- User is already followed -->
+                    <div class="dropdown custom-dropdown">
+                      <button class="btn btn-sm btn-secondary dropdown-toggle custom-follow-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Following
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <form action="{{ url_for('user_bp.unfollow', following=user.id) }}" method="POST" style="border: none;">
+                              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                              <button class="dropdown-item">Unfollow</button>
+                          </form>
+                      </div>
+                    </div>
+                {% else %}
+                    <!-- User is not followed, show follow button -->
+                    <form action="{{ url_for('user_bp.follow', following=user.id) }}" method="POST" style="border: none;">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                        <button class="followBtn btn btn-lg btn-secondary btn-sm fw-bold" style="background-color: #D17A5E; border: none">Follow</button>
+                    </form>
+                {% endif %}
+              {% endif %}
+              <h5 style="margin-bottom:2px">{{ user.fullname }}</h5>
+              <p class="small text-muted" style="margin-bottom: 8px">@{{ user.username }}</p>
+            </div>
+            {% if user.bio %}
+              <p class="small py-3 bio-text">{{ user.bio }}</p>
+            {% elif not user.bio %}
+              <p class="default-division" style="margin-top: 68px"></p>
+            {% endif %}
+            
+            {% if user.website %} 
+              <p class="small link">
+                <a href="{{ user.website }}" target="_blank" style="text-decoration: none; color: darkblue">
+                  <i class="fa-solid fa-link"></i> {{ user.website }}
+                </a> 
+              </p> 
+            {% endif %}
+          </div>
+
+          <div class="d-flex justify-content-center text-center">
+            <a href="{{ url_for('profile_bp.followers', username=user.username) }}">
+              <div class="d-flex px-3 py-3">
+                  <h6 class="px-2" id="userFollowers">{{ followers_num }}</h6>
+                  <h6 class="small text-muted">
+                      <span class="underline-text">Followers</span>
+                  </h6>
+              </div>
+            </a> 
+            <a href="{{ url_for('profile_bp.following', username=user.username) }}">
+              <div class="d-flex px-3 py-3">
+                  <h6 class="px-2" id="userFollowing">{{ following_num }}</h6>
+                  <h6 class="small text-muted">
+                    Following
+                  </h6>
+              </div>
+            </a>          
+          </div>
+        </section>
+
+        <div class="separator-bar"></div>
+
+        <!-- User followers table -->
+        {% if followers %}
+          <table class="table" id="students">
+            <thead>
+              <th scope="col">  
+                <a class="btn btn-dark text-light z-3 rounded " href="javascript:history.go(-1)">
+                <i class="fa-solid fa-angle-left fa-beat" style="color: #DAD6BF;"></i>
+                </a>
+              </th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col">&#12288</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+            </thead>
+              <tbody>
+                {% for follower in followers %}
+                <tr>
+                  <!-- Display information about the user being following you -->
+                  <td>&#12288</td>
+                  <td>&#12288</td>
+                  <td>&#12288</td>
+                  <td>
+                    <div style="display: flex; align-items: center;">
+                      <a href="{{ url_for('profile_bp.profile', username=follower.username) }}">
+                      <img loading="lazy" class="img rounded-pill" src="{{ follower.profilepic }}" alt="Profile Picture" style="height: 65px; width: 65px; margin-right: 10px;" /></a>
+                      <div>
+                        <h5 style="margin: 0;">{{ follower.fullname }}</h5>
+                        <p style="margin: 0;">@{{ follower.username }}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td>&#12288</td>
+                  <td>&#12288</td>
+                  <td>&#12288</td>
+                  <td>&#12288</td>
+                  {% if user.id == current_user.id %}
+                  {% if follower['id'] is defined and user_following is defined %}
+                    {% if follower['id'] in user_following %}
+                      <td>
+                        <p></p>
+                        <form action="{{ url_for('user_bp.unfollow', following=follower['id']) }}" method="POST" style="border: none;">
+                          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                          <button class="btn follow" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">Unfollow</button>
+                        </form>
+                      </td>
+                    {% else %}
+                      <td>
+                        <p></p>
+                        <form action="{{ url_for('user_bp.follow', following=follower['id']) }}" method="POST" style="border: none;">
+                          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                          <button class="followBtn btn btn-lg btn-secondary btn-sm fw-bold" style="background-color: #D17A5E; border: none">Follow</button>
+                        </form>
+                      </td>
+                    {% endif %}
+                  {% endif %}
+                  {% endif %}
+                  <td>&#12288</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+        {% else %}
+          <p>{{ user.username }} is not following anyone right now.</p>
+          </table>
+        {% endif %}
+    </section>
+
+    <style>
+      /* Add the separator bar styling */
+      .separator-bar {
+        width: 80%;
+        height: 3px;
+        background-color: #837d7d; /* Dark grey color */
+        border-radius: 3px; /* Rounded corners */
+        margin-top: 20px; /* Adjust the margin-top as needed */
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .table tbody tr td,
+      .table thead tr th {
+        border: none;
+      }
+    </style>
+
+<script>
+  let path = window.location.pathname;
+
+  let links = document.querySelectorAll('.nav a');
+  for (let i = 0; i < links.length; i++) {
+    if (links[i].getAttribute('href') === path) {
+      links[i].classList.add('active');
+    }
+  }
+</script>
+<script src="{{ url_for('static', filename='js/create.js') }}"></script>
+
+{% endblock %}
