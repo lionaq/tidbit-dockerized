@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask import Blueprint
-from flask import request, abort, jsonify
+from flask import request, abort, jsonify, flash
 from flask_login import current_user, login_required
 from app.model.user import User
 
@@ -24,6 +24,8 @@ def follow(following):
                 'following_count': len(following_list),
             }
             return jsonify(response_data)
+        else:
+            flash("You're already following this user!", category=Warning)
     else:
         abort(405)
 
