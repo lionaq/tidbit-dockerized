@@ -54,7 +54,7 @@ def profile_liked(username):
         following_num = len(following)
         followers = User.fetch_followers(user.id)
         followers_num = len(followers)
-        user_following = User.fetch_following_ids(current_user.id)
+        user_following = User.fetch_following_ids(user.id)
 
         first_images = { post: {'url': None, 'type': 'image'} for post in posts}
         for cont in content:

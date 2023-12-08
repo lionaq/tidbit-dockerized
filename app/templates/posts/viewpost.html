@@ -117,24 +117,17 @@
     </a>
 
     {% if current_user.id != post.user_id%}
-      {% if user_following and post.user_id in user_following %}
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
-              Following
-          </button>
-          <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <form action="{{ url_for('user_bp.unfollow', following=post['user_id']) }}" method="POST" style="border: none;">
-              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-              <button class="dropdown-item">Unfollow</button>
-            </form>
-          </div>
+      <!-- User is already followed -->
+      <div id = "unfollow-button-{{post.user_id}}" class="dropdown"  {%if post.user_id not in user_following%} style = "display:none;" {%else%} style= "display:inline;"{%endif%}>
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
+            Following
+        </button>
+        <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <button onclick="unfollow({{post.user_id}})" class="dropdown-item">Unfollow</button>
         </div>
-      {% else %} 
-        <form action="{{ url_for('user_bp.follow', following=post['user_id']) }}" method="POST" style="border: none;">
-          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-          <button class="btn follow">Follow</button>
-        </form>
-      {% endif %}
+      </div>              
+      <!-- User is not followed, show follow button -->
+      <button id = "follow-button-{{post.user_id}}"onclick="follow({{post.user_id}})"class="btn follow" {% if post.user_id in user_following %} style = "display:none; height:40px;" {%else%} style= "display:inline; height:40px;"{%endif%}>Follow</button>
     {% else %}
     <div class="dropdown pt-3">
       <button class="btn" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical" style="color: #d17a5e;"></i></button>
@@ -240,5 +233,5 @@
 }
 
 </script>
-
+<script src="{{ url_for('static', filename='js/follow.js') }}"></script>
 {% endblock %}

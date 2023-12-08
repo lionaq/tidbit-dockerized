@@ -12,10 +12,17 @@ function follow(user_id) {
     })
     .then((res) => res.json())
     .then((data) => {
-        console.log(data);
+        if(data['following'] == false){
+            console.log("Followed")
+            unfollowButton.style.display = "inline";
+            followButton.style.display="none";
+        }
+        else{
+            console.log("Already Following")
+            unfollowButton.style.display = "inline";
+            followButton.style.display="none";
+        }
     });
-    unfollowButton.style.display = "inline";
-    followButton.style.display="none";
 }
 
 function unfollow(user_id) {
@@ -31,8 +38,15 @@ function unfollow(user_id) {
     })
     .then((res) => res.json())
     .then((data) => {
-        console.log(data);
+        if(data['following'] == true){
+            console.log("Unfollowed")
+            unfollowButton.style.display = "none";
+            followButton.style.display="inline";
+        }
+        else{
+            console.log("Already Following")
+            unfollowButton.style.display = "none";
+            followButton.style.display="inline";
+        }
     });
-    unfollowButton.style.display = "none";
-    followButton.style.display="inline";
 }
