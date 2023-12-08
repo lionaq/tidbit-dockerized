@@ -217,10 +217,6 @@
 </div>
 <script>
   function like(postId) {
-    log = "{{post.id}}"
-    console.log(log)
-    log = "{{liked}}"
-    console.log(log)
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
     const likeCount = document.getElementById('like-count');
     const likePic = document.getElementById('like-icon');
