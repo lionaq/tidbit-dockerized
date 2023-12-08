@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS post (
     instructions TEXT,
     tag VARCHAR(99),
     subtags VARCHAR(255),
+    likes INT NOT NULL DEFAULT '0',
     FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
