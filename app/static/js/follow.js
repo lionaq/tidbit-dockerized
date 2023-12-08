@@ -14,12 +14,12 @@ function follow(user_id) {
     .then((data) => {
         if(data['following'] == false){
             console.log("Followed")
-            unfollowButton.style.display = "inline";
+            unfollowButton.style.display = "block";
             followButton.style.display="none";
         }
         else{
             console.log("Already Following")
-            unfollowButton.style.display = "inline";
+            unfollowButton.style.display = "block";
             followButton.style.display="none";
         }
     });

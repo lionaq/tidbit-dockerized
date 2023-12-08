@@ -34,26 +34,17 @@
           <div class=" justify-content-center text-center" style="margin-top: 68px">
             <div class = "userTop container-fluid">
               {% if current_user != user %}
-                {% if user_following and user.id in user_following %}
                     <!-- User is already followed -->
-                    <div class="dropdown custom-dropdown">
+                    <div id = "unfollow-button-{{user.id}}" class="dropdown custom-dropdown" {% if user_following and user.id in user_following %} style = "display:block;" {%else%} style = "display:none;" {%endif%}>
                       <button class="btn btn-sm btn-secondary dropdown-toggle custom-follow-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Following
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <form action="{{ url_for('user_bp.unfollow', following=user.id) }}" method="POST" style="border: none;">
-                              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                              <button class="dropdown-item">Unfollow</button>
-                          </form>
+                        <button onclick="unfollow({{user.id}})" class="dropdown-item">Unfollow</button>
                       </div>
                     </div>
-                {% else %}
-                    <!-- User is not followed, show follow button -->
-                    <form action="{{ url_for('user_bp.follow', following=user.id) }}" method="POST" style="border: none;">
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                        <button class="followBtn btn btn-lg btn-secondary btn-sm fw-bold" style="background-color: #D17A5E; border: none">Follow</button>
+                      <button id="follow-button-{{user.id}}" onclick="follow({{user.id}})" class="followBtn btn btn-lg btn-secondary btn-sm fw-bold"{% if user_following and user.id not in user_following %} style = "display:inline; background-color: #D17A5E; border: none;" {%else%} style = "display:none; background-color: #D17A5E; border: none;" {%endif%}>Follow</button>
                     </form>
-                {% endif %}
               {% endif %}
               <h5 style="margin-bottom:2px">{{ user.fullname }}</h5>
               <p class="small text-muted" style="margin-bottom: 8px">@{{ user.username }}</p>
@@ -189,5 +180,5 @@
   }
 </script>
 <script src="{{ url_for('static', filename='js/create.js') }}"></script>
-
+<script src="{{ url_for('static', filename='js/follow.js') }}"></script>
 {% endblock %}
