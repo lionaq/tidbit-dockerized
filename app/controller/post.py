@@ -200,7 +200,8 @@ def view_post(postid):
     content = Post.fetch_view_post_img(post.id)
     user_following = User.fetch_following_ids(current_user.id)
     liked_posts = Post.fetch_liked_posts(current_user.id)
-    return render_template('posts/viewpost.html', post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts)
+    saved_posts = Post.fetch_saved_posts(current_user.id)
+    return render_template('posts/viewpost.html', post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
 
 @post_bp.route('/like/<int:post>', methods=['POST'])
 @login_required
@@ -220,5 +221,24 @@ def like(post):
             Post.unlike(liker, post)
             likeAmount = Post.like_amount(post)
             return jsonify({"likes": likeAmount.get('likes'), "liked": False})
+    else:
+        abort(400)
+
+@post_bp.route('/save/<int:post>', methods=['POST'])
+@login_required
+def save(post):
+    if request.method == 'POST':
+        saver = current_user.id
+        saved = Post.save_check(saver,post)
+        if saved != True:
+            print("save")
+
+            Post.save(saver, post)
+            return jsonify({ "saved": True})
+        else:
+            print("unsave")
+            saver = current_user.id
+            Post.unsave(saver, post)
+            return jsonify({"saved": False})
     else:
         abort(400)
