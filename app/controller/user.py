@@ -18,7 +18,8 @@ def follow(following):
         # Check if User is already following
         if check_following == False:
             User.follow(follower, following)
-            return jsonify({"following": check_following})
+            following_list = User.fetch_following_ids(follower)
+            return jsonify({"following": check_following, 'following_count': len(following_list)})
         else:
             return jsonify({"following": check_following})
     else:
@@ -32,7 +33,8 @@ def unfollow(following):
         check_following = User.check_if_following(follower, following)
         if check_following == True:
             User.unfollow(follower, following)
-            return jsonify({"following": check_following})
+            following_list = User.fetch_following_ids(follower)
+            return jsonify({"following": check_following, 'following_count': len(following_list)})
         else:
             return jsonify({"following": check_following})
     else:
