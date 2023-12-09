@@ -133,7 +133,7 @@ class User(UserMixin):
     @classmethod
     def fetch_ALL_posts_except_user(cls, user_id):
         cursor = mysql.connection.cursor(dictionary=True)
-        sql = "SELECT user.fullname, user.username, user.profilepic, user.coverpic, post.id, post.user_id, post.title, post.caption FROM user JOIN post ON user.id = post.user_id WHERE NOT username = %s;"
+        sql = "SELECT user.fullname, user.username, user.profilepic, user.coverpic, post.id, post.user_id, post.title, post.caption, post.likes FROM user JOIN post ON user.id = post.user_id WHERE NOT username = %s;"
         cursor.execute(sql, (user_id,))
         data = cursor.fetchall()
 
@@ -201,6 +201,17 @@ class User(UserMixin):
         following_ids = [entry['following'] for entry in following]
 
         return following_ids
+    
+    def check_if_following(follower, following):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT id FROM follow WHERE follower = %s AND following = %s"
+        cursor.execute(sql,(follower,following))
+        check = cursor.fetchone()
+
+        if check:
+            return True
+        else:
+            return False
     
     def fetch_followers(id):
         cursor = mysql.connection.cursor(dictionary=True)

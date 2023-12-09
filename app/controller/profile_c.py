@@ -4,6 +4,7 @@ from flask_login import current_user, login_required
 from app.model.posts import Post
 from app.model.profile_m import Profile
 from app.model.user import User
+from app.model.posts import Post
 from app.forms.forms import EditProfileForm
 from cloudinary import uploader
 from cloudinary.uploader import upload
@@ -29,16 +30,46 @@ def profile(username):
         user_following = User.fetch_following_ids(current_user.id)
 
         first_images = {post['id']: {'url': None, 'type': 'image'} for post in posts}
+        for cont in content:
+            if cont['id'] in first_images and first_images[cont['id']]['url'] is None:
+                first_images[cont['id']]['url'] = cont['url']
+                first_images[cont['id']]['type'] = cont.get('type', 'image')
+        posts_with_images = zip(reversed(posts), reversed(first_images.values()))
+        print(posts)
+        print(posts_with_images)
+        return render_template('profile/user_profile.html', user=user, posts_with_images=posts_with_images, following=following, following_num=following_num, user_following=user_following, followers_num=followers_num)
+    
+    return render_template('profile/user_profile.html')
 
+@profile_bp.route('/<string:username>/liked', methods=['GET'])
+def profile_liked(username):
+    user = Profile.fetch_user_data(username)
+    if user == None or request.method != 'GET' or user.id != current_user.id:
+        abort(404)
+        
+    if user:
+        posts = Post.fetch_liked_posts(user.id)
+        content = Profile.fetch_liked_post_content(user.id)
+        following = User.fetch_following_ids(user.id)
+        following_num = len(following)
+        followers = User.fetch_followers(user.id)
+        followers_num = len(followers)
+        user_following = User.fetch_following_ids(user.id)
+
+        first_images = { post: {'url': None, 'type': 'image'} for post in posts}
         for cont in content:
             if cont['id'] in first_images and first_images[cont['id']]['url'] is None:
                 first_images[cont['id']]['url'] = cont['url']
                 first_images[cont['id']]['type'] = cont.get('type', 'image')
 
-        posts_with_images = zip(reversed(posts), reversed(first_images.values()))
-        return render_template('profile/user_profile.html', user=user, posts_with_images=posts_with_images, following=following, following_num=following_num, user_following=user_following, followers_num=followers_num)
+        print(first_images)
+        posts_dict = [{'id': value} for value in posts]
+        posts_with_images = zip(reversed(posts_dict), reversed(first_images.values()))
+        print(posts)
+        print(posts_with_images)
+        return render_template('profile/user_profile_liked.html', user=user, posts_with_images=posts_with_images, following=following, following_num=following_num, user_following=user_following, followers_num=followers_num)
     
-    return render_template('profile/user_profile.html')
+    return render_template('profile/user_profile_liked.html')
 
 @profile_bp.route('/settings/edit-profile', methods=['GET', 'POST'])
 @login_required

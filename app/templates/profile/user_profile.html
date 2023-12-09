@@ -7,7 +7,7 @@
 <head>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
+<input type="hidden" id = "user_prof_id" value="{{ user.id }}" 
 
     <!-- Section: White bg -->
     <section>
@@ -34,26 +34,16 @@
           <div class=" justify-content-center text-center" style="margin-top: 68px">
             <div class = "userTop container-fluid">
               {% if current_user != user %}
-                {% if user_following and user.id in user_following %}
                     <!-- User is already followed -->
-                    <div class="dropdown custom-dropdown">
+                    <div class="unfollow-button-{{user.id}} dropdown custom-dropdown" {%if user_following and user.id in user_following%} style = "display:block;" {%else%} style = "display:none;" {%endif%}>
                       <button class="btn btn-sm btn-secondary dropdown-toggle custom-follow-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Following
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <form action="{{ url_for('user_bp.unfollow', following=user.id) }}" method="POST" style="border: none;">
-                              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                              <button class="dropdown-item">Unfollow</button>
-                          </form>
+                        <button onclick="unfollow({{user.id}})" class="dropdown-item">Unfollow</button>
                       </div>
                     </div>
-                {% else %}
-                    <!-- User is not followed, show follow button -->
-                    <form action="{{ url_for('user_bp.follow', following=user.id) }}" method="POST" style="border: none;">
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                        <button class="followBtn btn btn-lg btn-secondary btn-sm fw-bold" style="background-color: #D17A5E; border: none">Follow</button>
-                    </form>
-                {% endif %}
+                      <button onclick="follow({{user.id}})" class="follow-button-{{user.id}} followBtn btn btn-lg btn-secondary btn-sm fw-bold"{%if user.id not in user_following%}style ="display:block; background-color: #D17A5E; border: none;"{%else%}style = "display:none; background-color: #D17A5E; border: none;"{%endif%}>Follow</button>
               {% endif %}
               <h5 style="margin-bottom:2px">{{ user.fullname }}</h5>
               <p class="small text-muted" style="margin-bottom: 8px">@{{ user.username }}</p>
@@ -76,25 +66,25 @@
           <div class="d-flex justify-content-center text-center">
             <a href="{{ url_for('profile_bp.followers', username=user.username) }}">
               <div class="d-flex px-3 py-3">
-                  <h6 class="px-2" id="userFollowing">{{ followers_num }}</h6>
-                  <h6 class="small text-muted">Followers</h6>
+                  <h6 class="px-2" id="userFollowers">{{ followers_num }}</h6>
+                  <h6 class="small text-muted">{%block followers_highlight%}Followers{%endblock%}</h6>
               </div>
             </a>
             <a href="{{ url_for('profile_bp.following', username=user.username) }}">
                 <div class="d-flex px-3 py-3">
                     <h6 class="px-2" id="userFollowing">{{ following_num }}</h6>
-                    <h6 class="small text-muted">Following</h6>
+                    <h6 class="small text-muted">{%block following_highlight%}Following{%endblock%}</h6>
                 </div>
             </a>
           </div>
         </section>
 
         <!-- Navbar: Posts, Liked, and Saved -->
-        <div>
+        <div class = "profNav">
           <nav class="nav justify-content-center">
             {% if current_user == user %}
               <a href="{{ url_for('profile_bp.profile', username=user.username) }}" class="nav-link">Posts</a>
-              <a href="" class="nav-link">Liked</a>
+              <a href="{{ url_for('profile_bp.profile_liked', username=user.username) }}" class="nav-link">Liked</a>
               <a href="" class="nav-link">Saved</a>
             {% else %}
               <a href="{{ url_for('profile_bp.profile', username=user.username) }}" class="nav-link">Posts</a>
@@ -102,6 +92,7 @@
           </nav>
         </div>
         <!-- User Posts Gallery -->
+        {%block gallery%}
         <div class="img-container">
           <div class="row">
               {% if posts_with_images %}
@@ -142,6 +133,7 @@
               {% endif %}
           </div>
         </div>
+        {%endblock%}
 
 
         <!-- Create post icon -->
@@ -187,5 +179,5 @@
   }
 </script>
 <script src="{{ url_for('static', filename='js/create.js') }}"></script>
-
+<script src="{{ url_for('static', filename='js/follow.js') }}"></script>
 {% endblock %}

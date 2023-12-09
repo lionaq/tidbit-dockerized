@@ -1,0 +1,28 @@
+{%extends 'profile/user_profile.html'%}
+{%block gallery%}
+
+<div class="img-container">
+    <div class="row">
+        {% if posts_with_images %}
+            {% for post, first_image_info in posts_with_images %}
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="image-container">
+                        <a href="{{url_for('post_bp.view_post',postid=post.id)}}">
+                            {% if first_image_info['type'] == 'image' %}
+                                <img loading="lazy" src="{{ first_image_info['url'] }}" class="gallery-image" alt="{{ post['title'] }}">
+                            {% elif first_image_info['type'] == 'video' %}
+                                <video class="gallery-video">
+                                    <source src="{{ first_image_info['url'] }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No posts available.</p>
+        {% endif %}
+    </div>
+  </div>
+{%endblock%}

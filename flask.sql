@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS post (
     instructions TEXT,
     tag VARCHAR(99),
     subtags VARCHAR(255),
+    likes INT NOT NULL DEFAULT '0',
     FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
@@ -51,4 +52,15 @@ CREATE TABLE IF NOT EXISTS follow (
         REFERENCES user(id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS like_post (
+  like_id int NOT NULL AUTO_INCREMENT,
+  liker_id int DEFAULT NULL,
+  post_id int DEFAULT NULL,
+  PRIMARY KEY (like_id),
+  KEY fk2_idx (liker_id),
+  KEY fk1_idx (post_id),
+  CONSTRAINT like_fk1 FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT like_fk2 FOREIGN KEY (liker_id) REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE
 );

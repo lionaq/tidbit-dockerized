@@ -52,26 +52,17 @@
           <!-- Inside the loop for posts -->
           <div class="col d-flex align-items-center justify-content-end">
             {% if post.user_id != current_user.id %}
-                {% if post.user_id in following %}
                     <!-- User is already followed -->
-                    <div class="dropdown">
+                    <div class="unfollow-button-{{post.user_id}} dropdown"  {%if post.user_id not in following%} style = "display:none;" {%else%} style= "display:block;"{%endif%}>
                       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
                           Following
                       </button>
                       <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <form action="{{ url_for('user_bp.unfollow', following=post['user_id']) }}" method="POST" style="border: none;">
-                          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                          <button class="dropdown-item">Unfollow</button>
-                        </form>
+                        <button onclick="unfollow({{post.user_id}})" class="dropdown-item">Unfollow</button>
                       </div>
                     </div>              
-                {% else %}
                     <!-- User is not followed, show follow button -->
-                    <form action="{{ url_for('user_bp.follow', following=post['user_id']) }}" method="POST" style="border: none;">
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                        <button class="btn follow">Follow</button>
-                    </form>
-                {% endif %}
+                    <button onclick="follow({{post.user_id}})"class="follow-button-{{post.user_id}} btn follow" {% if post.user_id in following %} style = "display:none;" {%else%} style= "display:block;"{%endif%}>Follow</button>
             {% endif %}
           </div>
         </div>
@@ -122,10 +113,14 @@
           <div class = "col-sm-2 my-2">
             <div class = "row row-cols-2">
               <div class = "col">
-                <button style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-heart fa-2xl"style="color: #000000;"></i></button>
+                {%if post.id in liked%}
+                  <button onclick = "like({{post.id}})" style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "like-icon-{{post.id}}" class="fa-solid fa-heart fa-2xl"style="color: #000000;"></i></button>
+                {%else%}
+                <button onclick = "like({{post.id}})" style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "like-icon-{{post.id}}" class="fa-regular fa-heart fa-2xl"style="color: #000000;"></i></button>
+                {%endif%}
               </div>
               <div class = "col ps-2">
-                <p class="fs-5">{{ range(1, 599) | random }}</p>
+                <p class="fs-5" id = "like-count-{{post.id}}">{{ post.likes}}</p>
               </div>
             </div>
           </div>
@@ -145,7 +140,7 @@
                 <button style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-bookmark fa-2xl" style="color: #000000;"></i></i></button>
               </div>
               <div class = "col ps-2">
-                <p class="fs-5">{{ range(1, 100) | random }}</p>
+                <p class="fs-5"></p>
               </div>
             </div>
           </div>
@@ -155,32 +150,7 @@
     {% endfor %}
   </div>
 </section>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const lazyLoadPosts = document.querySelectorAll('.lazy-post');
-
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px',
-      threshold: .3
-    };
-
-    const observer = new IntersectionObserver(callback, observerOptions);
-
-    lazyLoadPosts.forEach(post => {
-      observer.observe(post);
-    });
-
-    function callback(entries, observer) {
-      entries.forEach(entry => {
-        const intersecting = entry.isIntersecting
-        if (intersecting) {
-          entry.target.style.opacity = '1'
-          observer.unobserve(entry.target);
-        }
-      });
-    }
-  });
-</script>
+<script src="{{ url_for('static', filename='js/lazyLoad.js') }}"></script>
+<script src="{{ url_for('static', filename='js/like.js') }}"></script>
+<script src="{{ url_for('static', filename='js/follow.js') }}"></script>
 {% endblock %}
