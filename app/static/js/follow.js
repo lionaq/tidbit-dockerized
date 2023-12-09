@@ -75,7 +75,7 @@ function unfollow(user_id) {
             }
         }
         else{
-            console.log("Already Following")
+            console.log("Already unfollowed")
             for (let i = 0; i < followButton.length; i++) {
                 followButton[i].style.display="inline";
             }
