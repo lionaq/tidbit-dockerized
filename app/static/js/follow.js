@@ -3,7 +3,7 @@ function follow(user_id) {
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
     const current_user_id = document.querySelector('meta[name="current_user_id"]').content;
-    const user_prof_id = document.querySelector('meta[name="user_prof_id"]').content;
+    const user_prof_id = document.getElementById('user_prof_id')
     const followButton = document.getElementsByClassName('follow-button-' + user_id);
     const unfollowButton = document.getElementsByClassName('unfollow-button-' + user_id);
     const followingCount = document.getElementById('userFollowing');
@@ -26,7 +26,7 @@ function follow(user_id) {
                 unfollowButton[i].style.display = "block";
             }
 
-            if(followingCount && current_user_id == user_prof_id){
+            if(followingCount && current_user_id == user_prof_id.value){ //makes sure following count & user_prof_id elements exists in the page etc.
                 console.log("following count in profile changed!");
                 followingCount.innerHTML = data['following_count'];
             }
@@ -47,7 +47,8 @@ function unfollow(user_id) {
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
     const current_user_id = document.querySelector('meta[name="current_user_id"]').content;
-    const user_prof_id = document.querySelector('meta[name="user_prof_id"]').content;
+    const user_prof_id = document.getElementById('user_prof_id')
+    console.log(user_prof_id)
     const followButton = document.getElementsByClassName('follow-button-' + user_id);
     const unfollowButton = document.getElementsByClassName('unfollow-button-' + user_id);
     const followingCount = document.getElementById('userFollowing');
@@ -70,7 +71,7 @@ function unfollow(user_id) {
                 unfollowButton[i].style.display = "none";
             }
             
-            if(followingCount && current_user_id == user_prof_id){
+            if(followingCount && current_user_id == user_prof_id.value){
                 console.log("following count in profile changed!");
                 followingCount.innerHTML = data['following_count'];
             }
