@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask import Blueprint
-from flask import request, redirect, flash, abort, render_template
+from flask import request, abort, jsonify, flash
 from flask_login import current_user, login_required
 from app.model.user import User
 
@@ -14,12 +14,14 @@ user_bp = Blueprint(
 def follow(following):
     if request.method == 'POST':
         follower = current_user.id
-
-        User.follow(follower, following)
-
-        flash("You are now following this user.", "success")
-
-        return redirect(request.referrer)
+        check_following = User.check_if_following(follower, following)
+        # Check if User is already following
+        if check_following == False:
+            User.follow(follower, following)
+            following_list = User.fetch_following_ids(follower)
+            return jsonify({"following": check_following, 'following_count': len(following_list)})
+        else:
+            return jsonify({"following": check_following})
     else:
         abort(405)
 
@@ -28,8 +30,12 @@ def follow(following):
 def unfollow(following):
     if request.method == 'POST':
         follower = current_user.id
-        User.unfollow(follower, following)
-
-        return redirect(request.referrer)
+        check_following = User.check_if_following(follower, following)
+        if check_following == True:
+            User.unfollow(follower, following)
+            following_list = User.fetch_following_ids(follower)
+            return jsonify({"following": check_following, 'following_count': len(following_list)})
+        else:
+            return jsonify({"following": check_following})
     else:
         abort(405)
