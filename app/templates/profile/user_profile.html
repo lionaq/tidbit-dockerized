@@ -67,20 +67,20 @@
             <a href="{{ url_for('profile_bp.followers', username=user.username) }}">
               <div class="d-flex px-3 py-3">
                   <h6 class="px-2" id="userFollowers">{{ followers_num }}</h6>
-                  <h6 class="small text-muted">Followers</h6>
+                  <h6 class="small text-muted">{%block followers_highlight%}Followers{%endblock%}</h6>
               </div>
             </a>
             <a href="{{ url_for('profile_bp.following', username=user.username) }}">
                 <div class="d-flex px-3 py-3">
                     <h6 class="px-2" id="userFollowing">{{ following_num }}</h6>
-                    <h6 class="small text-muted">Following</h6>
+                    <h6 class="small text-muted">{%block following_highlight%}Following{%endblock%}</h6>
                 </div>
             </a>
           </div>
         </section>
 
         <!-- Navbar: Posts, Liked, and Saved -->
-        <div>
+        <div class = "profNav">
           <nav class="nav justify-content-center">
             {% if current_user == user %}
               <a href="{{ url_for('profile_bp.profile', username=user.username) }}" class="nav-link">Posts</a>
