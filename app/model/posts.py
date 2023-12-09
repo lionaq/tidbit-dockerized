@@ -205,3 +205,54 @@ class Post(UserMixin):
         cursor.close()
 
         return post
+    
+
+    def save_check(saver,post):
+        cursor = mysql.connection.cursor(dictionary=True)
+        check = "SELECT * FROM save_post WHERE saver_id = %s AND post_id = %s"
+        cursor.execute(check, (saver, post))
+        checking = cursor.fetchone()
+        if checking:
+            return True
+        else:
+            return False
+
+    def save(saver, post):
+        try:
+            cursor = mysql.connection.cursor(dictionary=True)
+            sql = "INSERT INTO save_post(saver_id, post_id) VALUES (%s,%s)"
+            cursor.execute(sql,[saver,post])
+            mysql.connection.commit()
+            cursor.close()
+        except:
+            print("saving post failed!")
+
+    def unsave(saver, post):
+        try:
+            cursor = mysql.connection.cursor(dictionary=True)
+            sql = "DELETE FROM save_post WHERE saver_id = %s AND post_id = %s"
+
+            checking = Post.save_check(saver,post)
+
+            if checking:
+                cursor.execute(sql, (saver, post))
+                mysql.connection.commit()
+                cursor.close()
+            else:
+                raise Exception("The relationship does not exist.")
+        except Exception as e:
+            print(f"Error: {e}")
+            mysql.connection.rollback()
+        finally:
+            if cursor:
+                cursor.close()
+    
+    def fetch_saved_posts(id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT post_id FROM save_post WHERE saver_id = %s"
+        cursor.execute(sql,(id,))
+        likes = cursor.fetchall()
+
+        liked_posts = [entry['post_id'] for entry in likes]
+
+        return liked_posts

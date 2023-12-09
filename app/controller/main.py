@@ -20,7 +20,7 @@ def home():
         content = User.fetch_user_post_content()
         user_following = User.fetch_following_ids(user.id)
         liked_posts = Post.fetch_liked_posts(user.id)
-
+        saved_posts = Post.fetch_saved_posts(current_user.id)
         print(liked_posts)
         if user_following:
             following_posts = User.fetch_following_posts(user.id)
@@ -29,7 +29,7 @@ def home():
             if following_posts:
                 posts.extend(following_posts)
                 random.shuffle(posts)
-        return render_template('main/loggedin.html', name=username, user=user, posts=posts, content=content, following=user_following, liked = liked_posts)
+        return render_template('main/loggedin.html', name=username, user=user, posts=posts, content=content, following=user_following, liked = liked_posts, saved = saved_posts)
     
 @main_bp.route('/explore')
 @login_required
@@ -38,5 +38,7 @@ def explore():
     cont = User.fetch_ALL_content_except_user(current_user.username)
     following = User.fetch_following_ids(current_user.id)
     liked_posts = Post.fetch_liked_posts(current_user.id)
+    saved_posts = Post.fetch_saved_posts(current_user.id)
+    print("saved", saved_posts)
     random.shuffle(data)
-    return render_template('main/explore.html', postData = data, postCont = cont, following = following, liked = liked_posts)
+    return render_template('main/explore.html', postData = data, postCont = cont, following = following, liked = liked_posts, saved = saved_posts)

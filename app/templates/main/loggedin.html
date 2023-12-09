@@ -133,7 +133,7 @@
         </div>
         <p class="fs-6 text-muted overflow-ellipsis my-1">{{ post.caption }}</p>
         
-        <!--Like commends and bookmark section-->
+        <!--Like commends and save section-->
         <div class = "row row-cols-3 mt-2">
           <div class = "col-sm-2 my-2">
             <div class = "row row-cols-2">
@@ -162,7 +162,11 @@
           <div class = "col-sm-2 my-2">
             <div class = "row row-cols-2">
               <div class = "col">
-                <button style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-bookmark fa-2xl" style="color: #000000;"></i></i></button>
+                {%if post.id in saved%}
+                  <button onclick = "save({{post.id}})" style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "save-icon-{{post.id}}" class="fa-solid fa-bookmark fa-2xl"style="color: #000000;"></i></button>
+                {%else%}
+                  <button onclick = "save({{post.id}})" style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "save-icon-{{post.id}}" class="fa-regular fa-bookmark fa-2xl"style="color: #000000;"></i></button>
+                {%endif%}
               </div>
               <div class = "col ps-2">
                 <p class="fs-5"></p>
@@ -183,5 +187,6 @@
 <script src="{{ url_for('static', filename='js/lazyLoad.js') }}"></script>
 <script src="{{ url_for('static', filename='js/like.js') }}"></script>
 <script src="{{ url_for('static', filename='js/follow.js') }}"></script>
+<script src="{{ url_for('static', filename='js/save.js') }}"></script>
 
 {% endblock %}
