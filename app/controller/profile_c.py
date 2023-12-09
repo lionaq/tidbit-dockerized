@@ -71,6 +71,38 @@ def profile_liked(username):
     
     return render_template('profile/user_profile_liked.html')
 
+@profile_bp.route('/<string:username>/saved', methods=['GET'])
+def profile_saved(username):
+    user = Profile.fetch_user_data(username)
+    if user == None or request.method != 'GET' or user.id != current_user.id:
+        abort(404)
+        
+    if user:
+        posts = Post.fetch_saved_posts(user.id)
+        content = Profile.fetch_saved_post_content(user.id)
+        following = User.fetch_following_ids(user.id)
+        following_num = len(following)
+        followers = User.fetch_followers(user.id)
+        followers_num = len(followers)
+        user_following = User.fetch_following_ids(user.id)
+
+        first_images = { post: {'url': None, 'type': 'image'} for post in posts}
+        for cont in content:
+            if cont['id'] in first_images and first_images[cont['id']]['url'] is None:
+                first_images[cont['id']]['url'] = cont['url']
+                first_images[cont['id']]['type'] = cont.get('type', 'image')
+
+        print(first_images)
+        posts_dict = [{'id': value} for value in posts]
+        posts_with_images = zip(reversed(posts_dict), reversed(first_images.values()))
+        print(posts)
+        print(posts_with_images)
+        return render_template('profile/user_profile_saved.html', user=user, posts_with_images=posts_with_images, following=following, following_num=following_num, user_following=user_following, followers_num=followers_num)
+    
+    return render_template('profile/user_profile_saved.html')
+
+
+
 @profile_bp.route('/settings/edit-profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():

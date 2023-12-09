@@ -142,6 +142,15 @@ class Post(UserMixin):
 
         return liked_posts
 
+    def fetch_saved_posts(id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT post_id FROM save_post WHERE saver_id = %s"
+        cursor.execute(sql,(id,))
+        saves = cursor.fetchall()
+
+        saved_posts = [entry['post_id'] for entry in saves]
+
+        return saved_posts
 
 
     def like(liker, post):

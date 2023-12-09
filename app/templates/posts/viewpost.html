@@ -93,18 +93,16 @@
         {%endif%}
       </p>
     </button>
-    <a href="#" class="text-dark text-decoration-none">
-      <button onclick="save({{post.id}})" class="text-dark text-decoration-none" style = "border:none; background-color:white;">
-        <p class="fs-6 rounded" style="background-color: transparent;">
-          {%if post.id in saved%}
-          <i id = "save-icon-{{post.id}}" class="fa-solid fa-bookmark fa-2xl"style="color: #000000;"></i>
-          {%elif post.id not in saved%}
-          <i id = "save-icon-{{post.id}}" class="fa-regular fa-bookmark fa-2xl"style="color: #000000;"></i>
-          {%endif%}
-        </p>
+    <button onclick="save({{post.id}})" class="text-dark text-decoration-none" style = "border:none; background-color:white;">
+      <p class="fs-6 rounded" style="background-color: transparent;">
+      {%if post.id in saved%}
+        <i id = "save-icon-{{post.id}}" class="fa-solid fa-bookmark fa-2xl"style="color: #000000;"></i>
+      {%elif post.id not in saved%}
+        <i id = "save-icon-{{post.id}}" class="fa-regular fa-bookmark fa-2xl"style="color: #000000;"></i>
+      {%endif%}
+      </p>
 
-      </button>
-    </a>
+    </button>
   </div>
 </div>
 
