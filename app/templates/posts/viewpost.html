@@ -106,8 +106,7 @@
   </div>
 </div>
 
-<div
-  class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center mt-3 pt-3">
+<div class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center mt-3 pt-3">
   <div class="d-flex justify-content-between w-100">
     <a href="{{url_for('profile_bp.profile',username=user.username)}}" class="text-dark text-decoration-none">
       <div class="d-flex align-items-center gap-3">
@@ -120,7 +119,7 @@
       </div>
     </a>
 
-  {% if post.user_id != current_user.id %}
+    {% if post.user_id != current_user.id %}
     <!-- User is already followed -->
     <div class="unfollow-button-{{post.user_id}} dropdown"  {%if post.user_id in user_following %} style = "display:block;" {%else%} style= "display:none;" {%endif%}>
       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
@@ -132,9 +131,9 @@
     </div>              
     <!-- User is not followed, show follow button -->
     <button onclick="follow({{post.user_id}})"class="follow-button-{{post.user_id}} btn follow" {% if post.user_id not in user_following %} style = "display:block; height:40px;" {%else%} style= "display:none; height:40px;"{%endif%}>Follow</button>
-  {% endif %}
-
+    {% endif %}
   </div>
+  {%block context%}
   <div class="d-flex w-100 align-content-start justify-content-start align-items-start">
     <p class="align-self-start mt-3 fw-lighter fs-6 text-break text-start">{{post.caption}}</p>
   </div>
@@ -181,7 +180,7 @@
     </ol>
   </div>
 </div>
-
+{%endblock%}
 <!-- DELETE CONFIRM MODAL -->
 <div class="modal fade" id="deleteConfirm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteConfirmLabel" aria-hidden="true" data-bs-theme="dark">
   <div class="modal-dialog text-light">
