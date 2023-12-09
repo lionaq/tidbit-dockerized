@@ -39,17 +39,24 @@
     box-shadow: 0px 0px 10px 0px #D17A5E;
   }
 
+  .back-button-container {
+    position: relative;
+    top: 50px;
+    z-index: 1000;
+  }
+
   .main-container {
     display: flex;
     justify-content: center;
-    max-width: 70vw;
+    max-width: 75vw;
     max-height: 90vh;
-    margin-top: 40px;
-    margin-left: 130px;
+    margin-left: 7vw;
     box-shadow: 0px 0px 8px 0px #b0b0b0;
     border-radius: 10px;
     padding: 5px;
+    position: relative;
   }
+
   .gallery-container {
     max-height: 80vh;
     width: 75%;
@@ -57,24 +64,25 @@
     margin-right: 10px;
     margin-left: 15px;
   }
+
   .content-container {
     max-height: 80vh;
     min-height: 80vh;
-    width: 52%;
+    width: 80%;
     margin-top: 10px;
   }
+
   .inside-content-container {
     max-height: 65vh;
     min-height: 60vh;
-    width: 100%;  
+    width: 100%;
     overflow-y: auto;
   }
 </style>
 
-<div>
-  <a class="btn btn-dark text-light z-3 rounded " href="javascript:history.go(-1)"
-  style="position: absolute; top: 105px; left: 145px">
-  <i class="fa-solid fa-angle-left fa-beat" style="color: #DAD6BF;"></i>
+<div class="back-button-container">
+  <a class="btn btn-dark text-light z-3 rounded" href="javascript:history.go(-1)">
+    <i class="fa-solid fa-angle-left fa-beat" style="color: #DAD6BF;"></i>
   </a>
 </div>
 
