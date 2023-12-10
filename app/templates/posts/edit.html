@@ -66,7 +66,7 @@
                     <div class = "col-xl-6 ps-2">
                         <p class = "postText">Title:
                             {% if form.title.errors %}
-                                <span style = "margin-left:69%;" class= "text-danger fw-bolder fs-6">
+                                <span class= "text-danger fw-bolder fs-6">
                                     {% for error in form.title.errors %}{{ error }}{% endfor %}
                                 </span>
                             {% endif %} 
@@ -74,7 +74,7 @@
                         {{ form.title(class="form-control my-2 mb-2  fs-4", style = "textFieldBorder", placeholder = "Add Title", style = "font-weight: 600;") }}
                         <p class = "postText">Caption:
                             {% if form.caption.errors %}
-                            <span style = "margin-left:65%;" class= "text-danger fw-bolder fs-6">
+                            <span class= "text-danger fw-bolder fs-6">
                                 {% for error in form.caption.errors %}{{ error }}{% endfor %}
                             </span>
                         {% endif %} 
@@ -83,7 +83,7 @@
                         
                         <p class = "postText">Ingredients:
                             {% if form.ingredients.errors %}
-                            <span style = "margin-left:61%;" class= "text-danger fw-bolder fs-6">
+                            <span  class= "text-danger fw-bolder fs-6">
                                 {% for error in form.ingredients.errors %}{{ error }}{% endfor %}
                             </span>
                         {% endif %} 
@@ -91,7 +91,7 @@
                         {{ form.ingredients(class="form-control my-2", rows="3", style = "textFieldBorder", placeholder = "List the ingredients here") }}
                         <p class = "postText">Instructions:
                             {% if form.instructions.errors %}
-                            <span style = "margin-left:60%;" class= "text-danger fw-bolder fs-6">
+                            <span class= "text-danger fw-bolder fs-6">
                                 {% for error in form.instructions.errors %}{{ error }}{% endfor %}
                             </span>
                         {% endif %} 

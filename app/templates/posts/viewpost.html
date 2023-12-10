@@ -127,19 +127,27 @@
           </div>
         </a>
     
-        {% if post.user_id != current_user.id %}
-        <!-- User is already followed -->
-        <div class="unfollow-button-{{post.user_id}} dropdown"  {%if post.user_id not in following%} style = "display:none;" {%else%} style= "display:block;"{%endif%}>
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
-              Following
-          </button>
-          <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <button onclick="unfollow({{post.user_id}})" class="dropdown-item">Unfollow</button>
-          </div>
-        </div>              
-        <!-- User is not followed, show follow button -->
-        <button onclick="follow({{post.user_id}})"class="follow-button-{{post.user_id}} btn follow" {% if post.user_id in following %} style = "display:none; height:40px;" {%else%} style= "display:block; height:40px;"{%endif%}>Follow</button>
-      {% endif %}
+        {% if current_user.id != post.user_id%}
+          <!-- User is already followed -->
+          <div class="unfollow-button-{{post.user_id}} dropdown"  {%if post.user_id not in following%} style = "display:none;" {%else%} style= "display:block;"{%endif%}>
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
+                Following
+            </button>
+            <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <button onclick="unfollow({{post.user_id}})" class="dropdown-item">Unfollow</button>
+            </div>
+          </div>              
+          <!-- User is not followed, show follow button -->
+          <button onclick="follow({{post.user_id}})"class="follow-button-{{post.user_id}} btn follow" {% if post.user_id in following %} style = "display:none; height:40px;" {%else%} style= "display:block; height:40px;"{%endif%}>Follow</button>
+        {% else %}
+        <div class="dropdown pt-1">
+          <button class="btn" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical" style="color: #d17a5e;"></i></button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{url_for('post_bp.edit',post_id=post.id,user_name=current_user.username)}}">Edit Post</a></li>
+            <li><a class="dropdown-item btn" data-bs-toggle="modal" data-bs-target="#deleteConfirm">Delete Post</a></li>
+          </ul>
+        </div>
+        {%endif%}
       </div>
       <div class="d-flex w-100 align-content-start justify-content-start align-items-start ms-3">
         <p class="align-self-start mt-3 fw-lighter fs-6 text-break text-start overflow-ellipsis">{{post.caption}}</p>
