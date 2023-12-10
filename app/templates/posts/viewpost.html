@@ -4,6 +4,11 @@
 {% block content%}
 
 <style>
+  .overflow-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .comment-section:hover hr {
     display: block;
   }
@@ -34,14 +39,32 @@
     background-color: #D17A5E;
     box-shadow: 0px 0px 10px 0px #D17A5E;
   }
+
+  .back-btn {
+    opacity: .7;
+    position: fixed;
+    z-index: 99999;
+    top: 90px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .back-btn:hover,
+  .back-btn:active {
+      transform: scale(1.1);
+      opacity: 1;
+  }
+  @media only screen and (max-width:600px){
+    .back-btn{
+      top:110px;
+    }
+  }
 </style>
 
-
-<a class="btn btn-dark text-light rounded" href="javascript:history.go(-1)" style="position: relative; top: 50px;">
+<a class="btn btn-dark text-light rounded back-btn" href="javascript:history.go(-1)">
   <i class="fa-solid fa-angle-left fa-beat" style="color: #DAD6BF;"></i>
 </a>
-
-<div class="container-md py-3" style="max-width: 1070px; border: solid 1px rgb(152, 140, 140); border-radius: 15px;">
+</div>
+<div class="container-md py-3 my-4" style="max-width: 1070px; border: solid 1px rgb(152, 140, 140); border-radius: 15px;">
   <div class="row">
     <div class="col-lg-6">
       <!-- Left side column -->
@@ -79,7 +102,7 @@
       </div>
     
       <div class="d-flex justify-content-between align-items-center mt-3 mx-auto ms-3">
-        <h5 class="fs-2 fw-semibold rounded" style="background-color: transparent;">
+        <h5 class="fs-2 fw-semibold rounded overflow-ellipsis" style="background-color: transparent;">
           {{post.title}}
         </h5>
         <div class="d-flex gap-4 align-items-center">
@@ -134,7 +157,7 @@
         {%endif%}
       </div>
       <div class="d-flex w-100 align-content-start justify-content-start align-items-start ms-3">
-        <p class="align-self-start mt-3 fw-lighter fs-6 text-break text-start">{{post.caption}}</p>
+        <p class="align-self-start mt-3 fw-lighter fs-6 text-break text-start overflow-ellipsis">{{post.caption}}</p>
       </div>
       <div class="d-flex w-100 flex-wrap gap-2 tag-section ms-3 mb-3">
         <span class="badge rounded-pill my-auto">{{post.tag}}</span>
