@@ -51,7 +51,7 @@
                     </div>
                 </div>
                 <div class = "d-flex flex-row-reverse mt-3">
-                    <button id = "postComment"type = "submit" class="btn btn-sm rounded-pill fw-bold ms-2" style="display:none; background-color: #d17a5e; color: black;">Comment</button>
+                    <button disabled id = "postComment"type = "submit" class="btn btn-sm rounded-pill fw-bold ms-2" style="display:none; background-color: #d17a5e; color: black;">Comment</button>
                     <button id = "cancelComment" type = "button" class = "btn btn-sm  rounded-pill ms-1 fw-bold" style="display:none; background-color: rgba(182, 120, 99, 0.349); color: black;">Cancel</button>
                 </div>
             </form>
@@ -74,7 +74,7 @@
                                 <p class="text-break text-start mb-0 fs-6">{{comment.fullname}}</p>
                                 <small class="text-break text-start mb-0 text-muted fs-6">@{{comment.username}}</small>
                             </div>
-                            <textarea  readonly type="text" style = "resize:none; overflow: hidden;" class="form-control-plaintext " rows = "1" id="commentBody" placeholder = "Add a comment...">{{comment.comment_body}}</textarea>
+                            <span class = "text-break"> <textarea  readonly type="text" style = "resize:none; overflow: hidden;" class="form-control-plaintext " rows = "1" id="commentBody" placeholder = "Add a comment...">{%for ing in comment.comment_body.split('\r\n')%}{%if ing.strip()%}{{ing}}{%endif%}{% endfor %}</textarea></span>
                         </div>
                         <div class = "col-1 p-0 m-0">
                             <div class="dropdown dropstart p-0">
@@ -118,6 +118,11 @@
             commentBody.style.height = "";
             /* commentBody.style.height = Math.min(commentBody.scrollHeight, 300) + "px"; */
             commentBody.style.height = commentBody.scrollHeight + "px"
+            if(commentBody.value.trim().length == 0){
+                postComment.disabled = true;
+            }else{
+                postComment.disabled = false;
+            }
         };
     </script>
 {%endblock%}

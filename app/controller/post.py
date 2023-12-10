@@ -214,12 +214,11 @@ def view_post_comment(postid):
     user_following = User.fetch_following_ids(current_user.id)
     liked_posts = Post.fetch_liked_posts(current_user.id)
     saved_posts = Post.fetch_saved_posts(current_user.id)
-    comments = Post.fetch_all_comment_in_post([postid])
     if request.method == "POST":
         print("HELLo")
         commentBody = request.form.get('commentBody')
         print(commentBody)
-        if commentBody:
+        if commentBody and commentBody.isspace() == False:
             print("IM IN")
             data = [postid, current_user.id, commentBody]
             Post.add_comment(data)
@@ -228,8 +227,9 @@ def view_post_comment(postid):
     else:
         print("GET METHOD")
 
+    comments = Post.fetch_all_comment_in_post([postid])
     print(comments)
-    return render_template('posts/viewpost_comment.html', comments = comments, post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
+    return render_template('posts/viewpost_comment.html', comments = reversed(comments), post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
 
 
 @post_bp.route('/like/<int:post>', methods=['POST'])
