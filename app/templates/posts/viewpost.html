@@ -94,7 +94,7 @@
           {% elif img.type == 'video' %}
           <div class="carousel-item {{ 'active' if loop.first }}">
             <div class="position-relative d-flex justify-content-center">
-              <video controls autoplay width="100%" height="333px" class="align-self-center object-fit-cover" style="border-radius: 10px;">
+              <video controls width="100%" height="333px" class="align-self-center object-fit-cover" style="border-radius: 10px;">
                 <source src="{{ img.url }}" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
