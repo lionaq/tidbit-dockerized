@@ -203,6 +203,18 @@ def view_post(postid):
     saved_posts = Post.fetch_saved_posts(current_user.id)
     return render_template('posts/viewpost.html', post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
 
+@post_bp.route('/<int:postid>/viewpost/comment', methods=['GET', 'POST'])
+@login_required
+def view_post_comment(postid):
+    form = SubmitForm()
+    post = Post.get_by_id(postid)
+    user = User.search_by_id(post.user_id)
+    content = Post.fetch_view_post_img(post.id)
+    user_following = User.fetch_following_ids(current_user.id)
+    liked_posts = Post.fetch_liked_posts(current_user.id)
+    saved_posts = Post.fetch_saved_posts(current_user.id)
+    return render_template('posts/viewpost_comment.html', post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
+
 @post_bp.route('/like/<int:post>', methods=['POST'])
 @login_required
 def like(post):

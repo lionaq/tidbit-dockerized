@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
-{% set active_page = "viewpostrecipe" %}
+
 {% block title %} {{user.username}} | Tidbit {% endblock%}
 {% block content%}
-
 <style>
   .overflow-ellipsis {
     white-space: nowrap;
@@ -22,6 +21,8 @@
     width: 150%;
     border: 3px solid #D17A5E;
   }
+
+  
   .tag-section span{
     background-color: #6c757d;
   }
@@ -57,6 +58,19 @@
     .back-btn{
       top:110px;
     }
+  }
+  .recipe-section:hover hr {
+    display: block;
+  }
+
+  .recipe-section:hover a {
+    font-weight: bold;
+  }
+
+  .recipe-section hr {
+    display: none;
+    width: 150%;
+    border: 3px solid #D17A5E;
   }
 </style>
 
@@ -165,20 +179,23 @@
       <div class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center mt-3 pt-3">
         <hr class="w-100" style="margin-top: -20px;">
         <div class="d-flex w-100 justify-content-around">
+          {%block contextNav%}
           <div class="d-flex flex-column align-items-center">
-            <a href="{{url_for('post_bp.view_post',postid=post.id)}}" class="{{'fw-bold' if active_page == 'viewpostrecipe'}} text-dark text-decoration-none">RECIPE</a>
-            {% if active_page == 'viewpostrecipe'%}
+            <a href="{{url_for('post_bp.view_post',postid=post.id)}}" class="fw-bold text-dark text-decoration-none">RECIPE</a>
             <hr style="width: 150%; border: 3px solid #D17A5E;">
-            {% endif%}
           </div>
           <div class="d-flex flex-column align-items-center comment-section">
-            <a href="#" class="text-dark text-decoration-none">COMMENTS</a>
+            <a href="{{url_for('post_bp.view_post_comment',postid=post.id)}}" class="text-dark text-decoration-none">COMMENTS</a>
             <hr>
           </div>
+          {%endblock%}
         </div>
         <hr class="w-100" style="margin-top: -16px;">
   
         <div class="content-container pt-3" style="width: 100%; max-height: 500px; overflow-y: auto;">
+
+          {%block context%}
+          
           <div class="d-flex w-100 flex-column align-items-start">
             <h6 class="ms-4">INGREDIENTS</h6>
             <ul class="my-2">
@@ -200,6 +217,8 @@
               {% endfor %}
             </ol>
           </div>
+
+          {%endblock%}
         </div>
       </div>    
     </div>

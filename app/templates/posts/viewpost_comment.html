@@ -1,4 +1,41 @@
-{%extends 'posts/viewpost_comment.html'%}
-{%block context%}
+{%extends 'posts/viewpost.html'%}
 
+{%block contextNav%}
+<div class="d-flex flex-column align-items-center recipe-section">
+  <a href="{{url_for('post_bp.view_post',postid=post.id)}}" class="text-dark text-decoration-none">RECIPE</a>
+  <hr>
+</div>
+<div class="d-flex flex-column align-items-center">
+  <a href="{{url_for('post_bp.view_post_comment',postid=post.id)}}" class="fw-bold text-dark text-decoration-none">COMMENTS</a>
+  <hr style="width: 150%; border: 3px solid #D17A5E;">
+</div>
+{%endblock%}
+
+{%block context%}
+    <div class = "row row-cols-3 mx-auto d-flex justify-content-center my-2 ms-2">
+        <div class = "col-1 d-flex justify-content-center px-0">
+            <a href="{{ url_for('profile_bp.profile', username=current_user.username) }}">
+                <img loading="lazy" 
+                    class="img rounded-pill" {% if 'static' in current_user.profilepic %}
+                    src = "{{url_for('static', filename=current_user.profilepic[7:])}}"{%else%}src="{{ current_user.profilepic }}"{%endif%} 
+                    style="height: 45px; width: 45px;">
+            </a>
+        </div>
+        <div class = "col-10">
+            <div class = "row">
+                <p class="text-break text-start mb-0 fs-6">Romeo Giullano R. Aclo</p>
+                <small class="text-break text-start mb-2 text-muted fs-6">@lionaq</small>
+            </div>
+            <p class="text-break">mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</p>
+        </div>
+        <div class = "col-1 p-0 m-0">
+            <div class="dropdown dropstart p-0">
+                <button class="btn p-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical" style="color: #d17a5e;"></i></button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{{url_for('post_bp.edit',post_id=post.id,user_name=current_user.username)}}">Edit Post</a></li>
+                    <li><a class="dropdown-item btn" data-bs-toggle="modal" data-bs-target="#deleteConfirm">Delete Post</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 {%endblock%}
