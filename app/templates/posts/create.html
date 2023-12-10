@@ -4,17 +4,17 @@
 
 {% block content%}
 <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/create.css')}}">
-    <div class = "container-md my-4 p-3" style = "border-radius: 15px; border: 1px solid rgba(0, 0, 0, 0.20); background: #FFF; max-width: 1070px;">
+    <div class = "container-md my-2 p-1" style = "border-radius: 15px; border: 1px solid rgba(0, 0, 0, 0.20); background: #FFF; max-width: 1070px;">
         <form id="postForm" method="POST" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
-            <div class = "container p-4">
-                <p style = "text-align: left; font-family: Dosis; font-size: 30px;  font-weight: bold; letter-spacing: 1.5px;">New Post</p>
-                <p class="text-info fw-bolder">Add atleast 1 file</p>
+            <div class = "container p-3">
+                <p class = "my-0 ms-4" style = "text-align: left; font-family: Dosis; font-size: 30px;  font-weight: bold; letter-spacing: 1.5px;">New Post</p>
+                <p class=" ms-4 text-info fw-bolder">Add atleast 1 file</p>
                 <div class = "row">
-                    <div class ="col-xl-6">
+                    <div class ="col-xl-6" align="center">
                         {{ form.content(class="form-control my-4 fs-4", style="display:none;", multiple="multiple") }}
                         <div class="form-group">
-                            <label class="postUpload carousel slide overflow-hidden d-flex justify-content-center" for="{{ form.content.id }}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer; width: 425px; height: 250px;" id = "carousel">
+                            <label class="postUpload carousel slide overflow-hidden d-flex justify-content-center" for="{{ form.content.id }}" style="border-radius: 5px; border: 3px dashed #000; cursor:pointer; max-width: 450px; height: 250px;" id = "carousel">
                                 <!-- Add a container for previews -->
                                 <div id="filePreviews" class = "carousel-inner" style = "width:100%; height:250px;">
                                     <img id="imagePreview" src="{{url_for('static', filename='img/UploadImg.png')}}" alt="File Preview" class="img-thumbnail" style="width:100%; height:250px; opacity:0.2;" loading="lazy">
@@ -49,7 +49,7 @@
                             </ul>
                         {% endif %}
                     </div>
-                    <div class = "col-xl-6 ps-2">
+                    <div class = "col-xl-6 ps-1">
                         <p class = "postText">Ingredients:</p>
                         {% if form.ingredients.errors %}
                                 {% for error in form.ingredients.errors %}
