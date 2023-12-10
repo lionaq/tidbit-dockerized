@@ -196,27 +196,27 @@
 
           {%block context%}
           
-          <div class="d-flex w-100 flex-column align-items-start">
-            <h6 class="ms-4">INGREDIENTS</h6>
-            <ul class="my-2">
-              {% for ing in post.ingredients.split('\r\n') %}
-                {%if ing.strip()%}
-                  <li class="text-break text-start mt-3 ps-3">{{ing}}</li>
-                {%endif%}
-              {% endfor %}
-            </ul>
-          </div>
-        
-          <div class="d-flex w-100 flex-column align-items-start my-5">
-            <h6 class="ms-4">INSTRUCTION</h6>
-            <ol class="my-2">
-              {% for int in post.instructions.split('\r\n') %}
-                {%if int.strip()%}
-                  <li class="text-break text-start mt-3 ps-3">{{int}}</li>
-                {%endif%}
-              {% endfor %}
-            </ol>
-          </div>
+            <div class="d-flex w-100 flex-column align-items-start">
+              <h6 class="ms-4">INGREDIENTS</h6>
+              <ul class="my-2">
+                {% for ing in post.ingredients.split('\r\n') %}
+                  {%if ing.strip()%}
+                    <li class="text-break text-start mt-3 ps-3">{{ing}}</li>
+                  {%endif%}
+                {% endfor %}
+              </ul>
+            </div>
+          
+            <div class="d-flex w-100 flex-column align-items-start my-5">
+              <h6 class="ms-4">INSTRUCTION</h6>
+              <ol class="my-2">
+                {% for int in post.instructions.split('\r\n') %}
+                  {%if int.strip()%}
+                    <li class="text-break text-start mt-3 ps-3">{{int}}</li>
+                  {%endif%}
+                {% endfor %}
+              </ol>
+            </div>
 
           {%endblock%}
         </div>

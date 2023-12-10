@@ -76,6 +76,5 @@ class EditPost(FlaskForm):
     subtag = SelectMultipleField('Subtags', [validators.DataRequired(message="Please choose a subtag")], choices=[('breakfast', 'Breakfast'), ('lunch', 'Lunch'), ('snack', 'Snack'), ('dinner', 'Dinner'), ('dessert', 'Dessert')], option_widget=widgets.CheckboxInput(), widget=widgets.ListWidget(prefix_label=False))
     submit = SubmitField('Edit Post')
 
-
 class SubmitForm(FlaskForm):
     submit = SubmitField('Submit')

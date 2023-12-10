@@ -203,9 +203,10 @@ def view_post(postid):
     saved_posts = Post.fetch_saved_posts(current_user.id)
     return render_template('posts/viewpost.html', post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
 
-@post_bp.route('/<int:postid>/viewpost/comment', methods=['GET', 'POST'])
+@post_bp.route('/<int:postid>/viewpost/comment', methods=['POST', 'GET'])
 @login_required
 def view_post_comment(postid):
+    
     form = SubmitForm()
     post = Post.get_by_id(postid)
     user = User.search_by_id(post.user_id)
@@ -213,7 +214,23 @@ def view_post_comment(postid):
     user_following = User.fetch_following_ids(current_user.id)
     liked_posts = Post.fetch_liked_posts(current_user.id)
     saved_posts = Post.fetch_saved_posts(current_user.id)
-    return render_template('posts/viewpost_comment.html', post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
+    comments = Post.fetch_all_comment_in_post([postid])
+    if request.method == "POST":
+        print("HELLo")
+        commentBody = request.form.get('commentBody')
+        print(commentBody)
+        if commentBody:
+            print("IM IN")
+            data = [postid, current_user.id, commentBody]
+            Post.add_comment(data)
+        print(f'Textarea Data: {commentBody}')
+        print("success!")
+    else:
+        print("GET METHOD")
+
+    print(comments)
+    return render_template('posts/viewpost_comment.html', comments = comments, post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
+
 
 @post_bp.route('/like/<int:post>', methods=['POST'])
 @login_required

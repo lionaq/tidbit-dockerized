@@ -265,3 +265,19 @@ class Post(UserMixin):
         liked_posts = [entry['post_id'] for entry in likes]
 
         return liked_posts
+    
+    def add_comment(data):
+        print(data)
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "INSERT INTO comment(post_id, user_id, comment_body) VALUES (%s,%s, %s)"
+        cursor.execute(sql,data)
+        mysql.connection.commit()
+    
+    def fetch_all_comment_in_post(post_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT user.id, user.fullname, user.username, user.profilepic, comment.comment_id, comment.comment_body FROM user JOIN comment ON user.id = comment.user_id WHERE comment.post_id = %s;"
+        cursor.execute(sql, post_id)
+        content = cursor.fetchall()
+
+        cursor.close()
+        return content

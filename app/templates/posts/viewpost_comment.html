@@ -12,30 +12,112 @@
 {%endblock%}
 
 {%block context%}
-    <div class = "row row-cols-3 mx-auto d-flex justify-content-center my-2 ms-2">
-        <div class = "col-1 d-flex justify-content-center px-0">
-            <a href="{{ url_for('profile_bp.profile', username=current_user.username) }}">
-                <img loading="lazy" 
-                    class="img rounded-pill" {% if 'static' in current_user.profilepic %}
-                    src = "{{url_for('static', filename=current_user.profilepic[7:])}}"{%else%}src="{{ current_user.profilepic }}"{%endif%} 
-                    style="height: 45px; width: 45px;">
-            </a>
+    <style>
+        .underline{
+            border-bottom: 2px solid #000000; /* Adjust the color as needed */
+            transition: border-color 0.3s; /* Add a transition effect if desired */
+        }
+        .plainline{
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+        <div class = "container">
+            <form method="POST" action = "{{url_for('post_bp.view_post_comment', postid = post.id)}}">
+                {{ form.hidden_tag() }}
+                <div class = "row row-cols-3 mx-auto d-flex justify-content-center my-2 ms-2">
+                    <div class = "col-1 d-flex justify-content-center px-0">
+                        <a href="{{ url_for('profile_bp.profile', username=current_user.username) }}">
+                            <img loading="lazy" 
+                                class="img rounded-pill" {% if 'static' in current_user.profilepic %}
+                                src = "{{url_for('static', filename=current_user.profilepic[7:])}}"{%else%}src="{{ current_user.profilepic }}"{%endif%} 
+                                style="height: 45px; width: 45px;">
+                        </a>
+                    </div>
+                    <div class = "col-10">
+                        <div class = "row">
+                            <p class="text-break text-start mb-0 fs-6">{{current_user.fullname}}</p>
+                            <small class="text-break text-start mb-0 text-muted fs-6">@{{current_user.username}}</small>
+                        </div>
+                        <textarea name = "commentBody" type="text" style = "resize:none; overflow: hidden;" class="form-control-plaintext plainline" rows = "1" id="commentBody" placeholder = "Add a comment..."></textarea>
+                    </div>
+                    <div class = "col-1 p-0 m-0">
+                        <div class="dropdown dropstart p-0">
+                            <button class="btn p-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical" style="color: #d17a5e;"></i></button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{url_for('post_bp.edit',post_id=post.id,user_name=current_user.username)}}">Edit Comment</a></li>
+                                <li><a class="dropdown-item btn" data-bs-toggle="modal" data-bs-target="#deleteConfirm">Delete Comment</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class = "d-flex flex-row-reverse mt-3">
+                    <button id = "postComment"type = "submit" class="btn btn-sm rounded-pill fw-bold ms-2" style="display:none; background-color: #d17a5e; color: black;">Comment</button>
+                    <button id = "cancelComment" type = "button" class = "btn btn-sm  rounded-pill ms-1 fw-bold" style="display:none; background-color: rgba(182, 120, 99, 0.349); color: black;">Cancel</button>
+                </div>
+            </form>
         </div>
-        <div class = "col-10">
-            <div class = "row">
-                <p class="text-break text-start mb-0 fs-6">Romeo Giullano R. Aclo</p>
-                <small class="text-break text-start mb-2 text-muted fs-6">@lionaq</small>
+        {%for comment in comments%}
+            <div class = "container-fluid">
+                <form method="POST" action = "{{url_for('post_bp.view_post_comment', postid = post.id)}}">
+                    {{ form.hidden_tag() }}
+                    <div class = "row row-cols-3 mx-auto d-flex justify-content-center my-2 ms-2">
+                        <div class = "col-1 d-flex justify-content-center px-0">
+                            <a href="{{ url_for('profile_bp.profile', username=comment.username) }}">
+                                <img loading="lazy" 
+                                    class="img rounded-pill" {% if 'static' in comment.profilepic %}
+                                    src = "{{url_for('static', filename=comment.profilepic[7:])}}"{%else%}src="{{ comment.profilepic }}"{%endif%} 
+                                    style="height: 45px; width: 45px;">
+                            </a>
+                        </div>
+                        <div class = "col-10">
+                            <div class = "row">
+                                <p class="text-break text-start mb-0 fs-6">{{comment.fullname}}</p>
+                                <small class="text-break text-start mb-0 text-muted fs-6">@{{comment.username}}</small>
+                            </div>
+                            <textarea  readonly type="text" style = "resize:none; overflow: hidden;" class="form-control-plaintext " rows = "1" id="commentBody" placeholder = "Add a comment...">{{comment.comment_body}}</textarea>
+                        </div>
+                        <div class = "col-1 p-0 m-0">
+                            <div class="dropdown dropstart p-0">
+                                <button class="btn p-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical" style="color: #d17a5e;"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{url_for('post_bp.edit',post_id=post.id,user_name=current_user.username)}}">Edit Comment</a></li>
+                                    <li><a class="dropdown-item btn" data-bs-toggle="modal" data-bs-target="#deleteConfirm">Delete Comment</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <p class="text-break">mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</p>
-        </div>
-        <div class = "col-1 p-0 m-0">
-            <div class="dropdown dropstart p-0">
-                <button class="btn p-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical" style="color: #d17a5e;"></i></button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{{url_for('post_bp.edit',post_id=post.id,user_name=current_user.username)}}">Edit Post</a></li>
-                    <li><a class="dropdown-item btn" data-bs-toggle="modal" data-bs-target="#deleteConfirm">Delete Post</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+        {%endfor%}
+    <script>
+        let commentBody = document.getElementById("commentBody");
+        let postComment = document.getElementById("postComment");
+        let cancelComment = document.getElementById("cancelComment");
+
+        commentBody.addEventListener("focus", function () {
+            commentBody.classList.remove("plainline");
+            commentBody.classList.add("underline");
+            postComment.style.display = "inline";
+            cancelComment.style.display = "inline";
+        });
+
+        commentBody.addEventListener("blur", function () {
+            commentBody.classList.remove("underline");
+            commentBody.classList.add("plainline");
+        });
+
+        cancelComment.addEventListener("click", function () {
+            console.log("CANCEL");
+            postComment.style.display = "none";
+            cancelComment.style.display = "none";
+            commentBody.value = "";
+            commentBody.style.height = "";
+        });
+
+        commentBody.oninput = function() {
+            commentBody.style.height = "";
+            /* commentBody.style.height = Math.min(commentBody.scrollHeight, 300) + "px"; */
+            commentBody.style.height = commentBody.scrollHeight + "px"
+        };
+    </script>
 {%endblock%}
