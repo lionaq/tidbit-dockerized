@@ -21,7 +21,7 @@
             border-bottom: 1px solid #ccc;
         }
     </style>
-        <div class = "container">
+        <div class = "container mb-5">
             <form method="POST" action = "{{url_for('post_bp.view_post_comment', postid = post.id)}}">
                 {{ form.hidden_tag() }}
                 <div class = "row row-cols-3 mx-auto d-flex justify-content-center my-2 ms-2">
@@ -41,13 +41,6 @@
                         <textarea name = "commentBody" type="text" style = "resize:none; overflow: hidden;" class="form-control-plaintext plainline" rows = "1" id="commentBody" placeholder = "Add a comment..."></textarea>
                     </div>
                     <div class = "col-1 p-0 m-0">
-                        <div class="dropdown dropstart p-0">
-                            <button class="btn p-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical" style="color: #d17a5e;"></i></button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{url_for('post_bp.edit',post_id=post.id,user_name=current_user.username)}}">Edit Comment</a></li>
-                                <li><a class="dropdown-item btn" data-bs-toggle="modal" data-bs-target="#deleteConfirm">Delete Comment</a></li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
                 <div class = "d-flex flex-row-reverse mt-3">
@@ -57,7 +50,7 @@
             </form>
         </div>
         {%for comment in comments%}
-            <div class = "container-fluid">
+            <div class = "container-fluid my-5">
                 <form method="POST" action = "{{url_for('post_bp.view_post_comment', postid = post.id)}}">
                     {{ form.hidden_tag() }}
                     <div class = "row row-cols-3 mx-auto d-flex justify-content-center my-2 ms-2">
