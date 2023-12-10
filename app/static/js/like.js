@@ -14,9 +14,9 @@ function like(postId){
             console.log(data);
             likeCount.innerHTML = data["likes"];
             if(data['liked'] == true){
-                likebutton.className = "fa-solid fa-heart fa-2xl";
+                likebutton.className = "fa-solid fa-heart fa-xl";
             }else{
-                likebutton.className = "fa-regular fa-heart fa-2xl";
+                likebutton.className = "fa-regular fa-heart fa-xl";
             }
         });
 

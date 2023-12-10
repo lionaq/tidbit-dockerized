@@ -4,6 +4,11 @@
 {% block content%}
 
 <style>
+  .overflow-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .comment-section:hover hr {
     display: block;
   }
@@ -25,6 +30,7 @@
     cursor: pointer;
   }
   .follow{
+    color: white;
     background-color: #D17A5E;
     transition: all 0.3s ease;
   }
@@ -33,154 +39,173 @@
     background-color: #D17A5E;
     box-shadow: 0px 0px 10px 0px #D17A5E;
   }
+
+  .back-btn {
+    opacity: .7;
+    position: fixed;
+    z-index: 99999;
+    top: 90px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .back-btn:hover,
+  .back-btn:active {
+      transform: scale(1.1);
+      opacity: 1;
+  }
+  @media only screen and (max-width:600px){
+    .back-btn{
+      top:110px;
+    }
+  }
 </style>
-<div class="position-relative">
 
-  <a class="btn btn-dark text-light z-3 rounded " href="javascript:history.go(-1)"
-    style="position: absolute; top: 17px;">
-    <i class="fa-solid fa-angle-left fa-beat" style="color: #DAD6BF;"></i>
-  </a>
-
-  <div id="carouselviewpost" class="carousel slide carousel-fade align-self-center w-100 mx-auto" data-bs-theme="dark">
-    <div class="carousel-inner">
-      {% for img in content %}
-      {% if img.type == 'image' %}
-      <div class="carousel-item {{'active' if loop.first}}">
-        <div class="text-center">
-          <img src="{{img.url}}" class="img-fluid rounded-bottom-4" style="height: 400px; width: 75%;">
+<a class="btn btn-dark text-light rounded back-btn" href="javascript:history.go(-1)">
+  <i class="fa-solid fa-angle-left fa-beat" style="color: #DAD6BF;"></i>
+</a>
+</div>
+<div class="container-md py-3 my-4" style="max-width: 1070px; border: solid 1px rgb(152, 140, 140); border-radius: 15px;">
+  <div class="row">
+    <div class="col-lg-6">
+      <!-- Left side column -->
+      <div id="carouselviewpost" class="carousel slide carousel-fade align-self-center w-100 mt-3 mx-auto ms-2" data-bs-theme="dark">
+        <div class="carousel-inner">
+          {% for img in content %}
+          {% if img.type == 'image' %}
+          <div class="carousel-item {{'active' if loop.first}}">
+            <div class="text-center">
+              <img src="{{img.url}}" class="img-fluid" style="height: 333px; width: 100%; border-radius: 10px;">
+            </div>
+          </div>
+          {% elif img.type == 'video' %}
+          <div class="carousel-item {{ 'active' if loop.first }}">
+            <div class="position-relative d-flex justify-content-center">
+              <video controls autoplay width="100%" height="333px" class="align-self-center object-fit-cover" style="border-radius: 10px;">
+                <source src="{{ img.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+        {% if content|length > 1 %}
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselviewpost" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselviewpost" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+        {%endif%}
+      </div>
+    
+      <div class="d-flex justify-content-between align-items-center mt-3 mx-auto ms-3">
+        <h5 class="fs-2 fw-semibold rounded overflow-ellipsis" style="background-color: transparent;">
+          {{post.title}}
+        </h5>
+        <div class="d-flex gap-4 align-items-center">
+          <a href="#" class="text-dark text-decoration-none">
+            <p class="fs-6 rounded mt-2"><img style="width: 28px; height: 100%;" src="{{url_for('static',filename='img/like.png')}}">99999</p>
+          </a>
+          <a href="#" class="text-dark text-decoration-none">
+            <p class="fs-6 rounded mt-2"><img style="width: 28px; height: 100%;" src="{{url_for('static',filename='img/BookMark.png')}}">11111</p>
+          </a>
         </div>
       </div>
-      {% elif img.type == 'video' %}
-      <div class="carousel-item {{ 'active' if loop.first }}">
-        <div class="position-relative d-flex justify-content-center">
-          <video controls autoplay width="75%" height="100%" class="align-self-center object-fit-cover">
-            <source src="{{ img.url }}" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
+
+      <div class="d-flex justify-content-between mt-1 ms-3">
+        <a href="{{url_for('profile_bp.profile',username=user.username)}}" class="text-dark text-decoration-none">
+          <div class="d-flex align-items-center gap-3">
+            <img src="{{user.profilepic}}" class="d-block m-auto align-self-center p-1 rounded-pill shadow-sm"
+              style="height: 55px; width: 55px;" loading="lazy">
+            <div class="d-flex flex-column">
+              <p class="m-0 fw-bold">{{user.fullname}}</p>
+              <p class="m-0 align-self-start fw-lighter" style="font-size: 10px;">@{{user.username}}</p>
+            </div>
+          </div>
+        </a>
+    
+        {% if current_user.id != post.user_id%}
+          <!-- User is already followed -->
+          <div class="unfollow-button-{{post.user_id}} dropdown"  {%if post.user_id not in following%} style = "display:none;" {%else%} style= "display:block;"{%endif%}>
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
+                Following
+            </button>
+            <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <button onclick="unfollow({{post.user_id}})" class="dropdown-item">Unfollow</button>
+            </div>
+          </div>              
+          <!-- User is not followed, show follow button -->
+          <button onclick="follow({{post.user_id}})"class="follow-button-{{post.user_id}} btn follow" {% if post.user_id in following %} style = "display:none; height:40px;" {%else%} style= "display:block; height:40px;"{%endif%}>Follow</button>
+        {% else %}
+        <div class="dropdown pt-1">
+          <button class="btn" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical" style="color: #d17a5e;"></i></button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{url_for('post_bp.edit',post_id=post.id,user_name=current_user.username)}}">Edit Post</a></li>
+            <li><a class="dropdown-item btn" data-bs-toggle="modal" data-bs-target="#deleteConfirm">Delete Post</a></li>
+          </ul>
         </div>
+        {%endif%}
       </div>
-      {% endif %}
-      {% endfor %}
+      <div class="d-flex w-100 align-content-start justify-content-start align-items-start ms-3">
+        <p class="align-self-start mt-3 fw-lighter fs-6 text-break text-start overflow-ellipsis">{{post.caption}}</p>
+      </div>
+      <div class="d-flex w-100 flex-wrap gap-2 tag-section ms-3 mb-3">
+        <span class="badge rounded-pill my-auto">{{post.tag}}</span>
+        {% for tag in post.subtags.split(',') %}
+        <span class="badge rounded-pill my-auto">{{tag}}</span>
+        {% endfor%}
+      </div>
     </div>
-    {% if content|length > 1 %}
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselviewpost" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselviewpost" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-    {%endif%}
 
+    <div class="col-lg-6">
+      <!-- Right side column -->
+      <div class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center mt-3 pt-3">
+        <hr class="w-100" style="margin-top: -20px;">
+        <div class="d-flex w-100 justify-content-around">
+          <div class="d-flex flex-column align-items-center">
+            <a href="{{url_for('post_bp.view_post',postid=post.id)}}" class="{{'fw-bold' if active_page == 'viewpostrecipe'}} text-dark text-decoration-none">RECIPE</a>
+            {% if active_page == 'viewpostrecipe'%}
+            <hr style="width: 150%; border: 3px solid #D17A5E;">
+            {% endif%}
+          </div>
+          <div class="d-flex flex-column align-items-center comment-section">
+            <a href="#" class="text-dark text-decoration-none">COMMENTS</a>
+            <hr>
+          </div>
+        </div>
+        <hr class="w-100" style="margin-top: -16px;">
+  
+        <div class="content-container pt-3" style="width: 100%; max-height: 500px; overflow-y: auto;">
+          <div class="d-flex w-100 flex-column align-items-start">
+            <h6 class="ms-4">INGREDIENTS</h6>
+            <ul class="my-2">
+              {% for ing in post.ingredients.split('\r\n') %}
+                {%if ing.strip()%}
+                  <li class="text-break text-start mt-3 ps-3">{{ing}}</li>
+                {%endif%}
+              {% endfor %}
+            </ul>
+          </div>
+        
+          <div class="d-flex w-100 flex-column align-items-start my-5">
+            <h6 class="ms-4">INSTRUCTION</h6>
+            <ol class="my-2">
+              {% for int in post.instructions.split('\r\n') %}
+                {%if int.strip()%}
+                  <li class="text-break text-start mt-3 ps-3">{{int}}</li>
+                {%endif%}
+              {% endfor %}
+            </ol>
+          </div>
+        </div>
+      </div>    
+    </div>
   </div>
 </div>
 
-
-
-
-<div class="d-flex justify-content-around align-items-center align-content-center mt-3 w-100 mx-auto">
-  <h5 class="fs-1 fw-semibold rounded" style="background-color: transparent ;">
-    {{post.title}}
-  </h5>
-  <div class="d-flex gap-4 align-items-center">
-    <button onclick="like({{post.id}})" class="text-dark text-decoration-none" style = "border:none; background-color:white;">
-      <p class="fs-6 rounded" style="background-color: transparent;">
-        {%if post.id in liked%}
-        <i id = "like-icon-{{post.id}}" class="fa-solid fa-heart fa-2xl"style="color: #000000;"></i><span id = "like-count-{{post.id}}">{{post.likes}}</span></p>
-        {%elif post.id not in liked%}
-        <i id = "like-icon-{{post.id}}" class="fa-regular fa-heart fa-2xl"style="color: #000000;"></i><span id = "like-count-{{post.id}}">{{post.likes}}</span>
-        {%endif%}
-      </p>
-    </button>
-    <button onclick="save({{post.id}})" class="text-dark text-decoration-none" style = "border:none; background-color:white;">
-      <p class="fs-6 rounded" style="background-color: transparent;">
-      {%if post.id in saved%}
-        <i id = "save-icon-{{post.id}}" class="fa-solid fa-bookmark fa-2xl"style="color: #000000;"></i>
-      {%elif post.id not in saved%}
-        <i id = "save-icon-{{post.id}}" class="fa-regular fa-bookmark fa-2xl"style="color: #000000;"></i>
-      {%endif%}
-      </p>
-
-    </button>
-  </div>
-</div>
-
-<div
-  class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center mt-3 pt-3">
-  <div class="d-flex justify-content-between w-100">
-    <a href="{{url_for('profile_bp.profile',username=user.username)}}" class="text-dark text-decoration-none">
-      <div class="d-flex align-items-center gap-3">
-        <img src="{{user.profilepic}}" class="d-block m-auto align-self-center p-1 rounded-pill shadow-lg"
-          style="height: 70px; width: 70px;" loading="lazy">
-        <div class="d-flex flex-column">
-          <p class="m-0 fw-bold">{{user.fullname}}</p>
-          <p class="m-0 align-self-start fw-lighter" style="font-size: 10px;">@{{user.username}}</p>
-        </div>
-      </div>
-    </a>
-
-  {% if post.user_id != current_user.id %}
-    <!-- User is already followed -->
-    <div class="unfollow-button-{{post.user_id}} dropdown"  {%if post.user_id in user_following %} style = "display:block;" {%else%} style= "display:none;" {%endif%}>
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
-          Following
-      </button>
-      <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <button onclick="unfollow({{post.user_id}})" class="dropdown-item">Unfollow</button>
-      </div>
-    </div>              
-    <!-- User is not followed, show follow button -->
-    <button onclick="follow({{post.user_id}})"class="follow-button-{{post.user_id}} btn follow" {% if post.user_id not in user_following %} style = "display:block; height:40px;" {%else%} style= "display:none; height:40px;"{%endif%}>Follow</button>
-  {% endif %}
-
-  </div>
-  <div class="d-flex w-100 align-content-start justify-content-start align-items-start">
-    <p class="align-self-start mt-3 fw-lighter fs-6 text-break text-start">{{post.caption}}</p>
-  </div>
-  <div class="d-flex w-100 flex-wrap gap-2 tag-section">
-    <span class="badge rounded-pill my-auto">{{post.tag}}</span>
-    {% for tag in post.subtags.split(',') %}
-    <span class="badge rounded-pill my-auto">{{tag}}</span>
-    {% endfor%}
-  </div>
-  <hr class="w-100 mt-3">
-  <div class="d-flex w-100 justify-content-around">
-    <div class="d-flex flex-column align-items-center">
-      <a href="{{url_for('post_bp.view_post',postid=post.id)}}"
-        class="{{'fw-bold' if active_page == 'viewpostrecipe'}} text-dark text-decoration-none">RECIPE</a>
-      {% if active_page == 'viewpostrecipe'%}
-      <hr style="width: 150%; border: 3px solid #D17A5E;">
-      {% endif%}
-    </div>
-    <div class="d-flex flex-column align-items-center comment-section">
-      <a href="#" class="text-dark text-decoration-none">COMMENTS</a>
-      <hr>
-    </div>
-  </div>
-  <hr class="w-100 mt-3">
-  <div class="d-flex w-100 flex-column align-items-start mt-5">
-    <h6 class="ms-5 my-3">INGREDIENTS</h6>
-    <ul class="my-3">
-      {% for ing in post.ingredients.split('\r\n') %}
-        {%if ing.strip()%}
-          <li class="text-break text-start mt-3 ps-3">{{ing}}</li>
-        {%endif%}
-      {% endfor %}
-    </ul>
-  </div>
-
-  <div class="d-flex w-100 flex-column align-items-start my-5">
-    <h6 class="ms-5 my-3">INSTRUCTION</h6>
-    <ol class="my-3">
-      {% for int in post.instructions.split('\r\n') %}
-        {%if int.strip()%}
-          <li class="text-break text-start mt-3 ps-3">{{int}}</li>
-        {%endif%}
-      {% endfor %}
-    </ol>
-  </div>
-</div>
 
 <!-- DELETE CONFIRM MODAL -->
 <div class="modal fade" id="deleteConfirm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteConfirmLabel" aria-hidden="true" data-bs-theme="dark">
@@ -193,7 +218,7 @@
         <form id="deletePostConfirm" method="POST" action="{{ url_for('post_bp.delete',user_name=current_user.username, post_id=post.id) }}">
           {{ form.hidden_tag() }}
           <div class="d-flex justify-content-between flex-column align-items-center">
-            <p>Are you sure u want to <strong> delete this post ?</strong></p>
+            <p>Are you sure you want to <strong> delete this post ?</strong></p>
           </div>
           <div class="alert alert-danger" id="errordelete" name="errordelete" role="alert" style="display: none"></div>      
           <div class="d-flex justify-content-end gap-3">
