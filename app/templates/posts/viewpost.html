@@ -4,10 +4,6 @@
 {% block content%}
 
 <style>
-  body {
-    overflow: hidden;
-  }
-
   .comment-section:hover hr {
     display: block;
   }
@@ -38,71 +34,30 @@
     background-color: #D17A5E;
     box-shadow: 0px 0px 10px 0px #D17A5E;
   }
-
-  .back-button-container {
-    position: relative;
-    top: 50px;
-    z-index: 1000;
-  }
-
-  .main-container {
-    display: flex;
-    justify-content: center;
-    max-width: 75vw;
-    max-height: 90vh;
-    margin-left: 7vw;
-    box-shadow: 0px 0px 8px 0px #b0b0b0;
-    border-radius: 10px;
-    padding: 5px;
-    position: relative;
-  }
-
-  .gallery-container {
-    max-height: 80vh;
-    width: 75%;
-    margin-top: 20px;
-    margin-right: 10px;
-    margin-left: 15px;
-  }
-
-  .content-container {
-    max-height: 80vh;
-    min-height: 80vh;
-    width: 80%;
-    margin-top: 10px;
-  }
-
-  .inside-content-container {
-    max-height: 65vh;
-    min-height: 60vh;
-    width: 100%;
-    overflow-y: auto;
-  }
 </style>
 
-<div class="back-button-container">
-  <a class="btn btn-dark text-light z-3 rounded" href="javascript:history.go(-1)">
-    <i class="fa-solid fa-angle-left fa-beat" style="color: #DAD6BF;"></i>
-  </a>
-</div>
 
-<div class="main-container">
+<a class="btn btn-dark text-light rounded" href="javascript:history.go(-1)" style="position: relative; top: 50px;">
+  <i class="fa-solid fa-angle-left fa-beat" style="color: #DAD6BF;"></i>
+</a>
 
-  <div class="gallery-container">
-    <div class="position-relative">
-      <div id="carouselviewpost" class="carousel slide carousel-fade align-self-center w-100 mx-auto" data-bs-theme="dark">
+<div class="container-md py-3" style="max-width: 1070px; border: solid 1px rgb(152, 140, 140); border-radius: 15px;">
+  <div class="row">
+    <div class="col-lg-6">
+      <!-- Left side column -->
+      <div id="carouselviewpost" class="carousel slide carousel-fade align-self-center w-100 mt-3 mx-auto ms-2" data-bs-theme="dark">
         <div class="carousel-inner">
           {% for img in content %}
           {% if img.type == 'image' %}
           <div class="carousel-item {{'active' if loop.first}}">
             <div class="text-center">
-              <img src="{{img.url}}" class="img-fluid rounded-2" style="height: 333px; width: 100%;">
+              <img src="{{img.url}}" class="img-fluid" style="height: 333px; width: 100%; border-radius: 10px;">
             </div>
           </div>
           {% elif img.type == 'video' %}
           <div class="carousel-item {{ 'active' if loop.first }}">
             <div class="position-relative d-flex justify-content-center">
-              <video controls autoplay width="100%" height="100%" class="align-self-center object-fit-cover">
+              <video controls autoplay width="100%" height="333px" class="align-self-center object-fit-cover" style="border-radius: 10px;">
                 <source src="{{ img.url }}" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
@@ -122,37 +77,52 @@
         </button>
         {%endif%}
       </div>
-
-      <div class="d-flex justify-content-between align-items-center align-content-start mt-1 w-100 mx-auto">
+    
+      <div class="d-flex justify-content-between align-items-center mt-3 mx-auto ms-3">
         <h5 class="fs-2 fw-semibold rounded" style="background-color: transparent;">
           {{post.title}}
         </h5>
         <div class="d-flex gap-4 align-items-center">
           <a href="#" class="text-dark text-decoration-none">
-            <p class="fs-6 rounded mt-2" style="background-color: transparent;"><img style="width: 28px; height: 100%;"
-                src="{{url_for('static',filename='img/like.png')}}">99999</p>
+            <p class="fs-6 rounded mt-2"><img style="width: 28px; height: 100%;" src="{{url_for('static',filename='img/like.png')}}">99999</p>
           </a>
           <a href="#" class="text-dark text-decoration-none">
-            <p class="fs-6 rounded mt-2" style="background-color: transparent ;"><img style="width: 26px; height: 100%;"
-                src="{{url_for('static',filename='img/BookMark.png')}}">11111</p>
+            <p class="fs-6 rounded mt-2"><img style="width: 28px; height: 100%;" src="{{url_for('static',filename='img/BookMark.png')}}">11111</p>
           </a>
         </div>
       </div>
 
-      <div class="d-flex justify-content-between w-100">
+      <div class="d-flex justify-content-between mt-1 ms-3">
         <a href="{{url_for('profile_bp.profile',username=user.username)}}" class="text-dark text-decoration-none">
           <div class="d-flex align-items-center gap-3">
-            <img src="{{user.profilepic}}" class="d-block m-auto align-self-center p-1 rounded-pill shadow-lg"
-              style="height: 50px; width: 50px;" loading="lazy">
+            <img src="{{user.profilepic}}" class="d-block m-auto align-self-center p-1 rounded-pill shadow-sm"
+              style="height: 55px; width: 55px;" loading="lazy">
             <div class="d-flex flex-column">
               <p class="m-0 fw-bold">{{user.fullname}}</p>
               <p class="m-0 align-self-start fw-lighter" style="font-size: 10px;">@{{user.username}}</p>
             </div>
           </div>
         </a>
-
+    
         {% if current_user.id != post.user_id%}
-        <button class="btn flex-shrink-0 align-self-center m-1 follow">Follow</button>
+          {% if user_following and post.user_id in user_following %}
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
+                  Following
+              </button>
+              <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <form action="{{ url_for('user_bp.unfollow', following=post['user_id']) }}" method="POST" style="border: none;">
+                  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                  <button class="dropdown-item">Unfollow</button>
+                </form>
+              </div>
+            </div>
+          {% else %} 
+            <form action="{{ url_for('user_bp.follow', following=post['user_id']) }}" method="POST" style="border: none;">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+              <button class="btn flex-shrink-0 align-self-center m-1 follow">Follow</button>
+            </form>
+          {% endif %}
         {% else %}
         <div class="dropdown pt-1">
           <button class="btn" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical" style="color: #d17a5e;"></i></button>
@@ -163,89 +133,86 @@
         </div>
         {%endif%}
       </div>
-
-      <div class="d-flex mt-4 w-100 align-content-start justify-content-start align-items-start">
-        <p class="align-self-start fw-lighter fs-6 text-break text-start">{{post.caption}}</p>
+      <div class="d-flex w-100 align-content-start justify-content-start align-items-start ms-3">
+        <p class="align-self-start mt-3 fw-lighter fs-6 text-break text-start">{{post.caption}}</p>
       </div>
-      <div class="d-flex w-100 flex-wrap gap-2 tag-section">
+      <div class="d-flex w-100 flex-wrap gap-2 tag-section ms-3 mb-3">
         <span class="badge rounded-pill my-auto">{{post.tag}}</span>
         {% for tag in post.subtags.split(',') %}
         <span class="badge rounded-pill my-auto">{{tag}}</span>
         {% endfor%}
       </div>
     </div>
-  </div>
 
-  <div class="content-container">
-
-    <div class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center mt-3 pt-3">
-      <hr class="w-100" style="margin-top: -20px;">
-      <div class="d-flex w-100 justify-content-around">
-        <div class="d-flex flex-column align-items-center">
-          <a href="{{url_for('post_bp.view_post',postid=post.id)}}"
-            class="{{'fw-bold' if active_page == 'viewpostrecipe'}} text-dark text-decoration-none">RECIPE</a>
-          {% if active_page == 'viewpostrecipe'%}
-          <hr style="width: 150%; border: 3px solid #D17A5E;">
-          {% endif%}
-        </div>
-        <div class="d-flex flex-column align-items-center comment-section">
-          <a href="#" class="text-dark text-decoration-none">COMMENTS</a>
-          <hr>
-        </div>
-      </div>
-      <hr class="w-100" style="margin-top: -16px;">
-
-      <div class="inside-content-container d-flex flex-column justify-content-start align-items-center align-content-center text-center pt-3">
-        <div class="d-flex w-100 flex-column align-items-start">
-          <h6 class="ms-4">INGREDIENTS</h6>
-          <ul class="my-2">
-            {% for ing in post.ingredients.split('\r\n') %}
-              {%if ing.strip()%}
-                <li class="text-break text-start mt-3 ps-3">{{ing}}</li>
-              {%endif%}
-            {% endfor %}
-          </ul>
-        </div>
-      
-        <div class="d-flex w-100 flex-column align-items-start my-5">
-          <h6 class="ms-4">INSTRUCTION</h6>
-          <ol class="my-2">
-            {% for int in post.instructions.split('\r\n') %}
-              {%if int.strip()%}
-                <li class="text-break text-start mt-3 ps-3">{{int}}</li>
-              {%endif%}
-            {% endfor %}
-          </ol>
-        </div>
-      </div>
-      
-    </div>
-
-    <!-- DELETE CONFIRM MODAL -->
-    <div class="modal fade" id="deleteConfirm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteConfirmLabel" aria-hidden="true" data-bs-theme="dark">
-      <div class="modal-dialog text-light">
-        <div class="modal-content">
-          <div class="modal-header d-flex justify-content-center">
-            <h1 class="modal-title fs-5" id="deleteConfirmLabel">Delete Post</h1>
+    <div class="col-lg-6">
+      <!-- Right side column -->
+      <div class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center mt-3 pt-3">
+        <hr class="w-100" style="margin-top: -20px;">
+        <div class="d-flex w-100 justify-content-around">
+          <div class="d-flex flex-column align-items-center">
+            <a href="{{url_for('post_bp.view_post',postid=post.id)}}" class="{{'fw-bold' if active_page == 'viewpostrecipe'}} text-dark text-decoration-none">RECIPE</a>
+            {% if active_page == 'viewpostrecipe'%}
+            <hr style="width: 150%; border: 3px solid #D17A5E;">
+            {% endif%}
           </div>
-          <div class="modal-body">
-            <form id="deletePostConfirm" method="POST" action="{{ url_for('post_bp.delete',user_name=current_user.username, post_id=post.id) }}">
-              {{ form.hidden_tag() }}
-              <div class="d-flex justify-content-between flex-column align-items-center">
-                <p>Are you sure u want to <strong> delete this post ?</strong></p>
-              </div>
-              <div class="alert alert-danger" id="errordelete" name="errordelete" role="alert" style="display: none"></div>      
-              <div class="d-flex justify-content-end gap-3">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="color: black;">Cancel</button>
-                {{ form.submit(class="btn btn-danger") }}
-              </div>
-            </form>
+          <div class="d-flex flex-column align-items-center comment-section">
+            <a href="#" class="text-dark text-decoration-none">COMMENTS</a>
+            <hr>
           </div>
         </div>
+        <hr class="w-100" style="margin-top: -16px;">
+  
+        <div class="content-container pt-3" style="width: 100%; max-height: 500px; overflow-y: auto;">
+          <div class="d-flex w-100 flex-column align-items-start">
+            <h6 class="ms-4">INGREDIENTS</h6>
+            <ul class="my-2">
+              {% for ing in post.ingredients.split('\r\n') %}
+                {%if ing.strip()%}
+                  <li class="text-break text-start mt-3 ps-3">{{ing}}</li>
+                {%endif%}
+              {% endfor %}
+            </ul>
+          </div>
+        
+          <div class="d-flex w-100 flex-column align-items-start my-5">
+            <h6 class="ms-4">INSTRUCTION</h6>
+            <ol class="my-2">
+              {% for int in post.instructions.split('\r\n') %}
+                {%if int.strip()%}
+                  <li class="text-break text-start mt-3 ps-3">{{int}}</li>
+                {%endif%}
+              {% endfor %}
+            </ol>
+          </div>
+        </div>
+      </div>    
+    </div>
+  </div>
+</div>
+
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal fade" id="deleteConfirm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteConfirmLabel" aria-hidden="true" data-bs-theme="dark">
+  <div class="modal-dialog text-light">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-center">
+        <h1 class="modal-title fs-5" id="deleteConfirmLabel">Delete Post</h1>
+      </div>
+      <div class="modal-body">
+        <form id="deletePostConfirm" method="POST" action="{{ url_for('post_bp.delete',user_name=current_user.username, post_id=post.id) }}">
+          {{ form.hidden_tag() }}
+          <div class="d-flex justify-content-between flex-column align-items-center">
+            <p>Are you sure you want to <strong> delete this post ?</strong></p>
+          </div>
+          <div class="alert alert-danger" id="errordelete" name="errordelete" role="alert" style="display: none"></div>      
+          <div class="d-flex justify-content-end gap-3">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="color: black;">Cancel</button>
+            {{ form.submit(class="btn btn-danger") }}
+          </div>
+        </form>
       </div>
     </div>
   </div>
-
 </div>
 
 {% endblock %}
