@@ -25,7 +25,7 @@
             <form method="POST" action = "{{url_for('post_bp.view_post_comment', postid = post.id)}}">
                 {{ form.hidden_tag() }}
                 <div class = "row row-cols-3 mx-auto d-flex justify-content-center my-2 ms-2">
-                    <div class = "col-1 d-flex justify-content-center px-0">
+                    <div class = "col-1 d-flex justify-content-center px-0 mt-1 pe-2">
                         <a href="{{ url_for('profile_bp.profile', username=current_user.username) }}">
                             <img loading="lazy" 
                                 class="img rounded-pill" {% if 'static' in current_user.profilepic %}
@@ -35,8 +35,8 @@
                     </div>
                     <div class = "col-10">
                         <div class = "row">
-                            <p class="text-break text-start mb-0 fs-6">{{current_user.fullname}}</p>
-                            <small class="text-break text-start mb-0 text-muted fs-6">@{{current_user.username}}</small>
+                            <p class="text-break text-start mb-0 fs-6 fw-bold">{{current_user.fullname}}</p>
+                            <small class="text-break text-start mb-0 text-muted" style = "font-size:12.5px;">@{{current_user.username}}</small>
                         </div>
                         <textarea name = "commentBody" type="text" style = "resize:none; overflow: hidden;" class="form-control-plaintext plainline" rows = "1" id="commentBody" placeholder = "Add a comment..."></textarea>
                     </div>
@@ -54,7 +54,7 @@
                 <form method="POST" action = "{{url_for('post_bp.view_post_comment', postid = post.id)}}">
                     {{ form.hidden_tag() }}
                     <div class = "row row-cols-3 mx-auto d-flex justify-content-center my-2 ms-2">
-                        <div class = "col-1 d-flex justify-content-center px-0">
+                        <div class = "col-1 d-flex justify-content-center px-0 mt-1 pe-2">
                             <a href="{{ url_for('profile_bp.profile', username=comment.username) }}">
                                 <img loading="lazy" 
                                     class="img rounded-pill" {% if 'static' in comment.profilepic %}
@@ -64,8 +64,8 @@
                         </div>
                         <div class = "col-10">
                             <div class = "row">
-                                <p class="text-break text-start mb-0 fs-6">{{comment.fullname}}</p>
-                                <small class="text-break text-start mb-0 text-muted fs-6">@{{comment.username}}</small>
+                                <p class="text-break text-start mb-0 fs-6 fw-bold">{{comment.fullname}}</p>
+                                <small class="text-break text-start mb-0 text-muted" style = "font-size:12.5px;">@{{comment.username}}</small>
                             </div>
                             <span class = "text-break"> <textarea  readonly type="text" style = "resize:none; overflow: hidden;" class="form-control-plaintext " rows = "1" id="commentBody" placeholder = "Add a comment...">{%for ing in comment.comment_body.split('\r\n')%}{%if ing.strip()%}{{ing}}{%endif%}{% endfor %}</textarea></span>
                         </div>
