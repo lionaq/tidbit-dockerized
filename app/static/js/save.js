@@ -12,9 +12,9 @@ function save(postId){
         .then((data) => {
             console.log(data);
             if(data['saved'] == true){
-                saveButton.className = "fa-solid fa-bookmark fa-2xl";
+                saveButton.className = "fa-solid fa-bookmark fa-xl";
             }else{
-                saveButton.className = "fa-regular fa-bookmark fa-2xl";
+                saveButton.className = "fa-regular fa-bookmark fa-xl";
             }
         });
 

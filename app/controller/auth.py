@@ -32,12 +32,12 @@ def login():
 
         if user and user.check_password(form.password.data):
             if not user.verified:
-                msg = Message("Tidbit | Verify", sender=("Tidbid Admin", "tidbid@gmail.com"), recipients=[user.email])
+                msg = Message("Tidbit | Verify", sender=("Tidbit Admin", "tidbit@gmail.com"), recipients=[user.email])
                 token = generate_token(user.email)
                 url_verify = url_for('auth_bp.verify_email', token=token, _external=True)
                 msg.html = render_template('auth/sendverification.html',user=user, url=url_verify)
                 mail.send(msg)
-                flash('Your Email is not Verified, We have send your email a verification link','message')
+                flash('Your email is not verified. We have sent your email a verification link.','message')
             else :
                 login_user(user)
                 return redirect(url_for('main_bp.home'))

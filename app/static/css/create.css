@@ -47,7 +47,17 @@ body {
 }
 .postUpload #uploadCaption{
     position: absolute;
-    top: 63%;
+    top: 62%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    font-weight: bold;
+    opacity:0.5
+}
+
+.postUpload #uploadEditCaption{
+    position: absolute;
+    top: 73%;
     left: 50%;
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
@@ -60,7 +70,7 @@ body {
 }
 
 .carousel-control-prev, .carousel-control-next {
-    height: 5vh%; /* Adjust the width as needed */
+    height: 5vh; /* Adjust the width as needed */
     top: 50%;
     transform: translateY(-50%);
 }
