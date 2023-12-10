@@ -35,10 +35,10 @@
   <h1 class = "display-9 fw-bold mt-3">Explore <small class="text-body-secondary fs-6">Looking for something different? The freshest content is served right here!</small></h1>
   <div class="row d-flex justify-content-center">
     {% for post in postData %}
-      <div class=" col-lg-5 mx-2 my-3 justify-content-center lazy-post">
+      <div class=" col-md-5 mx-2 my-3 justify-content-center lazy-post">
         <div class = "rounded-4 p-1 px-4" style = "background-color:white;">
         <div class = "row my-3">
-          <div class = "col-sm-9">
+          <div class = "col-md-9">
             <div class = "row">
               <div class = "col-sm-2 me-3">
                 <a href="{{ url_for('profile_bp.profile', username=post.username) }}"><img loading="lazy" class="rounded-pill shadow-sm" src="{{ post.profilepic }}" style="height: 53px; width: 53px; "></a>
@@ -50,11 +50,11 @@
             </div>
           </div>
           <!-- Inside the loop for posts -->
-          <div class="col d-flex align-items-center justify-content-end">
+          <div class = "col-md-3 d-flex align-items-center justify-content-end">
             {% if post.user_id != current_user.id %}
                     <!-- User is already followed -->
-                    <div class="unfollow-button-{{post.user_id}} dropdown"  {%if post.user_id not in following%} style = "display:none;" {%else%} style= "display:block;"{%endif%}>
-                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
+                    <div class="unfollow-button-{{post.user_id}} dropdown w-100"  {%if post.user_id not in following%} style = "min-width:94px; display:none;" {%else%} style= "min-width:94px; display:block;"{%endif%}>
+                      <button class="btn dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style=" background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
                           Following
                       </button>
                       <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -62,7 +62,7 @@
                       </div>
                     </div>              
                     <!-- User is not followed, show follow button -->
-                    <button onclick="follow({{post.user_id}})"class="follow-button-{{post.user_id}} btn follow" {% if post.user_id in following %} style = "display:none;" {%else%} style= "display:block;"{%endif%}>Follow</button>
+                    <button onclick="follow({{post.user_id}})"class="follow-button-{{post.user_id}} btn follow" {% if post.user_id in following %} style = "min-width:94px; display:none;" {%else%} style= "min-width:94px; display:block;"{%endif%}>Follow</button>
             {% endif %}
           </div>
         </div>
