@@ -206,7 +206,7 @@ def view_post(postid):
 @post_bp.route('/<int:postid>/viewpost/comment', methods=['POST', 'GET'])
 @login_required
 def view_post_comment(postid):
-    
+    form = SubmitForm()
     post = Post.get_by_id(postid)
     user = User.search_by_id(post.user_id)
     content = Post.fetch_view_post_img(post.id)
@@ -227,7 +227,7 @@ def view_post_comment(postid):
         print("GET")
 
     comments = Post.fetch_all_comment_in_post([postid])
-    return render_template('posts/viewpost_comment.html', comments = reversed(comments), post=post, user=user, content=content, user_following=user_following, liked = liked_posts, saved = saved_posts)
+    return render_template('posts/viewpost_comment.html', comments = reversed(comments), post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
 
 @post_bp.route('/comment/edit/<int:comment_id>/<int:user_id>', methods=['POST'])
 @login_required
