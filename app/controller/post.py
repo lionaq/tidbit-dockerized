@@ -228,20 +228,18 @@ def view_post_comment(postid):
         print("GET")
 
     comments = Post.fetch_all_comment_in_post([postid])
-    return render_template('posts/viewpost_comment.html', comments = list(reversed(comments)), post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
+    return render_template('posts/viewpost_comment.html', comments = comments, post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
 
-@post_bp.route('/comment/edit/<int:comment_id>/<int:user_id>', methods=['POST', 'DELETE'])
+@post_bp.route('/comment/config/<int:comment_id>/<int:user_id>', methods=['POST', 'DELETE'])
 @login_required
 def view_post_comment_config(comment_id, user_id):
     if request.method == 'POST':
-        print(comment_id)
-        TEST = request.form.get('commentBody')
-        print(TEST)
+        print("retrieved: ",comment_id, user_id )
         form_id = f'body-{comment_id}-{user_id}'
         print(form_id)
         commentBody = request.form.get(f'body-{comment_id}-{user_id}')
-        Post.edit_comment([commentBody, comment_id, user_id])
-        return jsonify({"edited": True, "body": commentBody})
+        check = Post.edit_comment([commentBody, comment_id, user_id])
+        return jsonify({"edited": check, "body": commentBody})
     
     elif request.method == 'DELETE':
         print(comment_id)

@@ -52,7 +52,7 @@
         </div>
         {%for comment in comments%}
             <div class = "container-fluid my-5" id = "main-{{comment.comment_id}}-{{comment.id}}">
-                <form id = "editComment" method="POST" action = "{{url_for('post_bp.view_post_comment_config', comment_id=comment.comment_id, user_id=comment.id)}}">
+                <form id = "editComment-{{comment.comment_id}}-{{comment.id}}" method="POST" action = "{{url_for('post_bp.view_post_comment_config', comment_id=comment.comment_id, user_id=comment.id)}}">
                     {{ form.hidden_tag() }}
                     <div class = "row row-cols-3 mx-auto d-flex justify-content-center my-2 ms-2">
                         <div class = "col-1 d-flex justify-content-center px-0 mt-1 pe-2">
@@ -78,7 +78,7 @@
                             <div class="dropdown dropstart p-0">
                                 <button class="btn p-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical" style="color: #d17a5e;"></i></button>
                                 <ul class="dropdown-menu">
-                                    <li><button type = "button" onclick = "toggleEdit({{comment.comment_id}}, {{comment.id}})" class="dropdown-item">Edit Comment</button></li>
+                                    <li><button type = "button" onclick = "toggleEdit({{comment.comment_id}},{{comment.id}})" class="dropdown-item">Edit Comment</button></li>
                                     <li><a class="dropdown-item btn" data-comment-id="{{comment.comment_id}}" data-user-id="{{comment.id}}" data-bs-toggle="modal" data-bs-target="#deleteConfirmComment">Delete Comment</a></li>
                                 </ul>
                             </div>

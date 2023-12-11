@@ -42,10 +42,11 @@ commentBody.oninput = function() {
 };
 
 function toggleEdit(comment_id, user_id){
-    const commentBodyEdit = document.getElementById('body-'+comment_id+'-'+user_id);
-    const commentConfirmEdit = document.getElementById('editConfirm-'+comment_id+'-'+user_id);
-    const commentCancelEdit = document.getElementById('editCancel-'+comment_id+'-'+user_id);
-    const loadingIndicator = document.getElementById('editSpinner-'+comment_id+'-'+user_id);
+    console.log(comment_id, user_id)
+    let commentBodyEdit = document.getElementById('body-'+comment_id+'-'+user_id);
+    let commentConfirmEdit = document.getElementById('editConfirm-'+comment_id+'-'+user_id);
+    let commentCancelEdit = document.getElementById('editCancel-'+comment_id+'-'+user_id);
+    let loadingIndicator = document.getElementById('editSpinner-'+comment_id+'-'+user_id);
 
     initText = commentBodyEdit.value
 
@@ -84,8 +85,8 @@ function toggleEdit(comment_id, user_id){
     toggleEdit.edit = function() { //using ajax to update db without refreshing page
         commentBodyEdit.readOnly = true;
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-        const form = document.getElementById('editComment');
-
+        const form = document.getElementById('editComment-'+comment_id+'-'+user_id);
+        console.log("IM HERE")
         commentBodyEdit.style.visibility = 'hidden';
         loadingIndicator.style.display = 'block';
         fetch(form.action,
@@ -99,6 +100,7 @@ function toggleEdit(comment_id, user_id){
         })
             .then((res) => res.json())
             .then((data) => {
+                console.log(data)
                 if(data['edited'] == true){
                     commentConfirmEdit.style.display = "none";
                     commentCancelEdit.style.display = "none";
@@ -137,7 +139,7 @@ function deleteComment(comment_id, user_id){
 
     commentBody.style.visibility = 'hidden';
     loadingIndicator.style.display = 'block';
-    fetch('/comment/edit/'+comment_id+'/'+user_id,
+    fetch('/comment/config/'+comment_id+'/'+user_id,
       { method:'DELETE',
         headers: {
         'X-CSRFToken': csrfToken

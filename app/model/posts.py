@@ -284,7 +284,7 @@ class Post(UserMixin):
     
     def fetch_all_comment_in_post(post_id):
         cursor = mysql.connection.cursor(dictionary=True)
-        sql = "SELECT user.id, user.fullname, user.username, user.profilepic, comment.comment_id, comment.comment_body FROM user JOIN comment ON user.id = comment.user_id WHERE comment.post_id = %s"
+        sql = "SELECT user.id, user.fullname, user.username, user.profilepic, comment.comment_id, comment.comment_body, comment.comment_time FROM user JOIN comment ON user.id = comment.user_id WHERE comment.post_id = %s ORDER BY comment.comment_time DESC"
         cursor.execute(sql, post_id)
         content = cursor.fetchall()
 
@@ -292,12 +292,16 @@ class Post(UserMixin):
         return content
     
     def edit_comment(data):
-        cursor = mysql.connection.cursor(dictionary=True)
-        print(data)
-        update = "UPDATE comment SET comment_body = %s WHERE comment_id = %s AND user_id = %s"
-        cursor.execute(update,data)
-        mysql.connection.commit()
-        cursor.close()
+        try:
+            cursor = mysql.connection.cursor(dictionary=True)
+            print(data)
+            update = "UPDATE comment SET comment_body = %s WHERE comment_id = %s AND user_id = %s"
+            cursor.execute(update,data)
+            mysql.connection.commit()
+            cursor.close()
+            return True
+        except:
+            return False
     
     def delete_comment(data):
         try:
