@@ -119,13 +119,13 @@
         <h5 class="fs-2 fw-semibold rounded overflow-ellipsis" style="background-color: transparent;">
           {{post.title}}
         </h5>
-        <div class="d-flex gap-4 align-items-center">
-          <a href="#" class="text-dark text-decoration-none">
-            <p class="fs-6 rounded mt-2"><img style="width: 28px; height: 100%;" src="{{url_for('static',filename='img/like.png')}}">99999</p>
-          </a>
-          <a href="#" class="text-dark text-decoration-none">
-            <p class="fs-6 rounded mt-2"><img style="width: 28px; height: 100%;" src="{{url_for('static',filename='img/BookMark.png')}}">11111</p>
-          </a>
+        <div class="d-flex gap-2 align-items-center">
+          <button type = "button" onclick = "like({{post.id}})" style = "color:white; border:none; background-color: white;"class="text-dark text-decoration-none">
+            <p class="fs-6 rounded mt-2"><img  id = "like-icon-{{post.id}}" class = "me-1" style="width: 28px; height: 100%;" {%if post.id in liked%}src="{{url_for('static',filename='img/like_toggled.png')}}" {%else%}src="{{url_for('static',filename='img/like.png')}}"{%endif%}><span id = "like-count-{{post.id}}">{{post.likes}}</span></p>
+          </button>
+          <button type = "button" onclick="save({{post.id}})" class="text-dark text-decoration-none" style = "border:none; background-color:white;">
+            <p class="fs-6 rounded mt-2"><img id = "save-icon-{{post.id}}" class = "me-1" style="width: 28px; height: 100%;"{%if post.id in saved%} src="{{url_for('static',filename='img/BookMark_toggled.png')}}"{%else%}src="{{url_for('static',filename='img/BookMark.png')}}"{%endif%}></p>
+          </button>
         </div>
       </div>
 
@@ -249,8 +249,60 @@
     </div>
   </div>
 </div>
+<script> 
+  let untoggled_save = "{{url_for('static',filename='img/BookMark.png')}}"
+  let toggled_save =  "{{url_for('static',filename='img/BookMark_toggled.png')}}"
 
+  let untoggled = "{{url_for('static',filename='img/like.png')}}"
+  let toggled =  "{{url_for('static',filename='img/like_toggled.png')}}"
+
+  function like(postId){ //custom like script for viewpost (icon uses img instead of fa font)
+    console.log("im in like");
+    console.log(toggled)
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const likeCount = document.getElementById('like-count-'+postId);
+    const likeicon = document.getElementById('like-icon-'+postId);
+
+    fetch('/like/'+postId, 
+      { method:'POST',
+        headers: {
+        'X-CSRFToken': csrfToken
+      }})
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data);
+            likeCount.innerHTML = data["likes"];
+            if(data['liked'] == true){
+              likeicon.src = toggled;
+            }else{
+              likeicon.src = untoggled;
+            }
+        });
+
+}
+
+function save(postId){
+  console.log(untoggled_save)
+  console.log("im in save");
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+  const saveIcon = document.getElementById('save-icon-'+postId);
+
+  fetch('/save/'+postId, 
+    { method:'POST',
+      headers: {
+      'X-CSRFToken': csrfToken
+    }})
+      .then((res) => res.json())
+      .then((data) => {
+          console.log(data);
+          if(data['saved'] == true){
+              saveIcon.src = toggled_save;
+          }else{
+              saveIcon.src = untoggled_save;
+          }
+      });
+
+}
+</script>
 <script src="{{ url_for('static', filename='js/follow.js') }}"></script>
-<script src="{{ url_for('static', filename='js/like.js') }}"></script>
-<script src="{{ url_for('static', filename='js/save.js') }}"></script>
 {% endblock %}
