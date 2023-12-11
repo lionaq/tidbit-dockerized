@@ -2,7 +2,7 @@
 {%block title%}Feed{%endblock%}
 {% block content %}
 {% set ns = namespace(firstItem=0) %}
-{% set num = namespace(iter=0)%}
+{% set num = namespace(iter=0, count=0)%}
 <!-- User Posts Gallery -->
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create.css') }}">
 <section>
@@ -75,11 +75,11 @@
               </div>
             </div>
           </div>
-          <div class = "col d-flex align-items-center justify-content-end">
+          <div class = "col-sm-3 d-flex align-items-center justify-content-end">
             {% if post.user_id != current_user.id %}
                     <!-- User is already followed -->
-                    <div class="unfollow-button-{{post.user_id}} dropdown"  {%if post.user_id not in following%} style = "display:none;" {%else%} style= "display:block;"{%endif%}>
-                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
+                    <div class="unfollow-button-{{post.user_id}} dropdown w-100"  {%if post.user_id not in following%} style = "min-width:94px; display:none;" {%else%} style= "min-width:94px; display:block;"{%endif%}>
+                      <button class="btn dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style=" background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
                           Following
                       </button>
                       <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -87,7 +87,7 @@
                       </div>
                     </div>              
                     <!-- User is not followed, show follow button -->
-                    <button onclick="follow({{post.user_id}})"class="follow-button-{{post.user_id}} btn follow" {% if post.user_id in following %} style = "display:none;" {%else%} style= "display:block;"{%endif%}>Follow</button>
+                    <button onclick="follow({{post.user_id}})"class="follow-button-{{post.user_id}} btn follow" {% if post.user_id in following %} style = "min-width:94px; display:none;" {%else%} style= "min-width:94px; display:block;"{%endif%}>Follow</button>
             {% endif %}
           </div>
         </div>
@@ -152,10 +152,16 @@
           <div class = "col-sm-2 my-2">
             <div class = "row row-cols-2">
               <div class = "col">
-                <button style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-comment fa-xl" style="color: #000000;"></i></button>
+                <a href="{{url_for('post_bp.view_post_comment',postid=post.id)}}"  style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-comment fa-xl" style="color: #000000;"></i></a>
               </div>
               <div class = "col ps-2">
-                <p class="fs-6">{{ range(1, 1000) | random }}</p>
+                {% set num.count = 0 %}
+                {% for comment in comments %}
+                    {% if comment == post.id %}
+                        {% set num.count = num.count + 1 %}
+                    {% endif %}
+                {% endfor %}
+                <p class="fs-6">{{ num.count }}</p>
               </div>
             </div>
           </div>

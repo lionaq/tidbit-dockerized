@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
-{% set active_page = "viewpostrecipe" %}
+
 {% block title %} {{user.username}} | Tidbit {% endblock%}
 {% block content%}
-
 <style>
   .overflow-ellipsis {
     white-space: nowrap;
@@ -22,6 +21,8 @@
     width: 150%;
     border: 3px solid #D17A5E;
   }
+
+  
   .tag-section span{
     background-color: #6c757d;
   }
@@ -58,6 +59,19 @@
       top:110px;
     }
   }
+  .recipe-section:hover hr {
+    display: block;
+  }
+
+  .recipe-section:hover a {
+    font-weight: bold;
+  }
+
+  .recipe-section hr {
+    display: none;
+    width: 150%;
+    border: 3px solid #D17A5E;
+  }
 </style>
 
 <a class="btn btn-dark text-light rounded back-btn" href="javascript:history.go(-1)">
@@ -80,7 +94,7 @@
           {% elif img.type == 'video' %}
           <div class="carousel-item {{ 'active' if loop.first }}">
             <div class="position-relative d-flex justify-content-center">
-              <video controls autoplay width="100%" height="333px" class="align-self-center object-fit-cover" style="border-radius: 10px;">
+              <video controls width="100%" height="333px" class="align-self-center object-fit-cover" style="border-radius: 10px;">
                 <source src="{{ img.url }}" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
@@ -105,13 +119,13 @@
         <h5 class="fs-2 fw-semibold rounded overflow-ellipsis" style="background-color: transparent;">
           {{post.title}}
         </h5>
-        <div class="d-flex gap-4 align-items-center">
-          <a href="#" class="text-dark text-decoration-none">
-            <p class="fs-6 rounded mt-2"><img style="width: 28px; height: 100%;" src="{{url_for('static',filename='img/like.png')}}">99999</p>
-          </a>
-          <a href="#" class="text-dark text-decoration-none">
-            <p class="fs-6 rounded mt-2"><img style="width: 28px; height: 100%;" src="{{url_for('static',filename='img/BookMark.png')}}">11111</p>
-          </a>
+        <div class="d-flex gap-2 align-items-center">
+          <button type = "button" onclick = "like({{post.id}})" style = "color:white; border:none; background-color: white;"class="text-dark text-decoration-none">
+            <p class="fs-6 rounded mt-2"><img  id = "like-icon-{{post.id}}" class = "me-1" style="width: 28px; height: 100%;" {%if post.id in liked%}src="{{url_for('static',filename='img/like_toggled.png')}}" {%else%}src="{{url_for('static',filename='img/like.png')}}"{%endif%}><span id = "like-count-{{post.id}}">{{post.likes}}</span></p>
+          </button>
+          <button type = "button" onclick="save({{post.id}})" class="text-dark text-decoration-none" style = "border:none; background-color:white;">
+            <p class="fs-6 rounded mt-2"><img id = "save-icon-{{post.id}}" class = "me-1" style="width: 28px; height: 100%;"{%if post.id in saved%} src="{{url_for('static',filename='img/BookMark_toggled.png')}}"{%else%}src="{{url_for('static',filename='img/BookMark.png')}}"{%endif%}></p>
+          </button>
         </div>
       </div>
 
@@ -129,7 +143,7 @@
     
         {% if current_user.id != post.user_id%}
           <!-- User is already followed -->
-          <div class="unfollow-button-{{post.user_id}} dropdown"  {%if post.user_id not in following%} style = "display:none;" {%else%} style= "display:block;"{%endif%}>
+          <div class="unfollow-button-{{post.user_id}} dropdown"  {%if post.user_id not in user_following %} style = "display:none;" {%else%} style= "display:block;"{%endif%}>
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
                 Following
             </button>
@@ -138,7 +152,7 @@
             </div>
           </div>              
           <!-- User is not followed, show follow button -->
-          <button onclick="follow({{post.user_id}})"class="follow-button-{{post.user_id}} btn follow" {% if post.user_id in following %} style = "display:none; height:40px;" {%else%} style= "display:block; height:40px;"{%endif%}>Follow</button>
+          <button onclick="follow({{post.user_id}})"class="follow-button-{{post.user_id}} btn follow" {% if post.user_id in user_following %} style = "display:none; height:40px;" {%else%} style= "display:block; height:40px;"{%endif%}>Follow</button>
         {% else %}
         <div class="dropdown pt-1">
           <button class="btn" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical" style="color: #d17a5e;"></i></button>
@@ -165,41 +179,46 @@
       <div class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center mt-3 pt-3">
         <hr class="w-100" style="margin-top: -20px;">
         <div class="d-flex w-100 justify-content-around">
+          {%block contextNav%}
           <div class="d-flex flex-column align-items-center">
-            <a href="{{url_for('post_bp.view_post',postid=post.id)}}" class="{{'fw-bold' if active_page == 'viewpostrecipe'}} text-dark text-decoration-none">RECIPE</a>
-            {% if active_page == 'viewpostrecipe'%}
+            <a href="{{url_for('post_bp.view_post',postid=post.id)}}" class="fw-bold text-dark text-decoration-none">RECIPE</a>
             <hr style="width: 150%; border: 3px solid #D17A5E;">
-            {% endif%}
           </div>
           <div class="d-flex flex-column align-items-center comment-section">
-            <a href="#" class="text-dark text-decoration-none">COMMENTS</a>
+            <a href="{{url_for('post_bp.view_post_comment',postid=post.id)}}" class="text-dark text-decoration-none">COMMENTS<small class = "ms-2 text-muted fw-regular">{{comments|length}}</small></a>
             <hr>
           </div>
+          {%endblock%}
         </div>
         <hr class="w-100" style="margin-top: -16px;">
   
         <div class="content-container pt-3" style="width: 100%; max-height: 500px; overflow-y: auto;">
-          <div class="d-flex w-100 flex-column align-items-start">
-            <h6 class="ms-4">INGREDIENTS</h6>
-            <ul class="my-2">
-              {% for ing in post.ingredients.split('\r\n') %}
-                {%if ing.strip()%}
-                  <li class="text-break text-start mt-3 ps-3">{{ing}}</li>
-                {%endif%}
-              {% endfor %}
-            </ul>
-          </div>
-        
-          <div class="d-flex w-100 flex-column align-items-start my-5">
-            <h6 class="ms-4">INSTRUCTION</h6>
-            <ol class="my-2">
-              {% for int in post.instructions.split('\r\n') %}
-                {%if int.strip()%}
-                  <li class="text-break text-start mt-3 ps-3">{{int}}</li>
-                {%endif%}
-              {% endfor %}
-            </ol>
-          </div>
+
+          {%block context%}
+          
+            <div class="d-flex w-100 flex-column align-items-start">
+              <h6 class="ms-4">INGREDIENTS</h6>
+              <ul class="my-2">
+                {% for ing in post.ingredients.split('\r\n') %}
+                  {%if ing.strip()%}
+                    <li class="text-break text-start mt-3 ps-3">{{ing}}</li>
+                  {%endif%}
+                {% endfor %}
+              </ul>
+            </div>
+          
+            <div class="d-flex w-100 flex-column align-items-start my-5">
+              <h6 class="ms-4">INSTRUCTION</h6>
+              <ol class="my-2">
+                {% for int in post.instructions.split('\r\n') %}
+                  {%if int.strip()%}
+                    <li class="text-break text-start mt-3 ps-3">{{int}}</li>
+                  {%endif%}
+                {% endfor %}
+              </ol>
+            </div>
+
+          {%endblock%}
         </div>
       </div>    
     </div>
@@ -230,8 +249,60 @@
     </div>
   </div>
 </div>
+<script> 
+  let untoggled_save = "{{url_for('static',filename='img/BookMark.png')}}"
+  let toggled_save =  "{{url_for('static',filename='img/BookMark_toggled.png')}}"
 
+  let untoggled = "{{url_for('static',filename='img/like.png')}}"
+  let toggled =  "{{url_for('static',filename='img/like_toggled.png')}}"
+
+  function like(postId){ //custom like script for viewpost (icon uses img instead of fa font)
+    console.log("im in like");
+    console.log(toggled)
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const likeCount = document.getElementById('like-count-'+postId);
+    const likeicon = document.getElementById('like-icon-'+postId);
+
+    fetch('/like/'+postId, 
+      { method:'POST',
+        headers: {
+        'X-CSRFToken': csrfToken
+      }})
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data);
+            likeCount.innerHTML = data["likes"];
+            if(data['liked'] == true){
+              likeicon.src = toggled;
+            }else{
+              likeicon.src = untoggled;
+            }
+        });
+
+}
+
+function save(postId){
+  console.log(untoggled_save)
+  console.log("im in save");
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+  const saveIcon = document.getElementById('save-icon-'+postId);
+
+  fetch('/save/'+postId, 
+    { method:'POST',
+      headers: {
+      'X-CSRFToken': csrfToken
+    }})
+      .then((res) => res.json())
+      .then((data) => {
+          console.log(data);
+          if(data['saved'] == true){
+              saveIcon.src = toggled_save;
+          }else{
+              saveIcon.src = untoggled_save;
+          }
+      });
+
+}
+</script>
 <script src="{{ url_for('static', filename='js/follow.js') }}"></script>
-<script src="{{ url_for('static', filename='js/like.js') }}"></script>
-<script src="{{ url_for('static', filename='js/save.js') }}"></script>
 {% endblock %}
