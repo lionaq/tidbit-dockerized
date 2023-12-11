@@ -73,3 +73,16 @@ CREATE TABLE IF NOT EXISTS save_post (
   CONSTRAINT save_fk1 FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT save_fk2 FOREIGN KEY (saver_id) REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE
   );
+
+CREATE TABLE IF NOT EXISTS comment (
+  comment_id int NOT NULL AUTO_INCREMENT,
+  post_id int DEFAULT NULL,
+  user_id int DEFAULT NULL,
+  comment_body text,
+  comment_time timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (comment_id),
+  KEY comment_fk1_idx (post_id),
+  KEY comment_fk2_idx (user_id),
+  CONSTRAINT comment_fk1 FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT comment_fk2 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
