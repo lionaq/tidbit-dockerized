@@ -51,7 +51,7 @@
         </div>
         {%for comment in comments%}
             <div class = "container-fluid my-5">
-                <form method="POST" action = "{{url_for('post_bp.view_post_comment', postid = post.id)}}">
+                <form id = "editComment" method="POST" action = "{{url_for('post_bp.view_post_comment_edit', comment_id=comment.comment_id, user_id=comment.id)}}">
                     {{ form.hidden_tag() }}
                     <div class = "row row-cols-3 mx-auto d-flex justify-content-center my-2 ms-2">
                         <div class = "col-1 d-flex justify-content-center px-0 mt-1 pe-2">
@@ -67,7 +67,10 @@
                                 <p class="text-break text-start mb-0 fs-6 fw-bold">{{comment.fullname}}</p>
                                 <small class="text-break text-start mb-0 text-muted" style = "font-size:12.5px;">@{{comment.username}}</small>
                             </div>
-                                <textarea id = "body-{{comment.comment_id}}-{{comment.id}}" readonly type="text" style = "resize:none; overflow: hidden;" class="form-control-plaintext textArea" placeholder = "Add a comment...">{{comment.comment_body}}</textarea>
+                                <div id = "editSpinner" class="spinner-border" role="status" style = "display:none;">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <textarea name = "body-{{comment.comment_id}}-{{comment.id}}" id = "body-{{comment.comment_id}}-{{comment.id}}" readonly type="text" style = "resize:none; overflow: hidden;" class="form-control-plaintext textArea" placeholder = "Add a comment...">{{comment.comment_body}}</textarea>
                         </div>
                         <div class = "col-1 p-0 m-0">
                             {%if current_user.id == comment.id%}
@@ -82,7 +85,7 @@
                         </div>
                     </div>
                     <div class = "d-flex flex-row-reverse mt-3">
-                        <button disabled id = "editConfirm-{{comment.comment_id}}-{{comment.id}}"  type = "submit" class="btn btn-sm rounded-pill fw-bold ms-2" style="display:none; background-color: #d17a5e; color: black;">Edit</button>
+                        <button type = "button" onclick = "toggleEdit.edit()" disabled id = "editConfirm-{{comment.comment_id}}-{{comment.id}}" class="btn btn-sm rounded-pill fw-bold ms-2" style="display:none; background-color: #d17a5e; color: black;">Edit</button>
                         <button onclick="toggleEdit.cancelEdit()" id = "editCancel-{{comment.comment_id}}-{{comment.id}}" type = "button" class = "btn btn-sm  rounded-pill ms-1 fw-bold" style="display:none; background-color: rgba(182, 120, 99, 0.349); color: black;">Cancel</button>
                     </div>
                 </form>

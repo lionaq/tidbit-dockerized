@@ -281,3 +281,11 @@ class Post(UserMixin):
 
         cursor.close()
         return content
+    
+    def edit_comment(data):
+        cursor = mysql.connection.cursor(dictionary=True)
+        print(data)
+        update = "UPDATE comment SET comment_body = %s WHERE comment_id = %s AND user_id = %s"
+        cursor.execute(update,data)
+        mysql.connection.commit()
+        cursor.close()

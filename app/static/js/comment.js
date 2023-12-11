@@ -3,7 +3,6 @@ let postComment = document.getElementById("postComment");
 let cancelComment = document.getElementById("cancelComment");
 let textArea = document.getElementsByClassName("textArea");
 
-
 document.addEventListener("DOMContentLoaded", function () {
     for (let i = 0; i < textArea.length; i++) {
         textArea[i].style.height = 0;
@@ -29,7 +28,7 @@ cancelComment.addEventListener("click", function () {
     postComment.style.display = "none";
     cancelComment.style.display = "none";
     commentBody.value = "";
-    commentBody.style.height = 0;
+    commentBody.style.height = "";
 });
 
 commentBody.oninput = function() {
@@ -80,5 +79,37 @@ function toggleEdit(comment_id, user_id){
         commentBodyEdit.style.height = commentBodyEdit.scrollHeight + "px"
         
     };
+
+    toggleEdit.edit = function() { //using ajax to update db without refreshing page
+        commentBodyEdit.readOnly = true;
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+        const form = document.getElementById('editComment');
+        const loadingIndicator = document.getElementById('editSpinner');
+
+        commentBodyEdit.style.visibility = 'hidden';
+        loadingIndicator.style.display = 'block';
+        fetch(form.action,
+          { method:'POST',
+            headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken
+            },
+            body: new URLSearchParams(new FormData(form))
+    
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if(data['edited'] == true){
+                    commentConfirmEdit.style.display = "none";
+                    commentCancelEdit.style.display = "none";
+                    commentBodyEdit.classList.remove("underline");
+                }
+                
+                commentBodyEdit.style.visibility = 'visible';
+                loadingIndicator.style.display = 'none';
+            }).catch(error => console.error('Error:', error));
+    
+    }
 }
+
 
