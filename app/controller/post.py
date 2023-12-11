@@ -241,4 +241,22 @@ def save(post):
             Post.unsave(saver, post)
             return jsonify({"saved": False})
     else:
-        abort(400)
+        abort(400)          
+            
+@post_bp.route('/search', methods=['POST'])
+def search():
+    query = request.form.get('query')
+    cuisines = request.form.getlist('cuisine')
+    meal_types = request.form.getlist('meal_type')
+
+    postData = Post.search(query, cuisines, meal_types)
+    
+    if not postData:
+        num_of_suggestions = 3
+        user_id = current_user.get_id()
+        suggestions = Post.fetch_random_posts(num_of_suggestions, user_id)
+        return render_template('main/search.html', suggestions=suggestions)
+
+    cont = Post.fetch_ALL_content(current_user.username)
+
+    return render_template('main/search.html', postData=postData, postCont=cont)

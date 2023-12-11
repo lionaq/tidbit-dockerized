@@ -265,3 +265,77 @@ class Post(UserMixin):
         liked_posts = [entry['post_id'] for entry in likes]
 
         return liked_posts
+            
+    @classmethod
+    def fetch_ALL_content(cls, user_id):
+        try:
+            cursor = mysql.connection.cursor(dictionary=True)
+            sql = "SELECT post_url.url, post_url.post_id, post_url.type FROM post JOIN post_url ON post.id = post_url.post_id;"
+            cursor.execute(sql)
+            data = cursor.fetchall()
+
+            cursor.close()
+            return data
+
+        except Exception as e:
+            print(f"Error fetching all content: {e}")
+
+        finally:
+            if mysql.connection.is_connected():
+                cursor.close()
+
+    @classmethod
+    def search(cls, query, cuisine, meal_type):
+        try:
+            cursor = mysql.connection.cursor(dictionary=True)
+            sql_query = """
+                SELECT post.*, user.profilepic AS profilepic, user.username AS username, user.fullname AS fullname
+                FROM post
+                JOIN user ON post.user_id = user.id
+                WHERE
+            """
+
+            if query:
+                sql_query += "(title LIKE %s OR ingredients LIKE %s OR tag LIKE %s OR subtags LIKE %s) AND "
+
+            if cuisine:
+                placeholders = ', '.join(['%s'] * len(cuisine))
+                sql_query += f"(tag IN ({placeholders})) AND "
+
+            if meal_type:
+                subtags_condition = " OR ".join(["FIND_IN_SET(%s, subtags) > 0"] * len(meal_type))
+                sql_query += f"({subtags_condition}) AND "
+
+            if sql_query.endswith("AND "):
+                sql_query = sql_query[:-4]
+
+            query_with_wildcards = f"%{query}%"
+            cursor.execute(sql_query, (query_with_wildcards, query_with_wildcards, query_with_wildcards, query_with_wildcards, *cuisine, *meal_type))
+
+            results = cursor.fetchall()
+
+            # Process the results or do other operations
+            return results
+
+        except Exception as e:
+            print(f"Error: {e}")
+
+        finally:
+            if mysql.connection.is_connected():
+                cursor.close()
+                
+    @classmethod
+    def fetch_random_posts(cls, num_of_suggestions, user_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = """
+            SELECT post.id AS post_id, post.title, post_url.type, post_url.url
+            FROM post
+            JOIN post_url ON post.id = post_url.post_id
+            WHERE post.user_id != %s
+            ORDER BY RAND()
+            LIMIT %s;
+        """
+        cursor.execute(sql, (user_id, num_of_suggestions))
+        data = cursor.fetchall()
+        cursor.close()
+        return data
