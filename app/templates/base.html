@@ -25,13 +25,97 @@
     <nav class="navbar navbar-expand-sm sticky-top" style="background-color: #FFF; box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);">
         <a class="navbar-brand ms-4" href="{{url_for('main_bp.home')}}" style = "color: #000; font-family: Dosis; font-size: 15px; font-style: normal; font-weight: 800;  letter-spacing: 0.75px;">
           <img loading="lazy" src="{{ url_for('static', filename='img/orangeLogo.png') }}" class="img me-3" alt="tidbit logo" style= " width: 35px; height: 35px;"><span style = "display: inline-block; vertical-align: middle; line-height: normal; font-family: 'Dancing Script', cursive; font-size: 25px;">Tidbit<span></a>
-        <div class="collapse navbar-collapse d-flex justify-content-center ms-3" id="navbarSupportedContent">
-            <form class = "input-group w-50 mx-auto rounded-pill" style = "height:30px; background: #D9D9D9; min-width:150px;" >
-                <input class="form-control rounded-pill " type="text" placeholder="Search" style = "height:30px;  background: #D9D9D9; border: 0;" >
-                <button class="input-group-text rounded-pill" id="basic-addon1" style = "height:30px; background: #D9D9D9; border: 0;"><img loading="lazy" src="{{ url_for('static', filename='img/search.svg') }}" class="img" alt="tidbit logo" style= " width: 35px; height: 30px;"></button>
-            </form>
+        <div class="collapse navbar-collapse d-flex justify-content-center" id="navbarSupportedContent">
 
-            <a class = "ms-4" href = "{{url_for('main_bp.explore')}}" style = "display: inline-block; vertical-align: middle; line-height: normal; border:none; background-color:white;">
+            <div class="container justify-content-center">
+              <form method="POST" action="{{ url_for('post_bp.search') }}">
+                <input name="csrf_token" value="{{ csrf_token() }}" type="hidden" />
+                <div class="input-group mx-auto rounded-pill" style="height: 30px; max-width: 750px; background: #D9D9D9;">
+                  <input class="form-control rounded-pill" type="text" name="query" placeholder="Search" style="height: 30px; background: #D9D9D9; border: 0;">
+                  <div class="input-group-append">
+                    <button type="button" class="input-group-text rounded-pill" id="basic-addon1" style="background: #D9D9D9; border: 0;" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-filter me-2"></i>
+                    </button>
+                    <!-- Filter options inside the dropdown -->
+                    <div class="dropdown-menu ms-2" style="width: 730px;">
+                      <div class="row">
+                        <div class="col-md-3 ms-5 mt-1">
+                          <label class="fs-6" style="font-weight: bold;">Cuisine</label>
+                          <div class="form-check mt-1">
+                              <input class="form-check-input" type="checkbox" id="americanCheckbox" name="cuisine" value="American Cuisine">
+                              <label class="form-check-label" for="americanCheckbox">American</label>
+                          </div>
+                          <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="filipinoCheckbox" name="cuisine" value="Filipino Cuisine">
+                              <label class="form-check-label" for="filipinoCheckbox">Filipino</label>
+                          </div>
+                          <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="frenchCheckbox" name="cuisine" value="French Cuisine">
+                              <label class="form-check-label" for="frenchCheckbox">French</label>
+                          </div>
+                        </div>
+                        <div class="col-md-3" style="margin-top: 4%;">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="japaneseCheckbox" name="cuisine" value="Japanese Cuisine">
+                            <label class="form-check-label" for="japaneseCheckbox">Japanese</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="chineseCheckbox" name="cuisine" value="Chinese Cuisine">
+                            <label class="form-check-label" for="chineseCheckbox">Chinese</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="greekCheckbox" name="cuisine" value="Greek Cuisine">
+                            <label class="form-check-label" for="greekCheckbox">Greek</label>
+                          </div>
+                        </div>
+                        <div class="col-md-3" style="margin-top: 4%;">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="mexcianCheckbox" name="cuisine" value="Mexican Cuisine">
+                            <label class="form-check-label" for="mexcianCheckbox">Mexican</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="indianCheckbox" name="cuisine" value="Indian Cuisine">
+                            <label class="form-check-label" for="indianCheckbox">Indian</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="thaiCheckbox" name="cuisine" value="Thai Cuisine">
+                            <label class="form-check-label" for="thaiCheckbox">Thai</label>
+                          </div>
+                        </div>
+                        <!-- Meal type checkboxes -->
+                        <div class="col-md-3 ms-5 mt-3">
+                          <label class="fs-6" style="font-weight: bold;">Meal Type</label>
+                          <div class="form-check mt-1">
+                            <input class="form-check-input" type="checkbox" id="breakfastCheckbox" name="meal_type" value="breakfast">
+                            <label class="form-check-label" for="breakfastCheckbox">Breakfast</label>
+                          </div>
+                          <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="lunchCheckbox" name="meal_type" value="lunch">
+                              <label class="form-check-label" for="lunchCheckbox">Lunch</label>
+                          </div>
+                          <div class="form-check" style="margin-bottom: 5%;">
+                              <input class="form-check-input" type="checkbox" id="dinnerCheckbox" name="meal_type" value="dinner">
+                              <label class="form-check-label" for="dinnerCheckbox">Dinner</label>
+                          </div>
+                        </div>
+                        <div class="col-md-3" style="margin-top: 6%;">
+                          <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="snackCheckbox" name="meal_type" value="snack">
+                              <label class="form-check-label" for="snackCheckbox">Snack</label>
+                          </div>
+                          <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="dessertCheckbox" name="meal_type" value="dessert">
+                              <label class="form-check-label" for="dessertCheckbox">Dessert</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <a href = "{{url_for('main_bp.explore')}}" style = "display: inline-block; vertical-align: middle; line-height: normal; border:none; background-color:white;">
               <img loading="lazy" src={%block exploreBtn%}"{{ url_for('static', filename='img/exploreIcon.png') }}"{%endblock%} class="img me-3" alt="tidbit logo" style= " width: 28px; height: 28px;">
             </a>
 
