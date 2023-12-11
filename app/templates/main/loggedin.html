@@ -2,7 +2,7 @@
 {%block title%}Feed{%endblock%}
 {% block content %}
 {% set ns = namespace(firstItem=0) %}
-{% set num = namespace(iter=0)%}
+{% set num = namespace(iter=0, count=0)%}
 <!-- User Posts Gallery -->
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create.css') }}">
 <section>
@@ -152,10 +152,16 @@
           <div class = "col-sm-2 my-2">
             <div class = "row row-cols-2">
               <div class = "col">
-                <button style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-comment fa-xl" style="color: #000000;"></i></button>
+                <a href="{{url_for('post_bp.view_post_comment',postid=post.id)}}"  style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-comment fa-xl" style="color: #000000;"></i></a>
               </div>
               <div class = "col ps-2">
-                <p class="fs-6">{{ range(1, 1000) | random }}</p>
+                {% set num.count = 0 %}
+                {% for comment in comments %}
+                    {% if comment == post.id %}
+                        {% set num.count = num.count + 1 %}
+                    {% endif %}
+                {% endfor %}
+                <p class="fs-6">{{ num.count }}</p>
               </div>
             </div>
           </div>

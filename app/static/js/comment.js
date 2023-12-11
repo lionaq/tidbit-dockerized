@@ -131,6 +131,8 @@ function deleteComment(comment_id, user_id){
     let commentBody = document.getElementById('body-'+comment_id+'-'+user_id);
     let csrfToken = document.querySelector('meta[name="csrf-token"]').content;
     let loadingIndicator = document.getElementById('editSpinner-'+comment_id+'-'+user_id);
+    let commentNum = document.getElementById('commentNum');
+    let commentNumDisplay = document.getElementById('commentNumDisplay');
 
 
     commentBody.style.visibility = 'hidden';
@@ -147,6 +149,7 @@ function deleteComment(comment_id, user_id){
             if (data['deleted'] == true) {
                 $('#deleteConfirmComment').modal('hide');
                 commentMain.remove();
+                commentNumDisplay.innerHTML = commentNum.value - 1;
             } else {
                 // Handle the case where deletion was not successful
                 commentBody.style.visibility = 'visible';

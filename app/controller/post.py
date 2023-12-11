@@ -201,7 +201,8 @@ def view_post(postid):
     user_following = User.fetch_following_ids(current_user.id)
     liked_posts = Post.fetch_liked_posts(current_user.id)
     saved_posts = Post.fetch_saved_posts(current_user.id)
-    return render_template('posts/viewpost.html', post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
+    comments = Post.fetch_all_comment_in_post([postid])
+    return render_template('posts/viewpost.html', post=post, comments = list(reversed(comments)), user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
 
 @post_bp.route('/<int:postid>/viewpost/comment', methods=['POST', 'GET'])
 @login_required

@@ -6,7 +6,8 @@
   <hr>
 </div>
 <div class="d-flex flex-column align-items-center">
-  <a href="{{url_for('post_bp.view_post_comment',postid=post.id)}}" class="fw-bold text-dark text-decoration-none">COMMENTS</a>
+    <input type="hidden" name="commentNum" id ="commentNum" value="{{comments|length}}" />
+  <a href="{{url_for('post_bp.view_post_comment',postid=post.id)}}" class="fw-bold text-dark text-decoration-none">COMMENTS<small id ="commentNumDisplay" class = "ms-2 text-muted fw-regular">{{comments|length}}</small></a>
   <hr style="width: 150%; border: 3px solid #D17A5E;">
 </div>
 {%endblock%}
