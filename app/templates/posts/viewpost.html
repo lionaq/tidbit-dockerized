@@ -74,7 +74,7 @@
           {% if img.type == 'image' %}
           <div class="carousel-item {{'active' if loop.first}}">
             <div class="text-center">
-              <img src="{{img.url}}" class="img-fluid" style="height: 333px; width: 100%; border-radius: 10px;">
+              <img src="{{img.url}}" class="img-fluid" style="height: 333px; width: 100%; border-radius: 10px; object-fit: cover;">
             </div>
           </div>
           {% elif img.type == 'video' %}
