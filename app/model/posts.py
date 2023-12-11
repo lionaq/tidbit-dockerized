@@ -289,3 +289,15 @@ class Post(UserMixin):
         cursor.execute(update,data)
         mysql.connection.commit()
         cursor.close()
+    
+    def delete_comment(data):
+        try:
+            cursor = mysql.connection.cursor(dictionary=True)
+            print(data)
+            delete = "DELETE FROM comment WHERE comment_id = %s AND user_id = %s"
+            cursor.execute(delete,data)
+            mysql.connection.commit()
+            cursor.close()
+            return True
+        except:
+            return False

@@ -50,8 +50,8 @@
             </form>
         </div>
         {%for comment in comments%}
-            <div class = "container-fluid my-5">
-                <form id = "editComment" method="POST" action = "{{url_for('post_bp.view_post_comment_edit', comment_id=comment.comment_id, user_id=comment.id)}}">
+            <div class = "container-fluid my-5" id = "main-{{comment.comment_id}}-{{comment.id}}">
+                <form id = "editComment" method="POST" action = "{{url_for('post_bp.view_post_comment_config', comment_id=comment.comment_id, user_id=comment.id)}}">
                     {{ form.hidden_tag() }}
                     <div class = "row row-cols-3 mx-auto d-flex justify-content-center my-2 ms-2">
                         <div class = "col-1 d-flex justify-content-center px-0 mt-1 pe-2">
@@ -67,7 +67,7 @@
                                 <p class="text-break text-start mb-0 fs-6 fw-bold">{{comment.fullname}}</p>
                                 <small class="text-break text-start mb-0 text-muted" style = "font-size:12.5px;">@{{comment.username}}</small>
                             </div>
-                                <div id = "editSpinner" class="spinner-border" role="status" style = "display:none;">
+                                <div id = "editSpinner-{{comment.comment_id}}-{{comment.id}}" class="spinner-border" role="status" style = "display:none;">
                                     <span class="visually-hidden">Loading...</span>
                                 </div>
                                 <textarea name = "body-{{comment.comment_id}}-{{comment.id}}" id = "body-{{comment.comment_id}}-{{comment.id}}" readonly type="text" style = "resize:none; overflow: hidden;" class="form-control-plaintext textArea" placeholder = "Add a comment...">{{comment.comment_body}}</textarea>
@@ -78,7 +78,7 @@
                                 <button class="btn p-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical" style="color: #d17a5e;"></i></button>
                                 <ul class="dropdown-menu">
                                     <li><button type = "button" onclick = "toggleEdit({{comment.comment_id}}, {{comment.id}})" class="dropdown-item">Edit Comment</button></li>
-                                    <li><a class="dropdown-item btn" data-bs-toggle="modal" data-bs-target="#deleteConfirmComment">Delete Comment</a></li>
+                                    <li><a class="dropdown-item btn" data-comment-id="{{comment.comment_id}}" data-user-id="{{comment.id}}" data-bs-toggle="modal" data-bs-target="#deleteConfirmComment">Delete Comment</a></li>
                                 </ul>
                             </div>
                             {%endif%}
@@ -100,22 +100,18 @@
           <h1 class="modal-title fs-5" id="deleteCommentConfirmLabel">Delete Comment</h1>
         </div>
         <div class="modal-body">
-          <form id="deleteCommentConfirm" method="POST" action="{{ url_for('post_bp.delete',user_name=current_user.username, post_id=post.id) }}">
-            {{ form.hidden_tag() }}
             <div class="d-flex justify-content-between flex-column align-items-center">
               <p>Are you sure you want to <br><strong> delete this comment ?</strong></p>
             </div>
             <div class="alert alert-danger" id="errordelete" name="errordelete" role="alert" style="display: none"></div>      
             <div class="d-flex justify-content-center gap-3">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="color: black;">Cancel</button>
-              {{ form.submit(class="btn btn-danger") }}
+              <button id ="deleteComment" type="button" class="btn btn-danger">Delete Comment</button>
             </div>
-          </form>
         </div>
       </div>
     </div>
-  </div>
-
+</div>
 
 <script src="{{ url_for('static', filename='js/comment.js') }}"></script>
 

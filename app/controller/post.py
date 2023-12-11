@@ -227,11 +227,11 @@ def view_post_comment(postid):
         print("GET")
 
     comments = Post.fetch_all_comment_in_post([postid])
-    return render_template('posts/viewpost_comment.html', comments = reversed(comments), post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
+    return render_template('posts/viewpost_comment.html', comments = list(reversed(comments)), post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
 
-@post_bp.route('/comment/edit/<int:comment_id>/<int:user_id>', methods=['POST'])
+@post_bp.route('/comment/edit/<int:comment_id>/<int:user_id>', methods=['POST', 'DELETE'])
 @login_required
-def view_post_comment_edit(comment_id, user_id):
+def view_post_comment_config(comment_id, user_id):
     if request.method == 'POST':
         print(comment_id)
         TEST = request.form.get('commentBody')
@@ -241,6 +241,16 @@ def view_post_comment_edit(comment_id, user_id):
         commentBody = request.form.get(f'body-{comment_id}-{user_id}')
         Post.edit_comment([commentBody, comment_id, user_id])
         return jsonify({"edited": True, "body": commentBody})
+    
+    elif request.method == 'DELETE':
+        print(comment_id)
+        check = Post.delete_comment([comment_id, user_id])
+        return jsonify({"deleted": check})
+
+    else:
+        print("none")
+
+    return None
 
 
 @post_bp.route('/like/<int:post>', methods=['POST'])

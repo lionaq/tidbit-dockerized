@@ -45,6 +45,7 @@ function toggleEdit(comment_id, user_id){
     const commentBodyEdit = document.getElementById('body-'+comment_id+'-'+user_id);
     const commentConfirmEdit = document.getElementById('editConfirm-'+comment_id+'-'+user_id);
     const commentCancelEdit = document.getElementById('editCancel-'+comment_id+'-'+user_id);
+    const loadingIndicator = document.getElementById('editSpinner-'+comment_id+'-'+user_id);
 
     initText = commentBodyEdit.value
 
@@ -84,7 +85,6 @@ function toggleEdit(comment_id, user_id){
         commentBodyEdit.readOnly = true;
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
         const form = document.getElementById('editComment');
-        const loadingIndicator = document.getElementById('editSpinner');
 
         commentBodyEdit.style.visibility = 'hidden';
         loadingIndicator.style.display = 'block';
@@ -112,4 +112,45 @@ function toggleEdit(comment_id, user_id){
     }
 }
 
+$('#deleteConfirmComment').on('show.bs.modal', function (event) {
+    console.log("IM IN")
+    let button = $(event.relatedTarget);
+    let comment_id = button.data('comment-id');
+    let user_id = button.data('user-id');
+    console.log(comment_id,user_id)
+    $('#deleteComment').off('click');
+    $('#deleteComment').on('click', function (event){
+        deleteComment(comment_id, user_id)
+    });
 
+});
+
+function deleteComment(comment_id, user_id){
+    console.log("DELETING:", comment_id, user_id)
+    let commentMain = document.getElementById('main-'+comment_id+'-'+user_id);
+    let commentBody = document.getElementById('body-'+comment_id+'-'+user_id);
+    let csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    let loadingIndicator = document.getElementById('editSpinner-'+comment_id+'-'+user_id);
+
+
+    commentBody.style.visibility = 'hidden';
+    loadingIndicator.style.display = 'block';
+    fetch('/comment/edit/'+comment_id+'/'+user_id,
+      { method:'DELETE',
+        headers: {
+        'X-CSRFToken': csrfToken
+        }
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data);
+            if (data['deleted'] == true) {
+                $('#deleteConfirmComment').modal('hide');
+                commentMain.remove();
+            } else {
+                // Handle the case where deletion was not successful
+                commentBody.style.visibility = 'visible';
+                loadingIndicator.style.display = 'none';
+            }
+        }).catch(error => console.error('Error:', error));
+}
