@@ -67,55 +67,53 @@
                                 <p class="text-break text-start mb-0 fs-6 fw-bold">{{comment.fullname}}</p>
                                 <small class="text-break text-start mb-0 text-muted" style = "font-size:12.5px;">@{{comment.username}}</small>
                             </div>
-                            <span class = "text-break"> <textarea  readonly type="text" style = "resize:none; overflow: hidden;" class="form-control-plaintext " rows = "1" id="commentBody" placeholder = "Add a comment...">{%for ing in comment.comment_body.split('\r\n')%}{%if ing.strip()%}{{ing}}{%endif%}{% endfor %}</textarea></span>
+                                <textarea id = "body-{{comment.comment_id}}-{{comment.id}}" readonly type="text" style = "resize:none; overflow: hidden;" class="form-control-plaintext textArea" placeholder = "Add a comment...">{{comment.comment_body}}</textarea>
                         </div>
                         <div class = "col-1 p-0 m-0">
+                            {%if current_user.id == comment.id%}
                             <div class="dropdown dropstart p-0">
                                 <button class="btn p-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical" style="color: #d17a5e;"></i></button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{{url_for('post_bp.edit',post_id=post.id,user_name=current_user.username)}}">Edit Comment</a></li>
-                                    <li><a class="dropdown-item btn" data-bs-toggle="modal" data-bs-target="#deleteConfirm">Delete Comment</a></li>
+                                    <li><button type = "button" onclick = "toggleEdit({{comment.comment_id}}, {{comment.id}})" class="dropdown-item">Edit Comment</button></li>
+                                    <li><a class="dropdown-item btn" data-bs-toggle="modal" data-bs-target="#deleteConfirmComment">Delete Comment</a></li>
                                 </ul>
                             </div>
+                            {%endif%}
                         </div>
+                    </div>
+                    <div class = "d-flex flex-row-reverse mt-3">
+                        <button disabled id = "editConfirm-{{comment.comment_id}}-{{comment.id}}"  type = "submit" class="btn btn-sm rounded-pill fw-bold ms-2" style="display:none; background-color: #d17a5e; color: black;">Edit</button>
+                        <button onclick="toggleEdit.cancelEdit()" id = "editCancel-{{comment.comment_id}}-{{comment.id}}" type = "button" class = "btn btn-sm  rounded-pill ms-1 fw-bold" style="display:none; background-color: rgba(182, 120, 99, 0.349); color: black;">Cancel</button>
                     </div>
                 </form>
             </div>
         {%endfor%}
-    <script>
-        let commentBody = document.getElementById("commentBody");
-        let postComment = document.getElementById("postComment");
-        let cancelComment = document.getElementById("cancelComment");
 
-        commentBody.addEventListener("focus", function () {
-            commentBody.classList.remove("plainline");
-            commentBody.classList.add("underline");
-            postComment.style.display = "inline";
-            cancelComment.style.display = "inline";
-        });
+<!-- DELETE COMMENT CONFIRM MODAL -->
+<div class="modal modal-sm fade" id="deleteConfirmComment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteConfirmCommentLabel" aria-hidden="true" data-bs-theme="dark">
+    <div class="modal-dialog text-light modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header d-flex justify-content-center">
+          <h1 class="modal-title fs-5" id="deleteCommentConfirmLabel">Delete Comment</h1>
+        </div>
+        <div class="modal-body">
+          <form id="deleteCommentConfirm" method="POST" action="{{ url_for('post_bp.delete',user_name=current_user.username, post_id=post.id) }}">
+            {{ form.hidden_tag() }}
+            <div class="d-flex justify-content-between flex-column align-items-center">
+              <p>Are you sure you want to <br><strong> delete this comment ?</strong></p>
+            </div>
+            <div class="alert alert-danger" id="errordelete" name="errordelete" role="alert" style="display: none"></div>      
+            <div class="d-flex justify-content-center gap-3">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="color: black;">Cancel</button>
+              {{ form.submit(class="btn btn-danger") }}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        commentBody.addEventListener("blur", function () {
-            commentBody.classList.remove("underline");
-            commentBody.classList.add("plainline");
-        });
 
-        cancelComment.addEventListener("click", function () {
-            console.log("CANCEL");
-            postComment.style.display = "none";
-            cancelComment.style.display = "none";
-            commentBody.value = "";
-            commentBody.style.height = "";
-        });
+<script src="{{ url_for('static', filename='js/comment.js') }}"></script>
 
-        commentBody.oninput = function() {
-            commentBody.style.height = "";
-            /* commentBody.style.height = Math.min(commentBody.scrollHeight, 300) + "px"; */
-            commentBody.style.height = commentBody.scrollHeight + "px"
-            if(commentBody.value.trim().length == 0){
-                postComment.disabled = true;
-            }else{
-                postComment.disabled = false;
-            }
-        };
-    </script>
 {%endblock%}
