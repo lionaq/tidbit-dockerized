@@ -201,7 +201,56 @@ def view_post(postid):
     user_following = User.fetch_following_ids(current_user.id)
     liked_posts = Post.fetch_liked_posts(current_user.id)
     saved_posts = Post.fetch_saved_posts(current_user.id)
-    return render_template('posts/viewpost.html', post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
+    comments = Post.fetch_all_comment_in_post([postid])
+    return render_template('posts/viewpost.html', post=post, comments = list(reversed(comments)), user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
+
+@post_bp.route('/<int:postid>/viewpost/comment', methods=['POST', 'GET'])
+@login_required
+def view_post_comment(postid):
+    form = SubmitForm()
+    post = Post.get_by_id(postid)
+    user = User.search_by_id(post.user_id)
+    content = Post.fetch_view_post_img(post.id)
+    user_following = User.fetch_following_ids(current_user.id)
+    liked_posts = Post.fetch_liked_posts(current_user.id)
+    saved_posts = Post.fetch_saved_posts(current_user.id)
+    if request.method == "POST":
+        print("HELLo")
+        commentBody = request.form.get('commentBody')
+        print(commentBody)
+        if commentBody and commentBody.isspace() == False:
+            print("IM IN")
+            data = [postid, current_user.id, commentBody]
+            Post.add_comment(data)
+        print(f'Textarea Data: {commentBody}')
+        print("success!")
+    else:
+        print("GET")
+
+    comments = Post.fetch_all_comment_in_post([postid])
+    return render_template('posts/viewpost_comment.html', comments = comments, post=post, user=user, content=content, form=form, user_following=user_following, liked = liked_posts, saved = saved_posts)
+
+@post_bp.route('/comment/config/<int:comment_id>/<int:user_id>', methods=['POST', 'DELETE'])
+@login_required
+def view_post_comment_config(comment_id, user_id):
+    if request.method == 'POST':
+        print("retrieved: ",comment_id, user_id )
+        form_id = f'body-{comment_id}-{user_id}'
+        print(form_id)
+        commentBody = request.form.get(f'body-{comment_id}-{user_id}')
+        check = Post.edit_comment([commentBody, comment_id, user_id])
+        return jsonify({"edited": check, "body": commentBody})
+    
+    elif request.method == 'DELETE':
+        print(comment_id)
+        check = Post.delete_comment([comment_id, user_id])
+        return jsonify({"deleted": check})
+
+    else:
+        print("none")
+
+    return None
+
 
 @post_bp.route('/like/<int:post>', methods=['POST'])
 @login_required
