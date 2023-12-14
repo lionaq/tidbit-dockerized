@@ -5,7 +5,7 @@
 <a href="{{url_for('auth_bp.login')}}">Login</a>
 <a href="{{url_for('post_bp.create', user_name='1')}}">Create Post</a> -->
 
-{% block content %}
+{% block home %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
 
 <style>
@@ -14,19 +14,19 @@
     }
 </style>
 
-<div id="section1" class="section container-fluid">
+<div class="parallax parallax-section-1">
   <div class="container">
     <div class="row">
       <div class="col-10 offset-1">
           <!-- <img src="static/img/orangeLogo.png" alt="Tidbit" class="img-fluid" style="margin-left: 12%; max-width: 25%;"> -->
-          <h1 class="mb-3" style="font-family: 'Dancing Script', cursive; font-size: 120px; color: #d17a5e;">Tidbit</h1>
-          <p style="font-size: 18px; opacity: 0.8">
+          <h1 class="mb-3" style="text-align: left; font-family: 'Dancing Script', cursive; font-size: 120px; color: #d17a5e;">Tidbit</h1>
+          <p style="text-align: left; font-family: Arial, sans-serif; font-size: 18px; opacity: 0.8">
             Unleash your inner chef and connect with a community <br>
             of culinary enthusiasts on Tidbit! Embark on a flavorful journey <br>
             as you explore a world of delectable recipes shared by <br>
             passionate food enthusiasts just like you.
           </p>
-          <p style="font-size: 18px; font-weight: bold; opacity: 0.8;">
+          <p style="text-align: left; font-size: 18px; font-weight: bold; opacity: 0.8;">
               Explore flavor, Discover Tidbit!
           </p>
       </div>
@@ -34,7 +34,7 @@
   </div>
 </div>
 
-<div class="feature-background">
+<div class="strip-background strip-background-1">
   <div class="container">
     <div class="row row-cols-9 justify-content-center">
       <div class="col">
@@ -74,14 +74,52 @@
   </div>
 </div>
 
-<div id="section2" class="section">
-  <div class="container">
-    <h1 class="mb-3" style="font-family: 'Dancing Script', cursive; font-size: 120px; color: #d17a5e;">Tidbit</h1>
+<div class="parallax parallax-section-2"></div>
 
+<div class="section section-1">
+  <div class="container">
+    <div class="row">
+        <h1 style="font-size: 32px; color: black; text-align: center;"> ​Embark on an Adventure with Tidbit </h1>
+        <p style="font-family: Arial, sans-serif; font-size: 15px; color: black; text-align: center;">
+          <br>
+          ​Join Tidbit today and embark on a flavorful adventure like never before. 
+          Whether you're a seasoned chef or a kitchen novice, our platform is designed 
+          to inspire, connect, and simplify your cooking experience. Start exploring, sharing, 
+          and discovering a world of delicious possibilities. Sign up now to unlock a 
+          treasure trove of recipes.
+        </p>
+    </div>
+    <div class="row justify-contents-center">
+      <!-- Side Columns -->
+      <div class="col-4">
+        <div class="justify-contents-center">
+            <!-- Content for the first side column -->
+            <img src="static/img/1.jpeg" alt="Tidbit" class="img-fluid mt-5" style="max-width: 75%;">
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="justify-contents-center">
+            <!-- Content for the second side column -->
+            <img src="static/img/2.jpeg" alt="Tidbit" class="img-fluid mt-5" style="max-width: 75%;">
+
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="justify-contents-center">
+            <!-- Content for the second side column -->
+            <img src="static/img/3.jpeg" alt="Tidbit" class="img-fluid mt-5" style="max-width: 75%;">
+
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
+<div class="parallax parallax-section-3">
+  <div class="container">
 
+  </div>
+</div>
 
 
 {% endblock %}
