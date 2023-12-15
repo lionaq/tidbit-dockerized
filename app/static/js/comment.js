@@ -151,7 +151,8 @@ function deleteComment(comment_id, user_id){
             if (data['deleted'] == true) {
                 $('#deleteConfirmComment').modal('hide');
                 commentMain.remove();
-                commentNumDisplay.innerHTML = commentNum.value - 1;
+                commentNum.value -= 1;
+                commentNumDisplay.innerHTML = commentNum.value;
             } else {
                 // Handle the case where deletion was not successful
                 commentBody.style.visibility = 'visible';

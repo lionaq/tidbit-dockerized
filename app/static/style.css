@@ -319,3 +319,7 @@ textarea {
 }
 
 
+
+.hidden {
+    display: none;
+}

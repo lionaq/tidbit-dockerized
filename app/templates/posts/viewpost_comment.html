@@ -65,7 +65,7 @@
                         </div>
                         <div class = "col-10">
                             <div class = "row">
-                                <p class="text-break text-start mb-0 fs-6 fw-bold">{{comment.fullname}}</p>
+                                <p class="text-break text-start mb-0 fs-6 fw-bold">{{comment.fullname}}<span class = "text-muted ms-2 fw-lighter" style = "font-size:12px;">{{comment.comment_time | time_ago}}</span></p>
                                 <small class="text-break text-start mb-0 text-muted" style = "font-size:12.5px;">@{{comment.username}}</small>
                             </div>
                                 <div id = "editSpinner-{{comment.comment_id}}-{{comment.id}}" class="spinner-border" role="status" style = "display:none;">

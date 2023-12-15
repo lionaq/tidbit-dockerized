@@ -15,8 +15,9 @@ jinja2 = "*"
 cloudinary = "*"
 flask-mail = "*"
 itsdangerous = "*"
+flask-socketio = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.11.4"
+python_version = "3.11"

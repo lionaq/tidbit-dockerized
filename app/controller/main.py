@@ -4,6 +4,7 @@ from flask import render_template, request, redirect, url_for, flash
 from app.model.user import User
 from app.model.posts import Post
 import random
+from app import socketio
 
 main_bp = Blueprint(
     "main_bp",
@@ -44,3 +45,25 @@ def explore():
     random.shuffle(data)
     comments = Post.fetch_all_comment_ids()
     return render_template('main/explore.html', comments = comments, postData = data, postCont = cont, following = following, liked = liked_posts, saved = saved_posts)
+
+@main_bp.route('/getnotif/update/<notification_id>', methods=['GET'])
+@login_required
+def update_read_notification(notification_id):
+    post_id = Post.update_read_notification(notification_id)
+    socketio.emit('get_notification')
+    if post_id['type'] == 'FOLLOW':
+        username = User.search_by_id(post_id['notifier'])
+        return redirect(url_for('profile_bp.profile', username = username.username))
+    if post_id['type'] == 'COMMENT':
+        return redirect(url_for('post_bp.view_post_comment', postid = post_id['post_id']))
+    
+    return redirect(url_for('post_bp.view_post', postid = post_id['post_id']))
+
+@socketio.on('get_notification')
+@login_required
+def get_notification(data):
+    user_id = data.get('user_id')
+    notification = Post.get_notification_post(user_id)
+    count = sum(1 for notif in notification if notif['is_read'] == 0)    
+    data = {'html' : render_template('main/notification.html', notification=notification), 'unread_count' : count}
+    socketio.emit('update_notification_dom', data=data,room=request.sid)

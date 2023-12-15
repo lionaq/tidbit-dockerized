@@ -3,6 +3,8 @@ from flask import Blueprint
 from flask import request, abort, jsonify, flash
 from flask_login import current_user, login_required
 from app.model.user import User
+from app.model.posts import Post
+from app import socketio
 
 user_bp = Blueprint(
     "user_bp",
@@ -18,6 +20,8 @@ def follow(following):
         # Check if User is already following
         if check_following == False:
             User.follow(follower, following)
+            Post().add_notification_follow(current_user.id, following, None)
+            socketio.emit('get_notification')
             following_list = User.fetch_following_ids(follower)
             following_followers_list = User.fetch_followers_ids(following)
             return jsonify({"following": check_following, 'following_count': len(following_list), 'following_followers': len(following_followers_list)})
@@ -34,6 +38,8 @@ def unfollow(following):
         check_following = User.check_if_following(follower, following)
         if check_following == True:
             User.unfollow(follower, following)
+            Post.remove_notification_follow(current_user.id, following)
+            socketio.emit('get_notification')
             following_list = User.fetch_following_ids(follower)
             print(following)
             following_followers_list = User.fetch_followers_ids(following)
