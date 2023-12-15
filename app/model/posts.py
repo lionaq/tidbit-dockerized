@@ -337,12 +337,7 @@ class Post(UserMixin):
     def search_posts(cls, query, cuisine, meal_type):
         try:
             cursor = mysql.connection.cursor(dictionary=True)
-            sql_query = """
-                SELECT post.*, user.profilepic AS profilepic, user.username AS username, user.fullname AS fullname
-                FROM post
-                JOIN user ON post.user_id = user.id
-                WHERE
-            """
+            sql_query = "SELECT post.*, user.profilepic AS profilepic, user.username AS username, user.fullname AS fullname FROM post JOIN user ON post.user_id = user.id WHERE "
 
             if query:
                 sql_query += "(LOWER(title) LIKE %s OR LOWER(ingredients) LIKE %s OR LOWER(tag) LIKE %s OR LOWER(subtags) LIKE %s) AND "
@@ -359,15 +354,12 @@ class Post(UserMixin):
                 sql_query = sql_query[:-4]
 
             query_with_wildcards = f"%{query.lower()}%"
-
-            print("SQL Query:", sql_query)
-            print("Query with Wildcards:", query_with_wildcards)
             
             cursor.execute(sql_query, (query_with_wildcards, query_with_wildcards, query_with_wildcards, query_with_wildcards, *cuisine, *meal_type))
 
 
             results = cursor.fetchall()
-            print(results)
+
             return results
 
         except Exception as e:
@@ -377,15 +369,12 @@ class Post(UserMixin):
             if mysql.connection.is_connected():
                 cursor.close()
                 
-
+    
     @classmethod
     def search_users(cls, query, current_user_id):
         cursor = mysql.connection.cursor(dictionary=True)
-        sql = """
-            SELECT id, username, fullname, profilepic
-            FROM user
-            WHERE id != %s AND (username LIKE %s OR fullname LIKE %s);
-        """
+        sql = """SELECT user.id, user.username, user.fullname, user.profilepic, COUNT(follower.id) AS followers_count, EXISTS(SELECT 1 FROM follow WHERE follower = %s AND following = user.id) AS is_following
+                FROM user LEFT JOIN follow AS follower ON user.id = follower.following WHERE user.username LIKE %s OR user.fullname LIKE %s GROUP BY user.id, user.username, user.fullname, user.profilepic;"""
         cursor.execute(sql, (current_user_id, f"%{query}%", f"%{query}%"))
         users = cursor.fetchall()
         cursor.close()
@@ -394,14 +383,7 @@ class Post(UserMixin):
     @classmethod
     def fetch_random_posts(cls, num_of_suggestions, user_id):
         cursor = mysql.connection.cursor(dictionary=True)
-        sql = """
-            SELECT post.id AS post_id, post.title, post_url.type, post_url.url
-            FROM post
-            JOIN post_url ON post.id = post_url.post_id
-            WHERE post.user_id != %s
-            ORDER BY RAND()
-            LIMIT %s;
-        """
+        sql = "SELECT post.id AS post_id, post.title, post_url.type, post_url.url FROM post JOIN post_url ON post.id = post_url.post_id WHERE post.user_id != %s ORDER BY RAND() LIMIT %s;"
         cursor.execute(sql, (user_id, num_of_suggestions))
         data = cursor.fetchall()
         cursor.close()
