@@ -318,7 +318,7 @@ class Post(UserMixin):
         
     def get_post_id_from_comment_id(self, comment_id):
         cursor = mysql.connection.cursor(dictionary=True)
-        sql = "SELECT post_id FROM comment WHERE comment_id=%s"
+        sql = "SELECT comment.post_id, post.user_id FROM comment JOIN post ON comment.post_id = post.id WHERE comment.comment_id = %s;"
         cursor.execute(sql, (comment_id,))
         comment = cursor.fetchone()
         cursor.close()

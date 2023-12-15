@@ -33,10 +33,10 @@ def get_notification_text(notif):
     if notif_type == 'POST':
         return 'created a post'
     elif notif_type == 'LIKE':
-        return 'liked a post'
+        return 'liked your post'
     elif notif_type == 'SAVE':
-        return 'saved a post'
+        return 'saved your post'
     elif notif_type == 'COMMENT':
-        return 'commented on a post'
+        return 'commented on your post'
     else:
         return 'performed an action'

@@ -5,30 +5,6 @@ from app.model.user import User
 from app.model.posts import Post
 import random
 from app import socketio
-from flask_socketio import join_room, leave_room
-
-
-@socketio.on('connect')
-@login_required
-def handle_connect():
-    current_user_room = f"user_{current_user.id}"
-    join_room(current_user_room)
-    followers_id = User.fetch_followers_ids(current_user.id)
-    followers_id.append(current_user.id)
-    for follower_id in followers_id:
-        follower_room = f"user_{follower_id}"
-        join_room(follower_room)
-
-@socketio.on('disconnect')
-@login_required
-def handle_disconnect():
-    current_user_room = f"user_{current_user.id}"
-    leave_room(current_user_room)
-    followers_id = User.fetch_followers_ids(current_user.id)
-    followers_id.append(current_user.id)
-    for follower_id in followers_id:
-        follower_room = f"user_{follower_id}"
-        leave_room(follower_room)
 
 main_bp = Blueprint(
     "main_bp",

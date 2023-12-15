@@ -228,9 +228,7 @@ def view_post_comment(postid):
             print("IM IN")
             data = [postid, current_user.id, commentBody]
             Post.add_comment(data)
-            followers_id = User.fetch_followers_ids(current_user.id)
-            for follower_id in followers_id:
-                Post().add_notification_comment(current_user.id, follower_id, postid)
+            Post().add_notification_comment(current_user.id, post.user_id, post.id)
             socketio.emit('get_notification')
         print(f'Textarea Data: {commentBody}')
         print("success!")
@@ -258,9 +256,7 @@ def view_post_comment_config(comment_id, user_id):
         if check:
             if post_id is not None:
                 print(post_id)
-                followers_id = User.fetch_followers_ids(current_user.id)
-                for follower_id in followers_id:
-                    Post.remove_notification_comment(current_user.id, follower_id, post_id['post_id'])
+                Post.remove_notification_comment(current_user.id, post_id['user_id'], post_id['post_id'])
                 socketio.emit('get_notification')
         return jsonify({"deleted": check})
 
@@ -276,25 +272,21 @@ def like(post):
     if request.method == 'POST':
         liker = current_user.id
         liked = Post.like_check(liker,post)
+        post = Post.get_by_id(post)
         if liked != True:
             print("like")
-
-            Post.like(liker, post)
-            followers_id = User.fetch_followers_ids(current_user.id)
-            for follower_id in followers_id:
-                Post().add_notification_like(current_user.id, follower_id, post)
+            Post.like(liker, post.id)
+            Post().add_notification_like(current_user.id, post.user_id, post.id)
             socketio.emit('get_notification')
-            likeAmount = Post.like_amount(post)
+            likeAmount = Post.like_amount(post.id)
             return jsonify({"likes": likeAmount.get('likes'), "liked": True})
         else:
             print("unlike")
             liker = current_user.id
-            Post.unlike(liker, post)
-            followers_id = User.fetch_followers_ids(current_user.id)
-            for follower_id in followers_id:
-                Post.remove_notification_like(current_user.id, follower_id, post)
+            Post.unlike(liker, post.id)
+            Post.remove_notification_like(current_user.id, post.user_id, post.id)
             socketio.emit('get_notification')
-            likeAmount = Post.like_amount(post)
+            likeAmount = Post.like_amount(post.id)
             return jsonify({"likes": likeAmount.get('likes'), "liked": False})
     else:
         abort(400)
@@ -305,22 +297,18 @@ def save(post):
     if request.method == 'POST':
         saver = current_user.id
         saved = Post.save_check(saver,post)
+        post = Post.get_by_id(post)
         if saved != True:
             print("save")
-
-            Post.save(saver, post)
-            followers_id = User.fetch_followers_ids(current_user.id)
-            for follower_id in followers_id:
-                Post().add_notification_save(current_user.id, follower_id, post)
+            Post.save(saver, post.id)
+            Post().add_notification_save(current_user.id, post.user_id, post.id)
             socketio.emit('get_notification')
             return jsonify({ "saved": True})
         else:
             print("unsave")
             saver = current_user.id
-            Post.unsave(saver, post)
-            followers_id = User.fetch_followers_ids(current_user.id)
-            for follower_id in followers_id:
-                Post.remove_notification_save(current_user.id, follower_id, post)
+            Post.unsave(saver, post.id)
+            Post.remove_notification_save(current_user.id, post.user_id, post.id)
             socketio.emit('get_notification')
             return jsonify({"saved": False})
     else:
