@@ -74,7 +74,7 @@
     {% if postUser %}
       <div class="col-12 mb-4 mt-3">
           <h3 style="font-weight: bold;">User Results</h3>
-          <div class="row">
+          <div class="row d-flex justify-content-center">
               {% for user in postUser %}
                   <div class="col-lg-3 mx-2 my-3 box ms-4" style="width: 250px; height: 130px;">
                       <div class="row">
@@ -87,7 +87,7 @@
                               <p class="fs-6 fw-semibold m-0 p-0">{{ user.fullname }}</p>
                               <p class="text-muted" style="font-size: 13px;">
                                 @{{ user.username }} <br>
-                                {{ user.followers_count }} followers
+                                <span class = "me-1" id = "followers-count-in-search-{{user.id}}">{{ user.followers_count }}</span>followers
                               </p>
                           </div>
                       </div>

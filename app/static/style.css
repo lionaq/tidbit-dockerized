@@ -173,7 +173,7 @@
 }
 
 .custom-dropdown .btn-secondary {
-    width: 11%;
+    width: auto;
 }
 
 .custom-dropdown .dropdown-menu {
@@ -279,6 +279,17 @@ textarea {
     box-shadow: 0px 0px 10px 0px #D17A5E;
 
 }
+
+.userTop .unfollowBtn {
+    position: absolute;
+    top: 55%;
+    left: 90%;
+    max-width: 500px;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transition: all 0.3s ease;
+}
+
 /* Add this to your CSS file or style tag */
 .overlay-link {
     background: none;

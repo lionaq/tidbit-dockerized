@@ -1,12 +1,18 @@
 // follow.js
-function follow(user_id) {
 
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-    const current_user_id = document.querySelector('meta[name="current_user_id"]').content;
+const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+const current_user_id = document.querySelector('meta[name="current_user_id"]').content;
+
+function follow(user_id) {
     const user_prof_id = document.getElementById('user_prof_id')
     const followButton = document.getElementsByClassName('follow-button-' + user_id);
     const unfollowButton = document.getElementsByClassName('unfollow-button-' + user_id);
+
+    //handles follower/following count in user profile
     const followingCount = document.getElementById('userFollowing');
+    const followerCount = document.getElementById('userFollowers');
+
+    const followers_count_in_search = document.getElementById('followers-count-in-search-'+user_id)
 
     fetch('/follow/' + user_id, {
         method: 'POST',
@@ -30,6 +36,11 @@ function follow(user_id) {
                 console.log("following count in profile changed!");
                 followingCount.innerHTML = data['following_count'];
             }
+
+            if(followerCount && current_user_id != user_prof_id.value && user_prof_id.value == user_id){
+                console.log("followerCount")
+                followerCount.innerHTML = data['following_followers'];
+            }
         }
         else{
             console.log("Already Following")
@@ -44,14 +55,15 @@ function follow(user_id) {
 }
 
 function unfollow(user_id) {
-
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-    const current_user_id = document.querySelector('meta[name="current_user_id"]').content;
     const user_prof_id = document.getElementById('user_prof_id')
-    console.log(user_prof_id)
     const followButton = document.getElementsByClassName('follow-button-' + user_id);
     const unfollowButton = document.getElementsByClassName('unfollow-button-' + user_id);
+
+    //handles follower/following count in user profile
     const followingCount = document.getElementById('userFollowing');
+    const followerCount = document.getElementById('userFollowers');
+
+    const followers_count_in_search = document.getElementById('followers-count-in-search-'+user_id)
 
     fetch('/unfollow/' + user_id, {
         method: 'POST',
@@ -74,6 +86,9 @@ function unfollow(user_id) {
             if(followingCount && current_user_id == user_prof_id.value){
                 console.log("following count in profile changed!");
                 followingCount.innerHTML = data['following_count'];
+            }
+            if(followerCount && current_user_id != user_prof_id.value && user_prof_id.value == user_id){
+                followerCount.innerHTML = data['following_followers'];
             }
         }
         else{
