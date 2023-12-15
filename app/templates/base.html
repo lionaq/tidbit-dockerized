@@ -42,43 +42,43 @@
                         <div class="col-md-3 ms-5 mt-1">
                           <label class="fs-6" style="font-weight: bold;">Cuisine</label>
                           <div class="form-check mt-1">
-                              <input class="form-check-input" type="checkbox" id="americanCheckbox" name="cuisine" value="American Cuisine">
+                              <input class="form-check-input" type="checkbox" id="americanCheckbox" name="cuisine" value="American Cuisine" {% if 'American Cuisine' in selected_cuisines %}checked{% endif %}>
                               <label class="form-check-label" for="americanCheckbox">American</label>
                           </div>
                           <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="filipinoCheckbox" name="cuisine" value="Filipino Cuisine">
+                              <input class="form-check-input" type="checkbox" id="filipinoCheckbox" name="cuisine" value="Filipino Cuisine" {% if 'Filipino Cuisine' in selected_cuisines %}checked{% endif %}>
                               <label class="form-check-label" for="filipinoCheckbox">Filipino</label>
                           </div>
                           <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="frenchCheckbox" name="cuisine" value="French Cuisine">
+                              <input class="form-check-input" type="checkbox" id="frenchCheckbox" name="cuisine" value="French Cuisine" {% if 'French Cuisine' in selected_cuisines %}checked{% endif %}>
                               <label class="form-check-label" for="frenchCheckbox">French</label>
                           </div>
                         </div>
                         <div class="col-md-3" style="margin-top: 4%;">
                           <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="japaneseCheckbox" name="cuisine" value="Japanese Cuisine">
+                            <input class="form-check-input" type="checkbox" id="japaneseCheckbox" name="cuisine" value="Japanese Cuisine" {% if 'Japanese Cuisine' in selected_cuisines %}checked{% endif %}>
                             <label class="form-check-label" for="japaneseCheckbox">Japanese</label>
                           </div>
                           <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="chineseCheckbox" name="cuisine" value="Chinese Cuisine">
+                            <input class="form-check-input" type="checkbox" id="chineseCheckbox" name="cuisine" value="Chinese Cuisine" {% if 'Chinese Cuisine' in selected_cuisines %}checked{% endif %}>
                             <label class="form-check-label" for="chineseCheckbox">Chinese</label>
                           </div>
                           <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="greekCheckbox" name="cuisine" value="Greek Cuisine">
+                            <input class="form-check-input" type="checkbox" id="greekCheckbox" name="cuisine" value="Greek Cuisine" {% if 'Greek Cuisine' in selected_cuisines %}checked{% endif %}>
                             <label class="form-check-label" for="greekCheckbox">Greek</label>
                           </div>
                         </div>
                         <div class="col-md-3" style="margin-top: 4%;">
                           <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="mexcianCheckbox" name="cuisine" value="Mexican Cuisine">
+                            <input class="form-check-input" type="checkbox" id="mexcianCheckbox" name="cuisine" value="Mexican Cuisine" {% if 'Mexican Cuisine' in selected_cuisines %}checked{% endif %}>
                             <label class="form-check-label" for="mexcianCheckbox">Mexican</label>
                           </div>
                           <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="indianCheckbox" name="cuisine" value="Indian Cuisine">
+                            <input class="form-check-input" type="checkbox" id="indianCheckbox" name="cuisine" value="Indian Cuisine" {% if 'Indian Cuisine' in selected_cuisines %}checked{% endif %}>
                             <label class="form-check-label" for="indianCheckbox">Indian</label>
                           </div>
                           <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="thaiCheckbox" name="cuisine" value="Thai Cuisine">
+                            <input class="form-check-input" type="checkbox" id="thaiCheckbox" name="cuisine" value="Thai Cuisine" {% if 'Thai Cuisine' in selected_cuisines %}checked{% endif %}>
                             <label class="form-check-label" for="thaiCheckbox">Thai</label>
                           </div>
                         </div>
@@ -86,25 +86,25 @@
                         <div class="col-md-3 ms-5 mt-3">
                           <label class="fs-6" style="font-weight: bold;">Meal Type</label>
                           <div class="form-check mt-1">
-                            <input class="form-check-input" type="checkbox" id="breakfastCheckbox" name="meal_type" value="breakfast">
+                            <input class="form-check-input" type="checkbox" id="breakfastCheckbox" name="meal_type" value="breakfast" {% if 'breakfast' in selected_meal_types %}checked{% endif %}>
                             <label class="form-check-label" for="breakfastCheckbox">Breakfast</label>
                           </div>
                           <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="lunchCheckbox" name="meal_type" value="lunch">
+                              <input class="form-check-input" type="checkbox" id="lunchCheckbox" name="meal_type" value="lunch" {% if 'lunch' in selected_meal_types %}checked{% endif %}>
                               <label class="form-check-label" for="lunchCheckbox">Lunch</label>
                           </div>
                           <div class="form-check" style="margin-bottom: 5%;">
-                              <input class="form-check-input" type="checkbox" id="dinnerCheckbox" name="meal_type" value="dinner">
+                              <input class="form-check-input" type="checkbox" id="dinnerCheckbox" name="meal_type" value="dinner" {% if 'dinner' in selected_meal_types %}checked{% endif %}>
                               <label class="form-check-label" for="dinnerCheckbox">Dinner</label>
                           </div>
                         </div>
                         <div class="col-md-3" style="margin-top: 6%;">
                           <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="snackCheckbox" name="meal_type" value="snack">
+                              <input class="form-check-input" type="checkbox" id="snackCheckbox" name="meal_type" value="snack" {% if 'snack' in selected_meal_types %}checked{% endif %}>
                               <label class="form-check-label" for="snackCheckbox">Snack</label>
                           </div>
                           <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="dessertCheckbox" name="meal_type" value="dessert">
+                              <input class="form-check-input" type="checkbox" id="dessertCheckbox" name="meal_type" value="dessert" {% if 'dessert' in selected_meal_types %}checked{% endif %}>
                               <label class="form-check-label" for="dessertCheckbox">Dessert</label>
                           </div>
                         </div>
