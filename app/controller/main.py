@@ -54,6 +54,9 @@ def update_read_notification(notification_id):
     if post_id['type'] == 'FOLLOW':
         username = User.search_by_id(post_id['notifier'])
         return redirect(url_for('profile_bp.profile', username = username.username))
+    if post_id['type'] == 'COMMENT':
+        return redirect(url_for('post_bp.view_post_comment', postid = post_id['post_id']))
+    
     return redirect(url_for('post_bp.view_post', postid = post_id['post_id']))
 
 @socketio.on('get_notification')
