@@ -39,7 +39,7 @@ body {
 
 .feature-box {
     width: 100%;
-    max-width: 355px;
+    max-width: 400px;
     min-height: 290px;
     border: 1px solid rgba(229,232,233,255);
     border-radius: 3px;
