@@ -38,5 +38,7 @@ def get_notification_text(notif):
         return 'saved your post'
     elif notif_type == 'COMMENT':
         return 'commented on your post'
+    elif notif_type == 'FOLLOW':
+        return 'followed you'
     else:
         return 'performed an action'

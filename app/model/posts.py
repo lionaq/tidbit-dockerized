@@ -346,11 +346,22 @@ class Post(UserMixin):
     def add_notification_comment(self, notifier, notifying, post_id, type='COMMENT'):
         self.add_notification(notifier, notifying, post_id, type)
 
+    def add_notification_follow(self, notifier, notifying, post_id=None, type='FOLLOW'):
+        self.add_notification(notifier, notifying, post_id, type)
+
+
         
     def remove_notification_like(notifier, notifying, post_id):
         cursor = mysql.connection.cursor(dictionary=True)
         sql = "DELETE FROM notification WHERE notifier = %s AND notifying = %s AND post_id = %s AND type = 'LIKE'"
         cursor.execute(sql, (notifier, notifying, post_id))
+        mysql.connection.commit()
+        cursor.close()
+
+    def remove_notification_follow(notifier, notifying):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "DELETE FROM notification WHERE notifier = %s AND notifying = %s AND type = 'FOLLOW'"
+        cursor.execute(sql, (notifier, notifying))
         mysql.connection.commit()
         cursor.close()
 
@@ -382,7 +393,7 @@ class Post(UserMixin):
         sql = "UPDATE notification SET is_read = True WHERE notification.id=%s"
         cursor.execute(sql, (notifid,))
         mysql.connection.commit()
-        sql = "SELECT notification.post_id FROM notification WHERE notification.id=%s"
+        sql = "SELECT notification.post_id,notification.type,notification.notifier FROM notification WHERE notification.id=%s"
         cursor.execute(sql, (notifid,))
         post_id = cursor.fetchone()
         cursor.close()
