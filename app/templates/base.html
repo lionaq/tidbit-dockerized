@@ -13,7 +13,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
     <link href="https://fonts.googleapis.com/css?family=Dosis&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    
     <!-- CURSIVE FONT FOR HOME -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,22 +37,65 @@
             </a>
 
             {% if current_user.is_anonymous == false%}
-            <button class="img me-3" style = "border:none; background-color:white;" onclick="changeNotifImg()">
-              <img loading="lazy" src="{{ url_for('static', filename='img/notifIcon.png') }}" style="height: 26px; width: 26px;" id="img1">
-            </button>
-            
+            <div style="position: relative;">
+              <button class="img me-3" style = "border:none; background-color:white;" onclick="changeNotifImg()">
+                <img loading="lazy" src="{{ url_for('static', filename='img/notifIcon.png') }}" style="height: 26px; width: 26px;" id="img1">
+                <span id="notifCounter" style="position: absolute; top: -5px; right: 15px; background-color: red; color: white; border-radius: 50%; font-size: 12px; text-align: center; width: 20px;"></span>
+              </button>
+              <div id="notification-container" style="width: 320px; background-color: whitesmoke; height: 320px; position: absolute; top: 45px; right: 12px; overflow-y: auto;" class="hidden rounded-4 shadow">
+                <div class="d-flex gap-2 justify-content-center">
+                  <p>John Lenard</p>
+                  <p>follow</p>
+                  <p>you</p>
+                </div>
+              </div>
+            </div>
+              
             <script>
+              var user_id = "{{ current_user.id }}"
+              
+              $(document).ready(function () {
+                const socket = io()
+
+                function updateNotificationContainer() {
+                  socket.emit('get_notification', data={"user_id": user_id})
+                }
+
+                function updateNotificationCounter(count) {
+                  const counter = $('#notifCounter');
+                  counter.text(count);
+                  if (count > 0) {
+                    counter.show();
+                  } else {
+                    counter.hide();
+                  } 
+                }
+
+                socket.on('update_notification_dom', function (response){
+                  $('#notification-container').html(response.html);
+                  updateNotificationCounter(response.unread_count)
+                });
+                socket.on('get_notification', function () {
+                  updateNotificationContainer();
+                });
+
+                updateNotificationContainer();
+              });
+
               function changeNotifImg() {
                 var img = document.getElementById("img1");
+                var notificationContainer = document.getElementById('notification-container');
                 var notifIconSrc = "{{ url_for('static', filename='img/notifIcon.png') }}";
                 var notifIconToggledSrc = "{{ url_for('static', filename='img/notifIcon_toggled.png') }}";
+                
             
                 if (img.getAttribute("src") === notifIconToggledSrc) {
                   img.src = notifIconSrc;
                 } else {
                   img.src = notifIconToggledSrc;
                 }
-              }
+                notificationContainer.classList.toggle("hidden");
+              }    
             </script>
             <div class="me-4">
               <a href="{{ url_for('profile_bp.profile', username=current_user.username) }}"><img loading="lazy" class="img rounded-pill" {% if 'static' in current_user.profilepic %}src = "{{url_for('static', filename=current_user.profilepic[7:])}}"{%else%}src="{{ current_user.profilepic }}"{%endif%} style="height: 35px; width: 35px;"></a>
@@ -79,6 +123,9 @@
         font-weight: 800;
         line-height: normal;
         letter-spacing: 0.5px;
+      }
+      .hidden {
+        display: none;
       }
     </style>
 

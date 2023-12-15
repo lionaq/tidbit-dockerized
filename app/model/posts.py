@@ -30,10 +30,11 @@ class Post(UserMixin):
         # Insert URLs into the `post_urls` table
         for entry in self.content:
             cursor.execute(sql_urls, (post_id, entry['url'], entry['type']))
-
         # Commit changes
         mysql.connection.commit()
         cursor.close()
+
+        return post_id
 
     def edit(self):
         if self.content:
@@ -314,3 +315,86 @@ class Post(UserMixin):
             return True
         except:
             return False
+        
+    def get_post_id_from_comment_id(self, comment_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT comment.post_id, post.user_id FROM comment JOIN post ON comment.post_id = post.id WHERE comment.comment_id = %s;"
+        cursor.execute(sql, (comment_id,))
+        comment = cursor.fetchone()
+        cursor.close()
+        return comment if comment else None
+    
+
+    def add_notification(self, notifier, notifying, post_id, type):
+        if notifier == notifying:
+            return
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "INSERT INTO notification (notifier, notifying, type, post_id) VALUES (%s, %s, %s, %s)"
+        cursor.execute(sql, (notifier, notifying, type, post_id))
+        mysql.connection.commit()
+        cursor.close()
+
+    def add_notification_post(self, notifier, notifying, post_id, type='POST'):
+        self.add_notification(notifier, notifying, post_id, type)
+
+    def add_notification_like(self, notifier, notifying, post_id, type='LIKE'):
+        self.add_notification(notifier, notifying, post_id, type)
+
+    def add_notification_save(self, notifier, notifying, post_id, type='SAVE'):
+        self.add_notification(notifier, notifying, post_id, type)
+
+    def add_notification_comment(self, notifier, notifying, post_id, type='COMMENT'):
+        self.add_notification(notifier, notifying, post_id, type)
+
+    def add_notification_follow(self, notifier, notifying, post_id=None, type='FOLLOW'):
+        self.add_notification(notifier, notifying, post_id, type)
+
+
+        
+    def remove_notification_like(notifier, notifying, post_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "DELETE FROM notification WHERE notifier = %s AND notifying = %s AND post_id = %s AND type = 'LIKE'"
+        cursor.execute(sql, (notifier, notifying, post_id))
+        mysql.connection.commit()
+        cursor.close()
+
+    def remove_notification_follow(notifier, notifying):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "DELETE FROM notification WHERE notifier = %s AND notifying = %s AND type = 'FOLLOW'"
+        cursor.execute(sql, (notifier, notifying))
+        mysql.connection.commit()
+        cursor.close()
+
+    def remove_notification_save(notifier, notifying, post_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "DELETE FROM notification WHERE notifier = %s AND notifying = %s AND post_id = %s AND type = 'SAVE'"
+        cursor.execute(sql, (notifier, notifying, post_id))
+        mysql.connection.commit()
+        cursor.close()
+        
+    def remove_notification_comment(notifier, notifying, post_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "DELETE FROM notification WHERE notifier = %s AND notifying = %s AND post_id = %s AND type = 'COMMENT'"
+        cursor.execute(sql, (notifier, notifying, post_id))
+        mysql.connection.commit()
+        cursor.close()
+        
+    @classmethod
+    def get_notification_post(cls, id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT notification.id, notification.notifying, notification.type, notification.post_id, notification.created_at, notification.is_read, user.fullname FROM notification JOIN user ON notification.notifier = user.id WHERE notification.notifying = %s ORDER BY notification.is_read ASC,notification.created_at DESC"
+        cursor.execute(sql, (id,))
+        notif = cursor.fetchall()
+        cursor.close()
+        return notif
+    
+    def update_read_notification(notifid):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "UPDATE notification SET is_read = True WHERE notification.id=%s"
+        cursor.execute(sql, (notifid,))
+        mysql.connection.commit()
+        sql = "SELECT notification.post_id,notification.type,notification.notifier FROM notification WHERE notification.id=%s"
+        cursor.execute(sql, (notifid,))
+        post_id = cursor.fetchone()
+        cursor.close()
+        return post_id
