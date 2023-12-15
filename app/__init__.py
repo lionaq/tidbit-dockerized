@@ -5,11 +5,14 @@ from config import DB_USERNAME, DB_PASSWORD, DB_NAME, DB_HOST, SECRET_KEY, CLOUD
 from flask_login import LoginManager, login_required, current_user
 from flask_wtf.csrf import CSRFProtect
 from flask_mail import Mail
+from app.filters import time_ago, get_notification_text
+from flask_socketio import SocketIO
 
 mysql = MySQL()
 login = LoginManager()
 csrf = CSRFProtect()
 mail = Mail()
+socketio = SocketIO()
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -37,10 +40,14 @@ def create_app(test_config=None):
     mysql.init_app(app)
     csrf.init_app(app)
     mail.init_app(app)
+    socketio.init_app(app)
 
     login.init_app(app)
     login.login_view = 'auth_bp.login'
     login.login_message = 'Please log in to access this page.'
+
+    app.jinja_env.filters['time_ago'] = time_ago
+    app.jinja_env.filters['notif_type'] = get_notification_text
 
     @app.route('/')
     def index():

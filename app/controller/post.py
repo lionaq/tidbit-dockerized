@@ -9,6 +9,7 @@ from flask_login import current_user, login_required
 from app.forms.forms import CreatePost, EditPost, SubmitForm
 from app.model.posts import Post
 from app.model.user import User
+from app import socketio
 
 post_bp = Blueprint(
     "post_bp",
@@ -49,8 +50,12 @@ def create(user_name):
         )
 
         # Add the post to the database
-        post.add()
+        post_id = post.add()
         flash("Post created successfully!", 'success')
+        followers_id = User.fetch_followers_ids(current_user.id)
+        for follower_id in followers_id:
+            post.add_notification_post(current_user.id, follower_id, post_id)
+        socketio.emit('get_notification')
         return redirect(url_for('profile_bp.profile', username = user_name))
 
 
@@ -178,6 +183,7 @@ def delete(user_name, post_id):
                 # Delete post from post table
                 Post.delete(post_id)
                 flash("Post Successfully Deleted!", 'danger')
+                socketio.emit('get_notification')
                 return redirect(url_for('profile_bp.profile', username = user_name))
             else:
                 print(public_id)
@@ -222,6 +228,10 @@ def view_post_comment(postid):
             print("IM IN")
             data = [postid, current_user.id, commentBody]
             Post.add_comment(data)
+            followers_id = User.fetch_followers_ids(current_user.id)
+            for follower_id in followers_id:
+                Post().add_notification_comment(current_user.id, follower_id, postid)
+            socketio.emit('get_notification')
         print(f'Textarea Data: {commentBody}')
         print("success!")
     else:
@@ -243,7 +253,15 @@ def view_post_comment_config(comment_id, user_id):
     
     elif request.method == 'DELETE':
         print(comment_id)
+        post_id = Post().get_post_id_from_comment_id(comment_id)
         check = Post.delete_comment([comment_id, user_id])
+        if check:
+            if post_id is not None:
+                print(post_id)
+                followers_id = User.fetch_followers_ids(current_user.id)
+                for follower_id in followers_id:
+                    Post.remove_notification_comment(current_user.id, follower_id, post_id['post_id'])
+                socketio.emit('get_notification')
         return jsonify({"deleted": check})
 
     else:
@@ -262,12 +280,20 @@ def like(post):
             print("like")
 
             Post.like(liker, post)
+            followers_id = User.fetch_followers_ids(current_user.id)
+            for follower_id in followers_id:
+                Post().add_notification_like(current_user.id, follower_id, post)
+            socketio.emit('get_notification')
             likeAmount = Post.like_amount(post)
             return jsonify({"likes": likeAmount.get('likes'), "liked": True})
         else:
             print("unlike")
             liker = current_user.id
             Post.unlike(liker, post)
+            followers_id = User.fetch_followers_ids(current_user.id)
+            for follower_id in followers_id:
+                Post.remove_notification_like(current_user.id, follower_id, post)
+            socketio.emit('get_notification')
             likeAmount = Post.like_amount(post)
             return jsonify({"likes": likeAmount.get('likes'), "liked": False})
     else:
@@ -283,11 +309,19 @@ def save(post):
             print("save")
 
             Post.save(saver, post)
+            followers_id = User.fetch_followers_ids(current_user.id)
+            for follower_id in followers_id:
+                Post().add_notification_save(current_user.id, follower_id, post)
+            socketio.emit('get_notification')
             return jsonify({ "saved": True})
         else:
             print("unsave")
             saver = current_user.id
             Post.unsave(saver, post)
+            followers_id = User.fetch_followers_ids(current_user.id)
+            for follower_id in followers_id:
+                Post.remove_notification_save(current_user.id, follower_id, post)
+            socketio.emit('get_notification')
             return jsonify({"saved": False})
     else:
         abort(400)

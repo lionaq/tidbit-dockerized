@@ -4,6 +4,31 @@ from flask import render_template, request, redirect, url_for, flash
 from app.model.user import User
 from app.model.posts import Post
 import random
+from app import socketio
+from flask_socketio import join_room, leave_room
+
+
+@socketio.on('connect')
+@login_required
+def handle_connect():
+    current_user_room = f"user_{current_user.id}"
+    join_room(current_user_room)
+    followers_id = User.fetch_followers_ids(current_user.id)
+    followers_id.append(current_user.id)
+    for follower_id in followers_id:
+        follower_room = f"user_{follower_id}"
+        join_room(follower_room)
+
+@socketio.on('disconnect')
+@login_required
+def handle_disconnect():
+    current_user_room = f"user_{current_user.id}"
+    leave_room(current_user_room)
+    followers_id = User.fetch_followers_ids(current_user.id)
+    followers_id.append(current_user.id)
+    for follower_id in followers_id:
+        follower_room = f"user_{follower_id}"
+        leave_room(follower_room)
 
 main_bp = Blueprint(
     "main_bp",
@@ -44,3 +69,19 @@ def explore():
     random.shuffle(data)
     comments = Post.fetch_all_comment_ids()
     return render_template('main/explore.html', comments = comments, postData = data, postCont = cont, following = following, liked = liked_posts, saved = saved_posts)
+
+@main_bp.route('/getnotif/update/<notification_id>', methods=['GET'])
+@login_required
+def update_read_notification(notification_id):
+    post_id = Post.update_read_notification(notification_id)
+    socketio.emit('get_notification')
+    return redirect(url_for('post_bp.view_post', postid = post_id['post_id']))
+
+@socketio.on('get_notification')
+@login_required
+def get_notification(data):
+    user_id = data.get('user_id')
+    notification = Post.get_notification_post(user_id)
+    count = sum(1 for notif in notification if notif['is_read'] == 0)    
+    data = {'html' : render_template('main/notification.html', notification=notification), 'unread_count' : count}
+    socketio.emit('update_notification_dom', data=data,room=request.sid)
