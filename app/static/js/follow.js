@@ -41,6 +41,10 @@ function follow(user_id) {
                 console.log("followerCount")
                 followerCount.innerHTML = data['following_followers'];
             }
+
+            if (followers_count_in_search){
+                followers_count_in_search.innerHTML = data['following_followers'];
+            }
         }
         else{
             console.log("Already Following")
@@ -89,6 +93,10 @@ function unfollow(user_id) {
             }
             if(followerCount && current_user_id != user_prof_id.value && user_prof_id.value == user_id){
                 followerCount.innerHTML = data['following_followers'];
+            }
+
+            if (followers_count_in_search){
+                followers_count_in_search.innerHTML = data['following_followers'];
             }
         }
         else{
