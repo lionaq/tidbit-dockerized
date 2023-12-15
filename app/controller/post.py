@@ -297,15 +297,28 @@ def search():
     query = request.form.get('query')
     cuisines = request.form.getlist('cuisine')
     meal_types = request.form.getlist('meal_type')
-
-    postData = Post.search(query, cuisines, meal_types)
     
-    if not postData:
+    selected_cuisines = request.form.getlist('cuisine')
+    selected_meal_types = request.form.getlist('meal_type')
+    
+    # Check if filters are selected
+    filters_selected = bool(selected_cuisines or selected_meal_types)
+    
+    # If filters are selected, perform post search
+    if filters_selected:
+        postData = Post.search_posts(query, cuisines, meal_types)
+        postUser = None
+    else:
+        # If no filters selected, perform user search and post search
+        postData = Post.search_posts(query, cuisines, meal_types)
+        postUser = Post.search_users(query, current_user.id)
+    
+    if not postData and not postUser:
         num_of_suggestions = 3
         user_id = current_user.get_id()
         suggestions = Post.fetch_random_posts(num_of_suggestions, user_id)
-        return render_template('main/search.html', suggestions=suggestions)
+        return render_template('main/search.html', selected_cuisines=selected_cuisines, selected_meal_types=selected_meal_types, suggestions=suggestions)
 
     cont = Post.fetch_ALL_content(current_user.username)
 
-    return render_template('main/search.html', postData=postData, postCont=cont)
+    return render_template('main/search.html', selected_cuisines=selected_cuisines, selected_meal_types=selected_meal_types, postData=postData, postCont=cont, postUser=postUser)

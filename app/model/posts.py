@@ -334,7 +334,7 @@ class Post(UserMixin):
                 cursor.close()
 
     @classmethod
-    def search(cls, query, cuisine, meal_type):
+    def search_posts(cls, query, cuisine, meal_type):
         try:
             cursor = mysql.connection.cursor(dictionary=True)
             sql_query = """
@@ -345,7 +345,7 @@ class Post(UserMixin):
             """
 
             if query:
-                sql_query += "(title LIKE %s OR ingredients LIKE %s OR tag LIKE %s OR subtags LIKE %s) AND "
+                sql_query += "(LOWER(title) LIKE %s OR LOWER(ingredients) LIKE %s OR LOWER(tag) LIKE %s OR LOWER(subtags) LIKE %s) AND "
 
             if cuisine:
                 placeholders = ', '.join(['%s'] * len(cuisine))
@@ -358,12 +358,16 @@ class Post(UserMixin):
             if sql_query.endswith("AND "):
                 sql_query = sql_query[:-4]
 
-            query_with_wildcards = f"%{query}%"
+            query_with_wildcards = f"%{query.lower()}%"
+
+            print("SQL Query:", sql_query)
+            print("Query with Wildcards:", query_with_wildcards)
+            
             cursor.execute(sql_query, (query_with_wildcards, query_with_wildcards, query_with_wildcards, query_with_wildcards, *cuisine, *meal_type))
 
-            results = cursor.fetchall()
 
-            # Process the results or do other operations
+            results = cursor.fetchall()
+            print(results)
             return results
 
         except Exception as e:
@@ -372,6 +376,20 @@ class Post(UserMixin):
         finally:
             if mysql.connection.is_connected():
                 cursor.close()
+                
+
+    @classmethod
+    def search_users(cls, query, current_user_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = """
+            SELECT id, username, fullname, profilepic
+            FROM user
+            WHERE id != %s AND (username LIKE %s OR fullname LIKE %s);
+        """
+        cursor.execute(sql, (current_user_id, f"%{query}%", f"%{query}%"))
+        users = cursor.fetchall()
+        cursor.close()
+        return users
                 
     @classmethod
     def fetch_random_posts(cls, num_of_suggestions, user_id):
