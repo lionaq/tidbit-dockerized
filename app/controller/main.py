@@ -64,6 +64,11 @@ def update_read_notification(notification_id):
 def get_notification(data):
     user_id = data.get('user_id')
     notification = Post.get_notification_post(user_id)
-    count = sum(1 for notif in notification if notif['is_read'] == 0)    
-    data = {'html' : render_template('main/notification.html', notification=notification), 'unread_count' : count}
-    socketio.emit('update_notification_dom', data=data,room=request.sid)
+    notification_setting = User.get_notif_settings(user_id)
+
+    filtered_notifications = [notif for notif in notification if notif['is_read'] == 0 and notification_setting.get(f"receive_{notif['type'].lower()}_notifications", False)]
+
+    count = len(filtered_notifications)
+    print(f"{count} COUNT ASDASD")
+    data = {'html': render_template('main/notification.html', notification=filtered_notifications, setting=notification_setting), 'unread_count': count}
+    socketio.emit('update_notification_dom', data=data, room=request.sid)

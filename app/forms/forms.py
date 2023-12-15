@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 
 from flask_wtf.file import MultipleFileField, FileAllowed, FileField
 
-from wtforms import validators,StringField,SubmitField,PasswordField, SelectMultipleField, widgets, TextAreaField, URLField
+from wtforms import validators,StringField,SubmitField,PasswordField, SelectMultipleField, widgets, TextAreaField, URLField, BooleanField
 
 from app.model.user import User
 
@@ -78,3 +78,10 @@ class EditPost(FlaskForm):
 
 class SubmitForm(FlaskForm):
     submit = SubmitField('Submit')
+class NotificationSetting(FlaskForm):
+    receive_post_notifications = BooleanField('Post', default=True)
+    receive_like_notifications = BooleanField('Like', default=True)
+    receive_save_notifications = BooleanField('Save', default=True)
+    receive_comment_notifications = BooleanField('Comment', default=True)
+    receive_follow_notifications = BooleanField('Follow', default=True)
+    submit = SubmitField('Save Settings')

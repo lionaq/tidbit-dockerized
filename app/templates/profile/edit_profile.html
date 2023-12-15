@@ -17,7 +17,7 @@
                         <a class="nav-link {% if 'edit-profile' in request.path %}active{% endif %}" href="{{ url_for('profile_bp.edit_profile') }}">Edit profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if 'notifications' in request.path %}active{% endif %}" href="#">Notifications</a>
+                        <a class="nav-link {% if 'notifications' in request.path %}active{% endif %}" href="{{ url_for('profile_bp.notification_setting') }}">Notifications</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if 'community-guidelines' in request.path %}active{% endif %}" href="#">Community guidelines</a>

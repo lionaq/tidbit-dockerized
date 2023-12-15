@@ -99,5 +99,14 @@ CREATE TABLE IF NOT EXISTS notification (
     FOREIGN KEY (post_id) REFERENCES post(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-
+CREATE TABLE IF NOT EXISTS notification_setting (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNIQUE,
+    receive_post_notifications BOOLEAN DEFAULT TRUE,
+    receive_like_notifications BOOLEAN DEFAULT TRUE,
+    receive_save_notifications BOOLEAN DEFAULT TRUE,
+    receive_comment_notifications BOOLEAN DEFAULT TRUE,
+    receive_follow_notifications BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (user_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
 

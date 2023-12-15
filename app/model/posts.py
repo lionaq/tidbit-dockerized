@@ -380,10 +380,15 @@ class Post(UserMixin):
         cursor.close()
         
     @classmethod
-    def get_notification_post(cls, id):
+    def get_notification_post(cls, id, type=None):
         cursor = mysql.connection.cursor(dictionary=True)
-        sql = "SELECT notification.id, notification.notifying, notification.type, notification.post_id, notification.created_at, notification.is_read, user.fullname FROM notification JOIN user ON notification.notifier = user.id WHERE notification.notifying = %s ORDER BY notification.is_read ASC,notification.created_at DESC"
-        cursor.execute(sql, (id,))
+        if type:
+            sql = "SELECT notification.id, notification.notifying, notification.type, notification.post_id, notification.created_at, notification.is_read, user.fullname FROM notification JOIN user ON notification.notifier = user.id WHERE notification.notifying = %s AND notification.type = %s ORDER BY notification.is_read ASC, notification.created_at DESC"
+            cursor.execute(sql, (id, type))
+        else:
+            sql = "SELECT notification.id, notification.notifying, notification.type, notification.post_id, notification.created_at, notification.is_read, user.fullname FROM notification JOIN user ON notification.notifier = user.id WHERE notification.notifying = %s ORDER BY notification.is_read ASC, notification.created_at DESC"
+            cursor.execute(sql, (id,))
+        
         notif = cursor.fetchall()
         cursor.close()
         return notif

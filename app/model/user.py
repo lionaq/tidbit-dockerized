@@ -239,3 +239,57 @@ class User(UserMixin):
         cursor.close()
 
         return posts
+
+    def insert_notif_setting(user_id, post, like, save, comment, follow):
+        try:
+            cursor = mysql.connection.cursor(dictionary=True)
+
+            insert_query = """
+            INSERT INTO notification_setting (user_id, receive_post_notifications, receive_like_notifications, receive_save_notifications, receive_comment_notifications, receive_follow_notifications)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE
+                receive_post_notifications = VALUES(receive_post_notifications),
+                receive_like_notifications = VALUES(receive_like_notifications),
+                receive_save_notifications = VALUES(receive_save_notifications),
+                receive_comment_notifications = VALUES(receive_comment_notifications),
+                receive_follow_notifications = VALUES(receive_follow_notifications)
+            """
+
+            cursor.execute(insert_query, (
+                user_id,
+                post,
+                like,
+                save,
+                comment,
+                follow
+            ))
+
+            mysql.connection.commit()
+            cursor.close()
+
+        except Exception as e:
+            print(f"Error inserting notification settings: {e}")
+            mysql.connection.rollback()
+        finally:
+            cursor.close()
+
+    def get_notif_settings(user_id):
+        try:
+            cursor = mysql.connection.cursor(dictionary=True)
+
+            select_query = """
+            SELECT *
+            FROM notification_setting
+            WHERE user_id = %s
+            """
+
+            cursor.execute(select_query, (user_id,))
+            notif_settings = cursor.fetchone()
+
+            return notif_settings
+
+        except Exception as e:
+            print(f"Error retrieving notification settings: {e}")
+
+        finally:
+            cursor.close()
