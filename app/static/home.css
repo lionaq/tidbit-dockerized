@@ -27,9 +27,9 @@ body {
 }
 
 .parallax-section-3 {
-    height: 600px;
-    background-image: url('img/4.png');
-    opacity: 0.9;
+    height: 650px;
+    background-image: url('img/section3.png');
+    opacity: 0.8;
 }
 
 .parallax-section-4 {
@@ -73,6 +73,7 @@ body {
 }
 
 .section-2 {
-    height: 500px;
+    height: 400px;
     width: 100%;
+    background-image: url('img/1.png');
 }
