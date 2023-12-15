@@ -308,3 +308,7 @@ textarea {
 }
 
 
+
+.hidden {
+    display: none;
+}
