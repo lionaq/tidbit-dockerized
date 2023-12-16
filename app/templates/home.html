@@ -1,16 +1,154 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block title %}Tidbit{% endblock %}
+
+{% block home %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
 
 <style>
-    .navbar {
-      display:none;
-    }
+
 </style>
 
+<div class="parallax parallax-section-1 vh-100">
+  <div class="container">
+    <div class="row">
+      <div class="col-10 offset-1">
+          <div class="d-flex" style="text-align: center; align-items: center;">
+            <h1 style="font-family: 'Dancing Script', cursive; font-size: 10vw; color: #d17a5e; margin-right: 10px;">Tidbit</h1>
+            <img src="static/img/orangeLogo.png" alt="Tidbit" class="img-fluid ms-3 mb-3" style="max-width: 16%;">
+          </div>
+          <p style="text-align: left; font-family: Arial, sans-serif; font-size: 1.15vw; opacity: 0.8; line-height: 1.7;">
+            Unleash your inner chef and connect with a community <br>
+            of culinary enthusiasts on Tidbit! Embark on a flavorful journey <br>
+            as you explore a world of delectable recipes shared by <br>
+            passionate food enthusiasts just like you.
+          </p>
+          <p style="text-align: left; font-size: 1.15vw; font-weight: bold; opacity: 0.8;">
+              Explore flavor, Discover Tidbit!
+          </p>
+          <div class="ms-2 mt-4" style="text-align: left;">
+            <a href="{{url_for('auth_bp.register')}}" style="text-decoration: none;">
+              <button type="button" class="btn btn-primary" style="background-color: #d17a5e; border-color: #e28363; font-size: 1.15vw;">Register</button>
+            </a>
+            <a href="{{url_for('auth_bp.login')}}" style="text-decoration: none;">
+              <button type="button" class="btn btn-primary ms-2" style="background-color: #d17b5e93; border-color: white; font-size: 1.15vw;">Login</button>
+            </a>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-<p>Hello</p>
-<a href="{{url_for('auth_bp.register')}}">Register</a>
-<a href="{{url_for('auth_bp.login')}}">Login</a>
-<a href="{{url_for('post_bp.create', user_name='1')}}">Create Post</a>
+<div class="strip-background strip-background-1">
+  <div class="container">
+    <div class="row row-cols-9 justify-content-center">
+      <div class="col">
+        <div id="feature-box1" class="feature-box">
+          <img src="static/img/feature-recipe.png" alt="Tidbit" class="img-fluid mt-4" style="max-width: 22%;">
+          <h2 class="mt-3" style="font-size: 1.70vw;">Find the perfect recipe</h2>
+          <p style="font-size: 1.075vw; opacity: 0.6"> 
+              Find recipes that fit your cravings <br>
+              effortlessly. Your next favorite dish is <br>
+              just a click away! 
+          </p>
+        </div>
+      </div>
+      <div class="col">
+        <div id="feature-box2" class="feature-box">
+          <img src="static/img/feature-connect.png" alt="Tidbit" class="img-fluid mt-4" style="max-width: 22%;">
+          <h2 class="mt-3"  style="font-size: 1.70vw;">Connect with others</h2>
+          <p style="font-size: 1.075vw; opacity: 0.6"> 
+            Connect with a community of fellow food <br>
+            enthusiasts.  Share, discuss, and bond <br>
+            over your culinary adventures. 
+          </p>
+        </div>
+      </div>
+      <div class="col">
+        <div id="feature-box3" class="feature-box">
+          <img src="static/img/feature-share.png" alt="Tidbit" class="img-fluid mt-4" style="max-width: 22%;">
+          <h2 class="mt-3"  style="font-size: 1.70vw;">Share your recipe</h2>
+          <p style="font-size: 1.075vw; opacity: 0.6"> 
+            Share your culinary masterpiece with the <br>
+            world. Showcase your kitchen triumphs <br>
+            and inspire others. 
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="parallax parallax-section-2"></div>
+
+<div class="section section-1">
+  <div class="container">
+    <div class="row" style="text-align: center;">
+        <h1 style="font-size: 2.5vw; color: black; text-align: center; margin: 0 auto;"> ​Embark on an Adventure with Tidbit </h1>
+        <p style="font-family: Arial, sans-serif; font-size: 1.1vw; color: black; text-align: center; margin: 0 auto;">
+          <br>
+          ​Join Tidbit today and embark on a flavorful adventure like never before. Whether you're a seasoned chef or a kitchen novice, <br>
+          our platform is designed to inspire, connect, and simplify your cooking experience. Start exploring, sharing, and discovering a world of <br>
+          delicious possibilities. Sign up now to unlock a treasure trove of recipes.
+        </p>
+    </div>
+    <div class="row justify-content-center">
+      <!-- Side Columns -->
+      <div class="col-3">
+        <div class="justify-contents-center">
+            <!-- Content for the first side column -->
+            <img src="static/img/1.jpeg" alt="Tidbit" class="img-fluid mt-5" style="max-width: 100%;">
+            <img src="static/img/4.jpeg" alt="Tidbit" class="img-fluid mt-4 mb-1" style="max-width: 100%;">
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="justify-contents-center">
+            <!-- Content for the second side column -->
+            <img src="static/img/2.jpeg" alt="Tidbit" class="img-fluid mt-5" style="max-width: 100%;">
+            <img src="static/img/5.jpeg" alt="Tidbit" class="img-fluid mt-4 mb-1" style="max-width: 100%;">
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="justify-contents-center">
+            <!-- Content for the second side column -->
+            <img src="static/img/3.jpeg" alt="Tidbit" class="img-fluid mt-5" style="max-width: 100%;">
+            <img src="static/img/6.jpeg" alt="Tidbit" class="img-fluid mt-4 mb-1" style="max-width: 100%;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="parallax parallax-section-3"></div>
+
+<div class="section section-2">
+  <div class="container justify-contents-center">
+    <div class="row">
+        <h1 style="font-size: 2.5vw; color: black; text-align: center; margin: 0 auto;"> Explore </h1>
+        <p style="font-family: Arial, sans-serif; font-size: 1.1vw; color: black; line-height: 1.7; text-align: center; margin: 0 auto;">
+          <br>
+          Step into the serendipitous realm of Tidbit's 'Explore' – a culinary adventure where randomness becomes <br>
+          your secret ingredient. Beyond the ordinary, this page unveils a tapestry of flavors, surprising you with unexpected recipes, <br>
+          ingenious hacks, and the uncharted brilliance of fellow food enthusiasts. It's a journey of delightful spontaneity, where each <br>
+          scroll paints a unique canvas of gastronomic inspiration. <br><br>
+        </p>
+    </div>
+  </div>
+</div>
+
+<div class="parallax parallax-section-4 vh-100">
+  <div class="container">
+    <div style="text-align: center;">
+      <img src="static/img/tidbitLogo_w.png" alt="Tidbit" class="img-fluid" style="max-width: 15%;">
+      <h1 style="text-align: center; font-family: 'Dancing Script', cursive; font-size: 5.5vw; color: #ffffff;">Tidbit</h1>
+      <p class="mb-4" style="text-align: center; font-size: 1.12vw; font-weight: bold; color: #ffffff; opacity: 0.8;">
+        Explore flavor, Discover Tidbit!
+      </p>
+      <a href="{{url_for('auth_bp.register')}}">
+        <button type="button" class="btn btn-primary" style="background-color: #d17a5e; border-color:#e28363;">Register</button>
+      </a>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
