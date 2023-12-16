@@ -110,7 +110,7 @@ class User(UserMixin):
         cursor.execute(sql,(self.email,self.fullname,self.username,self.password,self.bio,self.profilepic,self.coverpic))
         mysql.connection.commit()
         cursor.close()
-        
+        return cursor.lastrowid
     @classmethod
     def fetch_user_posts(cls, user_id):
         cursor = mysql.connection.cursor(dictionary=True)
@@ -240,7 +240,7 @@ class User(UserMixin):
 
         return posts
 
-    def insert_notif_setting(user_id, post, like, save, comment, follow):
+    def insert_notif_setting(user_id = '1', post = '1', like = '1', save = '1', comment = '1', follow= '1'):
         try:
             cursor = mysql.connection.cursor(dictionary=True)
 

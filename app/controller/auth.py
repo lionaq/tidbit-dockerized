@@ -54,8 +54,9 @@ def register():
     if form.validate_on_submit() and request.method =='POST':
         user = User(email=form.email.data, fullname = form.fullname.data, username = form.username.data)
         user.set_password(form.password.data)
-        user.add()
+        user_id = user.add()
         flash('Registration successful! You can now log in.', 'register')
+        User.insert_notif_setting(user_id=user_id)
         return redirect(url_for('auth_bp.login'))
     
     for field, errors in form.errors.items():
