@@ -50,6 +50,7 @@ def explore():
 @login_required
 def update_read_notification(notification_id):
     post_id = Post.update_read_notification(notification_id)
+    print(notification_id)
     socketio.emit('get_notification')
     if post_id['type'] == 'FOLLOW':
         username = User.search_by_id(post_id['notifier'])
@@ -66,9 +67,11 @@ def get_notification(data):
     notification = Post.get_notification_post(user_id)
     notification_setting = User.get_notif_settings(user_id)
 
-    filtered_notifications = [notif for notif in notification if notif['is_read'] == 0 and notification_setting.get(f"receive_{notif['type'].lower()}_notifications", False)]
+    filtered_notifications = [
+        notif for notif in notification 
+        if notification_setting.get(f"receive_{notif['type'].lower()}_notifications", False)
+    ]
 
-    count = len(filtered_notifications)
-    print(f"{count} COUNT ASDASD")
+    count = sum(1 for notif in filtered_notifications if notif['is_read'] == 0)
     data = {'html': render_template('main/notification.html', notification=filtered_notifications, setting=notification_setting), 'unread_count': count}
     socketio.emit('update_notification_dom', data=data, room=request.sid)
