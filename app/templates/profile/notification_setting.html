@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Notification Settings{% endblock %}
+
+{% block content %}
+
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <main>
+        <nav class="sidenav" style="position: fixed">
+            <div class="container-fluid">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('profile_bp.edit_profile') }}">Edit profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('profile_bp.notification_setting') }}">Notifications</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('profile_bp.community_guideline') }}">Community guidelines</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="edit-profile-content" style="margin-left: 285px; margin-top: 70px;position: relative;">
+            <h4 class="edit-profile-header mb-2">Notification Settings</h4>
+            <p class="edit-profile-body small text-muted mb-0">
+                Pick which notifications you want to get.
+            </p>  
+            
+            <div class="flash-messages" style="margin-top: 10px; margin-bottom: -10px; right: 10px; z-index: 9999; height: 10px;">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert {% if category == 'success' %}alert-success{% elif category == 'error' %}alert-danger{% else %}alert-info{% endif %}" style="width: 665px; padding: 3px; text-indent: 10px;">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+            
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                
+                <div style="margin-top: 50px; margin-bottom: 200px">
+                    <div class="form-group mt-2">
+                        {{ form.receive_post_notifications(class="text-body-emphasis me-3") }}
+                        {{ form.receive_post_notifications.label }}
+                    </div>
+                    <div class="form-group mt-2">
+                        {{ form.receive_like_notifications(class="text-body-emphasis me-3") }}
+                        {{ form.receive_like_notifications.label }}
+                    </div>
+                    <div class="form-group mt-2">
+                        {{ form.receive_save_notifications(class="text-body-emphasis me-3") }}
+                        {{ form.receive_save_notifications.label }}
+                    </div>
+                    <div class="form-group mt-2">
+                        {{ form.receive_comment_notifications(class="text-body-emphasis me-3") }}
+                        {{ form.receive_comment_notifications.label }}
+                    </div>
+                    <div class="form-group mt-2">
+                        {{ form.receive_follow_notifications(class="text-body-emphasis me-3") }}
+                        {{ form.receive_follow_notifications.label }}
+                    </div>
+                    <button class="btn mt-5 me-5 buttonsclick" style="background-color: rgba(182, 120, 99, 0.349)"><a href="{{ url_for('profile_bp.profile', username=current_user.username) }}"class="text-dark text-decoration-none">Cancel</a></button>
+                    <button type="submit" class="btn mt-5 buttonsclick" style="background-color:#d17a5e ;">Save Settings</button>
+                </div>
+                
+                
+            </form>
+        </div>
+    </main>
+    <style>
+        .buttonsclick:hover {
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+            navLinks.forEach(function(link) {
+                link.addEventListener('click', function() {
+                    navLinks.forEach(function(innerLink) {
+                        innerLink.classList.remove('active');
+                    });
+
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+{% endblock %}

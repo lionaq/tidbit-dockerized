@@ -5,7 +5,7 @@ from app.model.posts import Post
 from app.model.profile_m import Profile
 from app.model.user import User
 from app.model.posts import Post
-from app.forms.forms import EditProfileForm
+from app.forms.forms import EditProfileForm,NotificationSetting
 from cloudinary import uploader
 from cloudinary.uploader import upload
 
@@ -175,3 +175,40 @@ def followers(username):
     user_following = User.fetch_following_ids(current_user.id)
 
     return render_template('profile/followers.html', user=user, followers=followers, followers_num=followers_num, user_following=user_following, following_num=following_num)
+
+
+@profile_bp.route('/settings/notification', methods=['GET', 'POST'])
+@login_required
+def notification_setting():
+    form = NotificationSetting()
+
+    if request.method == 'GET':
+        notif_settings = User.get_notif_settings(current_user.id)
+        if notif_settings:
+            form.receive_post_notifications.data = notif_settings['receive_post_notifications']
+            form.receive_like_notifications.data = notif_settings['receive_like_notifications']
+            form.receive_save_notifications.data = notif_settings['receive_save_notifications']
+            form.receive_comment_notifications.data = notif_settings['receive_comment_notifications']
+            form.receive_follow_notifications.data = notif_settings['receive_follow_notifications']
+
+    elif request.method == 'POST' and form.validate_on_submit():
+        user_id = current_user.id
+        User.insert_notif_setting(
+            user_id,
+            form.receive_post_notifications.data,
+            form.receive_like_notifications.data,
+            form.receive_save_notifications.data,
+            form.receive_comment_notifications.data,
+            form.receive_follow_notifications.data
+        )
+
+        flash('Notification settings updated successfully!', 'success')
+        return redirect(url_for('profile_bp.notification_setting'))
+
+    return render_template('profile/notification_setting.html', form=form)
+
+
+@profile_bp.route('/settings/community_guideline', methods=['GET', 'POST'])
+@login_required
+def community_guideline():
+    return render_template('profile/community_guideline.html')

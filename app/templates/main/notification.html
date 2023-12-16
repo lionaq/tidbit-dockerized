@@ -1,16 +1,78 @@
 {% for notif in notification %}
     {% if notif.notifier != current_user.id %}
-        <a href="{{url_for('main_bp.update_read_notification', notification_id=notif.id)}}" style="color: black; text-decoration: none;">
-            <div style="display: flex; justify-content: left; margin: 1.5rem auto 1.5rem 1.5rem; {% if notif.is_read %}border-radius: 8px;{% endif %}">
-                <i class="fa-solid fa-circle fa-xs" style="align-self: center; {% if notif.is_read %}color: white;{% else %}color: #d17a5e;{% endif %}"></i>
-                <div style="display: flex; flex-direction: column; margin-left: 1.5rem;">
-                    <p style="margin-bottom: 0;"><b>{{ notif.fullname.lower() | title }} </b>{{ notif | notif_type }}</p>
-                    <p style="font-size: smaller; margin-bottom: 0;">{{ notif.created_at | time_ago}}</p>
+        {% if notif.type == 'FOLLOW' and setting.receive_follow_notifications %}
+            <a href="{{ url_for('main_bp.update_read_notification', notification_id=notif.id) }}" style="color: black; text-decoration: none;">
+                <div style="display: flex; justify-content: left; margin: 1.5rem auto 1.5rem 1.5rem; {% if notif.is_read %}border-radius: 8px;{% endif %}">
+                    <i class="fa-solid fa-circle fa-xs" style="align-self: center; {% if notif.is_read %}color: white;{% else %}color: #d17a5e;{% endif %}"></i>
+                    <div style="display: flex; flex-direction: column; margin-left: 1.5rem;">
+                        <p style="margin-bottom: 0;"><b>{{ notif.fullname.lower() | title }} </b>{{ notif | notif_type }}</p>
+                        <p style="font-size: smaller; margin-bottom: 0;">{{ notif.created_at | time_ago}}</p>
+                    </div>
                 </div>
-            </div>
-            {% if not loop.last %}
-            <hr style="width: 80%; margin: 0 auto;">
-            {% endif %}
-        </a>
+                {% if not loop.last %}
+                <hr style="width: 80%; margin: 0 auto;">
+                {% endif %}
+            </a>
+        {% endif %}
+
+        {% if notif.type == 'POST' and setting.receive_post_notifications %}
+            <a href="{{ url_for('main_bp.update_read_notification', notification_id=notif.id) }}" style="color: black; text-decoration: none;">
+                <div style="display: flex; justify-content: left; margin: 1.5rem auto 1.5rem 1.5rem; {% if notif.is_read %}border-radius: 8px;{% endif %}">
+                    <i class="fa-solid fa-circle fa-xs" style="align-self: center; {% if notif.is_read %}color: white;{% else %}color: #d17a5e;{% endif %}"></i>
+                    <div style="display: flex; flex-direction: column; margin-left: 1.5rem;">
+                        <p style="margin-bottom: 0;"><b>{{ notif.fullname.lower() | title }} </b>posted something new!</p>
+                        <p style="font-size: smaller; margin-bottom: 0;">{{ notif.created_at | time_ago}}</p>
+                    </div>
+                </div>
+                {% if not loop.last %}
+                <hr style="width: 80%; margin: 0 auto;">
+                {% endif %}
+            </a>
+        {% endif %}
+
+        {% if notif.type == 'LIKE' and setting.receive_like_notifications %}
+            <a href="{{ url_for('main_bp.update_read_notification', notification_id=notif.id) }}" style="color: black; text-decoration: none;">
+                <div style="display: flex; justify-content: left; margin: 1.5rem auto 1.5rem 1.5rem; {% if notif.is_read %}border-radius: 8px;{% endif %}">
+                    <i class="fa-solid fa-circle fa-xs" style="align-self: center; {% if notif.is_read %}color: white;{% else %}color: #d17a5e;{% endif %}"></i>
+                    <div style="display: flex; flex-direction: column; margin-left: 1.5rem;">
+                        <p style="margin-bottom: 0;"><b>{{ notif.fullname.lower() | title }} </b>liked your post!</p>
+                        <p style="font-size: smaller; margin-bottom: 0;">{{ notif.created_at | time_ago}}</p>
+                    </div>
+                </div>
+                {% if not loop.last %}
+                <hr style="width: 80%; margin: 0 auto;">
+                {% endif %}
+            </a>
+        {% endif %}
+
+        {% if notif.type == 'SAVE' and setting.receive_save_notifications %}
+            <a href="{{ url_for('main_bp.update_read_notification', notification_id=notif.id) }}" style="color: black; text-decoration: none;">
+                <div style="display: flex; justify-content: left; margin: 1.5rem auto 1.5rem 1.5rem; {% if notif.is_read %}border-radius: 8px;{% endif %}">
+                    <i class="fa-solid fa-circle fa-xs" style="align-self: center; {% if notif.is_read %}color: white;{% else %}color: #d17a5e;{% endif %}"></i>
+                    <div style="display: flex; flex-direction: column; margin-left: 1.5rem;">
+                        <p style="margin-bottom: 0;"><b>{{ notif.fullname.lower() | title }} </b>saved your post!</p>
+                        <p style="font-size: smaller; margin-bottom: 0;">{{ notif.created_at | time_ago}}</p>
+                    </div>
+                </div>
+                {% if not loop.last %}
+                <hr style="width: 80%; margin: 0 auto;">
+                {% endif %}
+            </a>
+        {% endif %}
+
+        {% if notif.type == 'COMMENT' and setting.receive_comment_notifications %}
+            <a href="{{ url_for('main_bp.update_read_notification', notification_id=notif.id) }}" style="color: black; text-decoration: none;">
+                <div style="display: flex; justify-content: left; margin: 1.5rem auto 1.5rem 1.5rem; {% if notif.is_read %}border-radius: 8px;{% endif %}">
+                    <i class="fa-solid fa-circle fa-xs" style="align-self: center; {% if notif.is_read %}color: white;{% else %}color: #d17a5e;{% endif %}"></i>
+                    <div style="display: flex; flex-direction: column; margin-left: 1.5rem;">
+                        <p style="margin-bottom: 0;"><b>{{ notif.fullname.lower() | title }} </b>commented on your post!</p>
+                        <p style="font-size: smaller; margin-bottom: 0;">{{ notif.created_at | time_ago}}</p>
+                    </div>
+                </div>
+                {% if not loop.last %}
+                <hr style="width: 80%; margin: 0 auto;">
+                {% endif %}
+            </a>
+        {% endif %}
     {% endif %}
 {% endfor %}

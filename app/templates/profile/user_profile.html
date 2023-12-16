@@ -163,13 +163,21 @@
           <div class="alert alert-danger" id="errordelete" name="errordelete" role="alert" style="display: none"></div>      
           <div class="d-flex justify-content-end gap-3">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="color: black;">Cancel</button>
-            <button type="submit" class="btn btn-danger" form="deletePostForm">Delete</button>
+            <button type="submit" class="btn btn-danger" onclick="submitFormAndDisable(this)">Delete</button>
           </div>
       </div>
     </div>
   </div>
 </div>
 <script>
+
+  function submitFormAndDisable(button) {
+    const form = document.getElementById('deletePostForm');
+    // Submit the form
+    form.submit();
+    button.disabled = true;
+  }
+
   let path = window.location.pathname;
 
   let links = document.querySelectorAll('.nav a');
