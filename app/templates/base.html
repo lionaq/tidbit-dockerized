@@ -38,11 +38,11 @@
                         <i class="fa-solid fa-filter me-2"></i>
                     </button>
                     <!-- Filter options inside the dropdown -->
-                    <div class="dropdown-menu ms-2" style="width: 730px;">
-                      <div class="row">
-                        <div class="col-md-3 ms-5 mt-1">
-                          <label class="fs-6" style="font-weight: bold;">Cuisine</label>
-                          <div class="form-check mt-1">
+                    <div class="dropdown-menu ms-2 py-3">
+                      <div class="row ms-4">
+                        <label class="fs-6 mb-2" style="font-weight: bold;">Cuisine</label>
+                        <div class="col-md-3">
+                          <div class="form-check">
                               <input class="form-check-input" type="checkbox" id="americanCheckbox" name="cuisine" value="American Cuisine" {% if 'American Cuisine' in selected_cuisines %}checked{% endif %}>
                               <label class="form-check-label" for="americanCheckbox">American</label>
                           </div>
@@ -55,7 +55,7 @@
                               <label class="form-check-label" for="frenchCheckbox">French</label>
                           </div>
                         </div>
-                        <div class="col-md-3" style="margin-top: 4%;">
+                        <div class="col-md-3">
                           <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="japaneseCheckbox" name="cuisine" value="Japanese Cuisine" {% if 'Japanese Cuisine' in selected_cuisines %}checked{% endif %}>
                             <label class="form-check-label" for="japaneseCheckbox">Japanese</label>
@@ -69,7 +69,7 @@
                             <label class="form-check-label" for="greekCheckbox">Greek</label>
                           </div>
                         </div>
-                        <div class="col-md-3" style="margin-top: 4%;">
+                        <div class="col-md-3">
                           <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="mexcianCheckbox" name="cuisine" value="Mexican Cuisine" {% if 'Mexican Cuisine' in selected_cuisines %}checked{% endif %}>
                             <label class="form-check-label" for="mexcianCheckbox">Mexican</label>
@@ -83,10 +83,11 @@
                             <label class="form-check-label" for="thaiCheckbox">Thai</label>
                           </div>
                         </div>
+                      <div class = "row mt-2">
                         <!-- Meal type checkboxes -->
-                        <div class="col-md-3 ms-5 mt-3">
-                          <label class="fs-6" style="font-weight: bold;">Meal Type</label>
-                          <div class="form-check mt-1">
+                        <label class="fs-6 mb-2" style="font-weight: bold;">Meal Type</label>
+                        <div class="col-md-3">
+                          <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="breakfastCheckbox" name="meal_type" value="breakfast" {% if 'breakfast' in selected_meal_types %}checked{% endif %}>
                             <label class="form-check-label" for="breakfastCheckbox">Breakfast</label>
                           </div>
@@ -94,12 +95,12 @@
                               <input class="form-check-input" type="checkbox" id="lunchCheckbox" name="meal_type" value="lunch" {% if 'lunch' in selected_meal_types %}checked{% endif %}>
                               <label class="form-check-label" for="lunchCheckbox">Lunch</label>
                           </div>
-                          <div class="form-check" style="margin-bottom: 5%;">
+                          <div class="form-check">
                               <input class="form-check-input" type="checkbox" id="dinnerCheckbox" name="meal_type" value="dinner" {% if 'dinner' in selected_meal_types %}checked{% endif %}>
                               <label class="form-check-label" for="dinnerCheckbox">Dinner</label>
                           </div>
                         </div>
-                        <div class="col-md-3" style="margin-top: 6%;">
+                        <div class="col-md-3">
                           <div class="form-check">
                               <input class="form-check-input" type="checkbox" id="snackCheckbox" name="meal_type" value="snack" {% if 'snack' in selected_meal_types %}checked{% endif %}>
                               <label class="form-check-label" for="snackCheckbox">Snack</label>
@@ -110,12 +111,22 @@
                           </div>
                         </div>
                       </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </form>
             </div>
 
+            <script>
+              $(document).ready(function () {
+                // Prevent dropdown menu from closing when clicking inside its container
+                $(".dropdown-menu").on("click", function (e) {
+                  e.stopPropagation();
+                });
+              });
+            </script>
+            
             <a href = "{{url_for('main_bp.explore')}}" style = "display: inline-block; vertical-align: middle; line-height: normal; border:none; background-color:white;">
               <img loading="lazy" src={%block exploreBtn%}"{{ url_for('static', filename='img/exploreIcon.png') }}"{%endblock%} class="img me-3" alt="tidbit logo" style= " width: 28px; height: 28px;">
             </a>
@@ -184,7 +195,7 @@
             <div class="me-4">
               <a href="{{ url_for('profile_bp.profile', username=current_user.username) }}"><img loading="lazy" class="img rounded-pill" {% if 'static' in current_user.profilepic %}src = "{{url_for('static', filename=current_user.profilepic[7:])}}"{%else%}src="{{ current_user.profilepic }}"{%endif%} style="height: 35px; width: 35px;"></a>
             </div>
-            <div class="nav-item dropdown me-5">
+            <div class="nav-item dropdown pe-4">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
               <ul class="dropdown-menu dropdown-menu-end mt-4">
                 <li><a class="dropdown-item" href="{{ url_for('profile_bp.profile', username=current_user.username) }}"> <img loading="lazy" class="img rounded-pill me-4" {% if 'static' in current_user.profilepic %}src = "{{url_for('static', filename=current_user.profilepic[7:])}}"{%else%}src="{{ current_user.profilepic }}"{%endif%} style="height: 30px; width: 30px;">Profile</a></li>

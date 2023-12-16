@@ -2,6 +2,7 @@
 
 {% block title %} {{user.username}} | Tidbit {% endblock%}
 {% block content%}
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/create.css')}}">
 <style>
   .overflow-ellipsis {
     white-space: nowrap;
@@ -78,17 +79,17 @@
   <i class="fa-solid fa-angle-left fa-beat" style="color: #DAD6BF;"></i>
 </a>
 </div>
-<div class="container-md py-3 my-4" style="max-width: 1070px; border: solid 1px rgb(152, 140, 140); border-radius: 15px;">
+<div class="container-md py-3 my-4" style="max-width: 1070px; border: solid 1px rgb(152, 140, 140); border-radius: 15px; background-color:white;">
   <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-6 pe-3">
       <!-- Left side column -->
-      <div id="carouselviewpost" class="carousel slide carousel-fade align-self-center w-100 mt-3 mx-auto ms-2" data-bs-theme="dark">
+      <div id="carouselviewpost" class="carousel slide carousel-fade align-self-center w-100 mt-3 mx-auto ms-2 rounded-1 shadow-sm" data-bs-theme="dark">
         <div class="carousel-inner">
           {% for img in content %}
           {% if img.type == 'image' %}
           <div class="carousel-item {{'active' if loop.first}}">
             <div class="text-center">
-              <img src="{{img.url}}" class="img-fluid" style="height: 333px; width: 100%; border-radius: 10px;">
+              <img src="{{img.url}}" class="img-fluid" style="height: 333px; width: 100%; border-radius: 10px; object-fit:cover;">
             </div>
           </div>
           {% elif img.type == 'video' %}
@@ -129,14 +130,14 @@
         </div>
       </div>
 
-      <div class="d-flex justify-content-between mt-1 ms-3">
+      <div class="d-flex justify-content-between mt-1 ms-3 mb-0">
         <a href="{{url_for('profile_bp.profile',username=user.username)}}" class="text-dark text-decoration-none">
           <div class="d-flex align-items-center gap-3">
             <img src="{{user.profilepic}}" class="d-block m-auto align-self-center p-1 rounded-pill shadow-sm"
               style="height: 55px; width: 55px;" loading="lazy">
-            <div class="d-flex flex-column">
-              <p class="m-0 fw-bold">{{user.fullname}}</p>
-              <p class="m-0 align-self-start fw-lighter" style="font-size: 10px;">@{{user.username}}</p>
+            <div class="d-flex flex-column mt-0">
+              <p class="m-0 fw-bold fs-5">{{user.fullname}}</p>
+              <p class="m-0 align-self-start fw-lighter text-muted" style="font-size: 14px;">@{{user.username}}</p>
             </div>
           </div>
         </a>
@@ -164,7 +165,7 @@
         {%endif%}
       </div>
       <div class="d-flex w-100 align-content-start justify-content-start align-items-start ms-3">
-        <p class="align-self-start mt-3 fw-lighter fs-6 text-break text-start overflow-ellipsis">{{post.caption}}</p>
+        <p class="align-self-start mt-3 fw-lighter fs-6 text-break text-start">{{post.caption}}</p>
       </div>
       <div class="d-flex w-100 flex-wrap gap-2 tag-section ms-3 mb-3">
         <span class="badge rounded-pill my-auto">{{post.tag}}</span>
@@ -173,7 +174,6 @@
         {% endfor%}
       </div>
     </div>
-
     <div class="col-lg-6">
       <!-- Right side column -->
       <div class="container d-flex flex-column justify-content-center align-items-center align-content-center text-center mt-3 pt-3">
