@@ -118,6 +118,15 @@
               </form>
             </div>
 
+            <script>
+              $(document).ready(function () {
+                // Prevent dropdown menu from closing when clicking inside its container
+                $(".dropdown-menu").on("click", function (e) {
+                  e.stopPropagation();
+                });
+              });
+            </script>
+            
             <a href = "{{url_for('main_bp.explore')}}" style = "display: inline-block; vertical-align: middle; line-height: normal; border:none; background-color:white;">
               <img loading="lazy" src={%block exploreBtn%}"{{ url_for('static', filename='img/exploreIcon.png') }}"{%endblock%} class="img me-3" alt="tidbit logo" style= " width: 28px; height: 28px;">
             </a>
