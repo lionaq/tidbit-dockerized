@@ -242,7 +242,7 @@
           <div class="alert alert-danger" id="errordelete" name="errordelete" role="alert" style="display: none"></div>      
           <div class="d-flex justify-content-end gap-3">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="color: black;">Cancel</button>
-            {{ form.submit(class="btn btn-danger") }}
+            <button type="submit" class="btn btn-danger" onclick="submitFormAndDisable(this)">Delete</button>
           </div>
         </form>
       </div>
@@ -250,6 +250,13 @@
   </div>
 </div>
 <script> 
+  function submitFormAndDisable(button) {
+    const form = document.getElementById('deletePostConfirm');
+    // Submit the form
+    form.submit();
+    button.disabled = true;
+  }
+
   let untoggled_save = "{{url_for('static',filename='img/BookMark.png')}}"
   let toggled_save =  "{{url_for('static',filename='img/BookMark_toggled.png')}}"
 
