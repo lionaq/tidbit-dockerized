@@ -46,6 +46,11 @@ def explore():
     comments = Post.fetch_all_comment_ids()
     return render_template('main/explore.html', comments = comments, postData = data, postCont = cont, following = following, liked = liked_posts, saved = saved_posts)
 
+@main_bp.route('/settings/guidelines')
+@login_required
+def guidelines():
+    return render_template('main/guidelines.html')
+
 @main_bp.route('/getnotif/update/<notification_id>', methods=['GET'])
 @login_required
 def update_read_notification(notification_id):

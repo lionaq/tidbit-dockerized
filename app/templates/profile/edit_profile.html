@@ -20,7 +20,7 @@
                         <a class="nav-link {% if 'notifications' in request.path %}active{% endif %}" href="#">Notifications</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if 'community-guidelines' in request.path %}active{% endif %}" href="#">Community guidelines</a>
+                        <a class="nav-link {% if 'community-guidelines' in request.path %}active{% endif %}" href="{{ url_for('main_bp.guidelines') }}">Community guidelines</a>
                     </li>
                 </ul>
             </div>
