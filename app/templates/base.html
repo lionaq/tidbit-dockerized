@@ -195,7 +195,7 @@
             <div class="me-4">
               <a href="{{ url_for('profile_bp.profile', username=current_user.username) }}"><img loading="lazy" class="img rounded-pill" {% if 'static' in current_user.profilepic %}src = "{{url_for('static', filename=current_user.profilepic[7:])}}"{%else%}src="{{ current_user.profilepic }}"{%endif%} style="height: 35px; width: 35px;"></a>
             </div>
-            <div class="nav-item dropdown me-5">
+            <div class="nav-item dropdown pe-4">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
               <ul class="dropdown-menu dropdown-menu-end mt-4">
                 <li><a class="dropdown-item" href="{{ url_for('profile_bp.profile', username=current_user.username) }}"> <img loading="lazy" class="img rounded-pill me-4" {% if 'static' in current_user.profilepic %}src = "{{url_for('static', filename=current_user.profilepic[7:])}}"{%else%}src="{{ current_user.profilepic }}"{%endif%} style="height: 30px; width: 30px;">Profile</a></li>

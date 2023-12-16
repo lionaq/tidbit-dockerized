@@ -17,7 +17,7 @@
         <!-- ProfilePic and CoverPic -->
         <section>
           <div class="d-flex justify-content-center cover-pic-container rounded-bottom">
-            <img loading="lazy"
+            <img loading="lazy" style = "object-fit:cover;"
               {% if 'static' in user.coverpic %}src = "{{url_for('static', filename=user.coverpic[7:])}}"{%else%}src="{{ user.coverpic }}"{%endif%}
               class="cover-pic" 
             />
