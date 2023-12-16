@@ -7,16 +7,17 @@
 <head>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<input type="hidden" id = "user_prof_id" value="{{ user.id }}" 
 
-    <!-- Section: White bg -->
+<input type="hidden" id = "user_prof_id" value="{{ user.id }}">
+
+    <!--Section: White bg-->
     <section>
       <div class="container">
 
         <!-- ProfilePic and CoverPic -->
         <section>
           <div class="d-flex justify-content-center cover-pic-container rounded-bottom">
-            <img loading="lazy"
+            <img loading="lazy" style = "object-fit:cover;"
               {% if 'static' in user.coverpic %}src = "{{url_for('static', filename=user.coverpic[7:])}}"{%else%}src="{{ user.coverpic }}"{%endif%}
               class="cover-pic" 
             />
@@ -35,7 +36,7 @@
             <div class = "userTop container-fluid">
               {% if current_user != user %}
                     <!-- User is already followed -->
-                    <div class="unfollow-button-{{user.id}} dropdown custom-dropdown" {%if user_following and user.id in user_following%} style = "display:block;" {%else%} style = "display:none;" {%endif%}>
+                    <div class="unfollow-button-{{user.id}} dropdown custom-dropdown unfollowBtn" {%if user_following and user.id in user_following%} style = "display:block;" {%else%} style = "display:none;" {%endif%}>
                       <button class="btn btn-sm btn-secondary dropdown-toggle custom-follow-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Following
                       </button>
@@ -43,7 +44,7 @@
                         <button onclick="unfollow({{user.id}})" class="dropdown-item">Unfollow</button>
                       </div>
                     </div>
-                      <button onclick="follow({{user.id}})" class="follow-button-{{user.id}} followBtn btn btn-lg btn-secondary btn-sm fw-bold"{%if user.id not in user_following%}style ="display:block; background-color: #D17A5E; border: none;"{%else%}style = "display:none; background-color: #D17A5E; border: none;"{%endif%}>Follow</button>
+                      <button onclick="follow({{user.id}})" class="follow-button-{{user.id}} followBtn btn btn-lg btn-secondary btn-sm fw-bold"{%if user.id not in user_following%}style ="display:block; background-color: #D17A5E; border: none; width:91px;"{%else%}style = "display:none; background-color: #D17A5E; border: none; width:91px;"{%endif%}>Follow</button>
               {% endif %}
               <h5 style="margin-bottom:2px">{{ user.fullname }}</h5>
               <p class="small text-muted" style="margin-bottom: 8px">@{{ user.username }}</p>
@@ -178,6 +179,5 @@
     }
   }
 </script>
-<script src="{{ url_for('static', filename='js/create.js') }}"></script>
 <script src="{{ url_for('static', filename='js/follow.js') }}"></script>
 {% endblock %}

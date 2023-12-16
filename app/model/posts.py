@@ -315,6 +315,80 @@ class Post(UserMixin):
             return True
         except:
             return False
+            
+    @classmethod
+    def fetch_ALL_content(cls, user_id):
+        try:
+            cursor = mysql.connection.cursor(dictionary=True)
+            sql = "SELECT post_url.url, post_url.post_id, post_url.type FROM post JOIN post_url ON post.id = post_url.post_id;"
+            cursor.execute(sql)
+            data = cursor.fetchall()
+
+            cursor.close()
+            return data
+
+        except Exception as e:
+            print(f"Error fetching all content: {e}")
+
+        finally:
+            if mysql.connection.is_connected():
+                cursor.close()
+
+    @classmethod
+    def search_posts(cls, query, cuisine, meal_type):
+        try:
+            cursor = mysql.connection.cursor(dictionary=True)
+            sql_query = "SELECT post.*, user.profilepic AS profilepic, user.username AS username, user.fullname AS fullname FROM post JOIN user ON post.user_id = user.id WHERE "
+
+            if query:
+                sql_query += "(LOWER(title) LIKE %s OR LOWER(ingredients) LIKE %s OR LOWER(tag) LIKE %s OR LOWER(subtags) LIKE %s) AND "
+
+            if cuisine:
+                placeholders = ', '.join(['%s'] * len(cuisine))
+                sql_query += f"(tag IN ({placeholders})) AND "
+
+            if meal_type:
+                subtags_condition = " OR ".join(["FIND_IN_SET(%s, subtags) > 0"] * len(meal_type))
+                sql_query += f"({subtags_condition}) AND "
+
+            if sql_query.endswith("AND "):
+                sql_query = sql_query[:-4]
+
+            query_with_wildcards = f"%{query.lower()}%"
+            
+            cursor.execute(sql_query, (query_with_wildcards, query_with_wildcards, query_with_wildcards, query_with_wildcards, *cuisine, *meal_type))
+
+
+            results = cursor.fetchall()
+
+            return results
+
+        except Exception as e:
+            print(f"Error: {e}")
+
+        finally:
+            if mysql.connection.is_connected():
+                cursor.close()
+                
+    
+    @classmethod
+    def search_users(cls, query, current_user_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = """SELECT user.id, user.username, user.fullname, user.profilepic, COUNT(follower.id) AS followers_count, EXISTS(SELECT 1 FROM follow WHERE follower = %s AND following = user.id) AS is_following
+                FROM user LEFT JOIN follow AS follower ON user.id = follower.following WHERE user.username LIKE %s OR user.fullname LIKE %s GROUP BY user.id, user.username, user.fullname, user.profilepic;"""
+        cursor.execute(sql, (current_user_id, f"%{query}%", f"%{query}%"))
+        users = cursor.fetchall()
+        cursor.close()
+        return users
+                
+    @classmethod
+    def fetch_random_posts(cls, num_of_suggestions, user_id):
+        cursor = mysql.connection.cursor(dictionary=True)
+        sql = "SELECT post.id AS post_id, post.title, post_url.type, post_url.url FROM post JOIN post_url ON post.id = post_url.post_id WHERE post.user_id != %s ORDER BY RAND() LIMIT %s;"
+        cursor.execute(sql, (user_id, num_of_suggestions))
+        data = cursor.fetchall()
+        cursor.close()
+        return data
         
     def get_post_id_from_comment_id(self, comment_id):
         cursor = mysql.connection.cursor(dictionary=True)

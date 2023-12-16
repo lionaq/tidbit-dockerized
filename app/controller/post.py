@@ -312,4 +312,35 @@ def save(post):
             socketio.emit('get_notification')
             return jsonify({"saved": False})
     else:
-        abort(400)
+        abort(400)          
+            
+@post_bp.route('/search', methods=['POST'])
+def search():
+    query = request.form.get('query')
+    cuisines = request.form.getlist('cuisine')
+    meal_types = request.form.getlist('meal_type')
+    
+    selected_cuisines = request.form.getlist('cuisine')
+    selected_meal_types = request.form.getlist('meal_type')
+    
+    filters_selected = bool(selected_cuisines or selected_meal_types)
+
+    if filters_selected:
+        postData = Post.search_posts(query, cuisines, meal_types)
+        postUser = None
+    else:
+        postData = Post.search_posts(query, cuisines, meal_types)
+        postUser = Post.search_users(query, current_user.id)
+    
+    if not postData and not postUser:
+        num_of_suggestions = 3
+        user_id = current_user.get_id()
+        suggestions = Post.fetch_random_posts(num_of_suggestions, user_id)
+        return render_template('main/search.html', selected_cuisines=selected_cuisines, selected_meal_types=selected_meal_types, suggestions=suggestions)
+
+    following = User.fetch_following_ids(current_user.id)
+    liked_posts = Post.fetch_liked_posts(current_user.id)
+    saved_posts = Post.fetch_saved_posts(current_user.id)
+    cont = Post.fetch_ALL_content(current_user.username)
+
+    return render_template('main/search.html', selected_cuisines=selected_cuisines, selected_meal_types=selected_meal_types, postData=postData, postCont=cont, postUser=postUser, following=following, liked_posts=liked_posts, saved_posts=saved_posts)
