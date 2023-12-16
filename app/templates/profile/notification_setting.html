@@ -14,13 +14,13 @@
             <div class="container-fluid">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link {% if 'edit-profile' in request.path %}active{% endif %}" href="{{ url_for('profile_bp.edit_profile') }}">Edit profile</a>
+                        <a class="nav-link" href="{{ url_for('profile_bp.edit_profile') }}">Edit profile</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="{{ url_for('profile_bp.notification_setting') }}">Notifications</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if 'community-guidelines' in request.path %}active{% endif %}" href="#">Community guidelines</a>
+                        <a class="nav-link" href="{{ url_for('profile_bp.community_guideline') }}">Community guidelines</a>
                     </li>
                 </ul>
             </div>

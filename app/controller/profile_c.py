@@ -206,3 +206,9 @@ def notification_setting():
         return redirect(url_for('profile_bp.notification_setting'))
 
     return render_template('profile/notification_setting.html', form=form)
+
+
+@profile_bp.route('/settings/community_guideline', methods=['GET', 'POST'])
+@login_required
+def community_guideline():
+    return render_template('profile/community_guideline.html')
