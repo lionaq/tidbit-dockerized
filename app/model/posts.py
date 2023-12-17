@@ -92,7 +92,7 @@ class Post(UserMixin):
 
         return post
     
-    def fetch_post_paginated_explore(per_page, page, current_user_id):
+    def fetch_post_paginated_explore(limit, index, current_user_id):
         # Connect to the MySQL database
         cursor = mysql.connection.cursor(dictionary=True)
         # Example query, replace with your actual query
@@ -127,7 +127,7 @@ class Post(UserMixin):
                     WHERE NOT user.id = {current_user_id}
                     GROUP BY
                         post.id, user.fullname, user.username,user.profilepic, post.user_id, post.date, post.title, post.caption, post.ingredients, post.instructions, post.tag, post.subtags, post.likes 
-                    ORDER BY id LIMIT {per_page} OFFSET {(page - 1) * per_page}'''
+                    ORDER BY id LIMIT {limit} OFFSET {index * limit}'''
         
         cursor.execute(query)
         posts = cursor.fetchall()
