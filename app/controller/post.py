@@ -325,11 +325,14 @@ def search():
     
     filters_selected = bool(selected_cuisines or selected_meal_types)
 
+    index = 0
+    limit = 10
+
     if filters_selected:
-        postData = Post.search_posts(query, cuisines, meal_types)
+        postData = Post.search_posts(query, cuisines, meal_types, limit, index)
         postUser = None
     else:
-        postData = Post.search_posts(query, cuisines, meal_types)
+        postData = Post.search_posts(query, cuisines, meal_types, limit, index)
         postUser = Post.search_users(query, current_user.id)
     
     if not postData and not postUser:
@@ -342,5 +345,5 @@ def search():
     liked_posts = Post.fetch_liked_posts(current_user.id)
     saved_posts = Post.fetch_saved_posts(current_user.id)
     cont = Post.fetch_ALL_content(current_user.username)
-
+    print(postData)
     return render_template('main/search.html', selected_cuisines=selected_cuisines, selected_meal_types=selected_meal_types, postData=postData, postCont=cont, postUser=postUser, following=following, liked_posts=liked_posts, saved_posts=saved_posts)

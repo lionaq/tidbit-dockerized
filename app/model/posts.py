@@ -457,7 +457,7 @@ class Post(UserMixin):
                 cursor.close()
 
     @classmethod
-    def search_posts(cls, query, cuisine, meal_type):
+    def search_posts(cls, query, cuisine, meal_type, limit, offset):
         try:
             cursor = mysql.connection.cursor(dictionary=True)
             sql_query = "SELECT post.*, user.profilepic AS profilepic, user.username AS username, user.fullname AS fullname FROM post JOIN user ON post.user_id = user.id WHERE "
@@ -478,8 +478,11 @@ class Post(UserMixin):
 
             query_with_wildcards = f"%{query.lower()}%"
             
-            cursor.execute(sql_query, (query_with_wildcards, query_with_wildcards, query_with_wildcards, query_with_wildcards, *cuisine, *meal_type))
+            sql_query += "ORDER BY post.id DESC "  # Order by post.id in descending order
+            sql_query += "LIMIT %s OFFSET %s"  # Add LIMIT and OFFSET clauses
 
+            # Append limit and offset values to the parameters
+            cursor.execute(sql_query, (query_with_wildcards, query_with_wildcards, query_with_wildcards, query_with_wildcards, *cuisine, *meal_type, limit, offset))
 
             results = cursor.fetchall()
 
