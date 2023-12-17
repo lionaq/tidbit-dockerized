@@ -40,9 +40,14 @@
 <script src="{{ url_for('static', filename='js/like.js') }}"></script>
 <script src="{{ url_for('static', filename='js/follow.js') }}"></script>
 <script src="{{ url_for('static', filename='js/save.js') }}"></script>
+<script src="{{ url_for('static', filename='js/lazyLoad.js') }}"></script>
 <script type = "text/javascript">
-
-  let indexNum = 4
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.3
+  };
+  let indexNum = 4;
   fetchContent(0,4);
 
   $(window).scroll(() => {
@@ -64,7 +69,7 @@
         const grouped_urls = curr.grouped_urls.split(',');
         console.log(grouped_urls[0].includes('image'))
         page = `
-        <div class=" col-md-5 mx-2 my-3 justify-content-center ">
+        <div class=" col-md-5 mx-2 my-3 justify-content-center lazy-post">
           <div class = "rounded-4 p-1 px-4" style = "background-color:white;">
           <div class = "row my-3">
             <div class = "col-md-9">
@@ -175,6 +180,8 @@
         `
         $('#contentContainer').append(page + page2)
       }
+      const lazyLoadPosts = document.querySelectorAll('.lazy-post');
+      startIntersectionObserver(lazyLoadPosts, observerOptions);
     });
 
   }
