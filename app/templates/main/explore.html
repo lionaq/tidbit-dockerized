@@ -2,40 +2,40 @@
 {%block exploreBtn%}"{{ url_for('static', filename='img/exploreIcon_toggled.png') }}"{%endblock%}
 {%block title%}Explore{%endblock%}
 {% block content %}
-{% set ns = namespace(firstItem=0) %}
-{% set num = namespace(iter=0, count=0)%}
 <!-- User Posts Gallery -->
+<style>
+  body {
+    scroll-behavior: smooth;
+    background-color:#F0F2F5;
+}
+  .overflow-ellipsis {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+  }
+  .lazy-post {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .follow{
+    width: 100%;
+    background-color: #D17A5E;
+    transition: all 0.3s ease;
+  }
+  .follow:hover{
+    transform: scale(1.1);
+    background-color: #D17A5E;
+    box-shadow: 0px 0px 10px 0px #D17A5E;
+  }
+</style>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create.css') }}">
 <section>
-  <style>
-    body {
-      scroll-behavior: smooth;
-      background-color:#F0F2F5;
-  }
-    .overflow-ellipsis {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .lazy-post {
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .follow{
-      width: 100%;
-      background-color: #D17A5E;
-      transition: all 0.3s ease;
-    }
-    .follow:hover{
-      transform: scale(1.1);
-      background-color: #D17A5E;
-      box-shadow: 0px 0px 10px 0px #D17A5E;
-    }
-</style>
-  <h1 class = "display-9 fw-bold mt-3">Explore <small class="text-body-secondary fs-6">Looking for something different? The freshest content is served right here!</small></h1>
-  <div id = "contentContainer" class="row d-flex justify-content-center">
 
+  <h1 class = "display-9 fw-bold mt-3">Explore <small class="text-body-secondary fs-6">Looking for something different? The freshest content is served right here!</small></h1>
+
+  <div id = "contentContainer" class="row d-flex justify-content-center">
   </div>
+
 </section>
 <script src="{{ url_for('static', filename='js/like.js') }}"></script>
 <script src="{{ url_for('static', filename='js/follow.js') }}"></script>
@@ -61,7 +61,6 @@
     }
   });
 
-  var placeholder = "/static/img/food.jpg"
   function fetchContent(index, limit){
     $.get('/explore/posts?index='+index+'&limit='+limit, (data) => {
       for (let i =  0; i < data.data.length; i++){
@@ -137,7 +136,7 @@
               <h2 class = "fs-3 mt-3 overflow-ellipsis">${curr.title}</h2>
             </div>
             <div class = "col-sm-2 d-flex align-items-center justify-content-end">
-              <a href="#"><img loading="lazy" src="{{url_for('static', filename='img/reportIcon.png')}}" style="height: 40px; width: 40px; opacity: 0.65;" class = "mt-3"></a>
+              <a href="#"><img loading="lazy" src="static/img/reportIcon.png" style="height: 40px; width: 40px; opacity: 0.65;" class = "mt-3"></a>
             </div>
           </div>
           <p class="fs-6 text-muted overflow-ellipsis my-1">${curr.caption}</p>
@@ -187,4 +186,8 @@
   }
 
 </script>
+<script src="{{ url_for('static', filename='js/like.js') }}"></script>
+<script src="{{ url_for('static', filename='js/follow.js') }}"></script>
+<script src="{{ url_for('static', filename='js/save.js') }}"></script>
+<script src="{{ url_for('static', filename='js/lazyLoad.js') }}"></script>
 {% endblock %}
