@@ -96,7 +96,7 @@ class Post(UserMixin):
         # Connect to the MySQL database
         cursor = mysql.connection.cursor(dictionary=True)
         # Example query, replace with your actual query
-        query = f'''SELECT
+        query = f'''SELECT A.* FROM (SELECT
                         post.id,post.user_id, user.fullname, user.username, user.profilepic,
                         post.date, post.title, post.caption, post.likes,
                         GROUP_CONCAT(post_url.url) AS grouped_urls,
@@ -117,7 +117,21 @@ class Post(UserMixin):
                                 AND sp.post_id = post.id
                             ) THEN 1
                             ELSE 0
-                        END AS saved
+                        END AS saved,
+                        CASE 
+                            WHEN EXISTS (
+                                SELECT 1 
+                                FROM follow
+                                WHERE follow.follower = {current_user_id}
+                                AND follow.following = post.user_id
+                            ) THEN 1
+                            ELSE 0
+                        END AS followed,
+                        (
+                            SELECT COUNT(*) 
+                            FROM comment
+                            WHERE comment.post_id = post.id
+                        ) AS comments
                     FROM
                         post
                     JOIN
@@ -127,7 +141,8 @@ class Post(UserMixin):
                     WHERE NOT user.id = {current_user_id}
                     GROUP BY
                         post.id, user.fullname, user.username,user.profilepic, post.user_id, post.date, post.title, post.caption, post.ingredients, post.instructions, post.tag, post.subtags, post.likes 
-                    ORDER BY id LIMIT {limit} OFFSET {index * limit}'''
+                    ORDER BY id LIMIT {limit} OFFSET {index}
+                    ) AS A ORDER BY RAND()'''
         
         cursor.execute(query)
         posts = cursor.fetchall()
