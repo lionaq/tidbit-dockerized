@@ -13,12 +13,20 @@ main_bp = Blueprint(
 
 
 @main_bp.route('/explore/posts')
-def get_posts():
+def get_posts_explore():
     index = request.args.get('index', 1, type=int)
     limit = request.args.get('limit', 1, type=int)
     posts = Post.fetch_post_paginated_explore(limit, index, current_user.id)
 
     return jsonify(data=posts, has_next=len(posts) == limit)
+
+@main_bp.route('/home/posts')
+def get_posts_feed():
+    index = request.args.get('index', 1, type=int)
+    limit = request.args.get('limit', 1, type=int)
+    posts = Post.fetch_post_paginated_feed(limit, index, current_user.id)
+
+    return jsonify(data=posts, has_next=len(posts) == limit, current_user_id = current_user.id)
 
 
 @main_bp.route('/home')
