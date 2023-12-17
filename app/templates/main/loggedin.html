@@ -71,8 +71,13 @@
 </section>
 
 <script type = "text/javascript">
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.3
+  };
 
-  let indexNum = 4
+  let indexNum = 4;
   fetchContent(0,4);
 
   $(window).scroll(() => {
@@ -93,7 +98,7 @@
         const grouped_urls = curr.grouped_urls.split(',');
         console.log(data.current_user_id)
         page = `
-        <div class=" col-md-5 mx-2 my-3 justify-content-center ">
+        <div class=" col-md-5 mx-2 my-3 justify-content-center lazy-post">
           <div class = "rounded-4 p-1 px-4" style = "background-color:white;">
           <div class = "row my-3">
             <div class = "col-md-9">
@@ -206,6 +211,8 @@
         `
         $('#contentContainer').append(page + page2)
       }
+      const lazyLoadPosts = document.querySelectorAll('.lazy-post');
+      startIntersectionObserver(lazyLoadPosts, observerOptions);
     });
 
   }

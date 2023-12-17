@@ -42,11 +42,13 @@
 <script src="{{ url_for('static', filename='js/save.js') }}"></script>
 <script src="{{ url_for('static', filename='js/lazyLoad.js') }}"></script>
 <script type = "text/javascript">
+
   const observerOptions = {
     root: null,
     rootMargin: '0px',
     threshold: 0.3
   };
+  
   let indexNum = 4;
   fetchContent(0,4);
 
