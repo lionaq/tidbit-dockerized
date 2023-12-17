@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask_login import current_user, login_required
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, jsonify
 from app.model.user import User
 from app.model.posts import Post
 import random
@@ -10,6 +10,16 @@ main_bp = Blueprint(
     "main_bp",
     __name__
 )
+
+
+@main_bp.route('/explore/posts')
+def get_posts():
+    page = request.args.get('page', 1, type=int)
+    per_page = 2
+    posts = Post.fetch_post_paginated_explore(per_page, page, current_user.id)
+
+    return jsonify(data=posts, has_next=len(posts) == per_page)
+
 
 @main_bp.route('/home')
 @login_required

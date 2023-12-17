@@ -92,6 +92,48 @@ class Post(UserMixin):
 
         return post
     
+    def fetch_post_paginated_explore(per_page, page, current_user_id):
+        # Connect to the MySQL database
+        cursor = mysql.connection.cursor(dictionary=True)
+        # Example query, replace with your actual query
+        query = f'''SELECT
+                        post.id,post.user_id, user.fullname, user.username, user.profilepic,
+                        post.date, post.title, post.caption, post.likes,
+                        GROUP_CONCAT(post_url.url) AS grouped_urls,
+                        CASE 
+                            WHEN EXISTS (
+                                SELECT 1 
+                                FROM like_post AS lp 
+                                WHERE lp.liker_id = {current_user_id}
+                                AND lp.post_id = post.id
+                            ) THEN 1
+                            ELSE 0
+                        END AS liked,
+                        CASE 
+                            WHEN EXISTS (
+                                SELECT 1 
+                                FROM save_post AS sp 
+                                WHERE sp.saver_id = {current_user_id}
+                                AND sp.post_id = post.id
+                            ) THEN 1
+                            ELSE 0
+                        END AS saved
+                    FROM
+                        post
+                    JOIN
+                        post_url ON post.id = post_url.post_id
+                    JOIN
+                        user ON user.id = post.user_id
+                    WHERE NOT user.id = {current_user_id}
+                    GROUP BY
+                        post.id, user.fullname, user.username,user.profilepic, post.user_id, post.date, post.title, post.caption, post.ingredients, post.instructions, post.tag, post.subtags, post.likes 
+                    ORDER BY id LIMIT {per_page} OFFSET {(page - 1) * per_page}'''
+        
+        cursor.execute(query)
+        posts = cursor.fetchall()
+        cursor.close()
+        return posts
+
     @classmethod
     def fetch_post_content(cls, post_id):
         cursor = mysql.connection.cursor(dictionary=True)
