@@ -325,8 +325,8 @@ def search():
     
     filters_selected = bool(selected_cuisines or selected_meal_types)
 
-    index = 0
-    limit = 10
+    index = request.args.get('index', 1, type=int)
+    limit = request.args.get('limit', 1, type=int)
 
     if filters_selected:
         postData = Post.search_posts(query, cuisines, meal_types, limit, index)
