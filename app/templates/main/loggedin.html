@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 {%block title%}Feed{%endblock%}
 {% block content %}
-{% set ns = namespace(firstItem=0) %}
-{% set num = namespace(iter=0, count=0)%}
 <!-- User Posts Gallery -->
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create.css') }}">
 <style>

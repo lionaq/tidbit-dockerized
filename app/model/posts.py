@@ -439,7 +439,7 @@ class Post(UserMixin):
             return False
             
     @classmethod
-    def fetch_ALL_content(cls, user_id):
+    def fetch_ALL_content(cls):
         try:
             cursor = mysql.connection.cursor(dictionary=True)
             sql = "SELECT post_url.url, post_url.post_id, post_url.type FROM post JOIN post_url ON post.id = post_url.post_id;"
@@ -457,10 +457,47 @@ class Post(UserMixin):
                 cursor.close()
 
     @classmethod
-    def search_posts(cls, query, cuisine, meal_type, limit, offset):
+    def search_posts(cls, current_user_id, query, cuisine, meal_type, index, limit):
         try:
             cursor = mysql.connection.cursor(dictionary=True)
-            sql_query = "SELECT post.*, user.profilepic AS profilepic, user.username AS username, user.fullname AS fullname FROM post JOIN user ON post.user_id = user.id WHERE "
+            sql_query = f'''
+            SELECT post.id, post.user_id, post.date, post.title, post.caption, post.ingredients,
+            post.tag, post.subtags, post.likes, user.profilepic, user.username, user.fullname,
+            GROUP_CONCAT(post_url.url) AS grouped_urls,
+            CASE 
+                WHEN EXISTS (
+                    SELECT 1 
+                    FROM like_post AS lp 
+                    WHERE lp.liker_id = {current_user_id}
+                    AND lp.post_id = post.id
+                ) THEN 1
+                ELSE 0
+            END AS liked,
+            CASE 
+                WHEN EXISTS (
+                    SELECT 1 
+                    FROM save_post AS sp 
+                    WHERE sp.saver_id = {current_user_id}
+                    AND sp.post_id = post.id
+                ) THEN 1
+                ELSE 0
+            END AS saved,
+            CASE 
+                WHEN EXISTS (
+                    SELECT 1 
+                    FROM follow
+                    WHERE follow.follower = {current_user_id}
+                    AND follow.following = post.user_id
+                ) THEN 1
+                ELSE 0
+            END AS followed,
+            (   
+                SELECT COUNT(*) 
+                FROM comment
+                WHERE comment.post_id = post.id
+            ) AS comments
+            FROM post JOIN post_url ON post.id = post_url.post_id
+            JOIN user ON user.id = post.user_id WHERE '''
 
             if query:
                 sql_query += "(LOWER(title) LIKE %s OR LOWER(ingredients) LIKE %s OR LOWER(tag) LIKE %s OR LOWER(subtags) LIKE %s) AND "
@@ -476,13 +513,12 @@ class Post(UserMixin):
             if sql_query.endswith("AND "):
                 sql_query = sql_query[:-4]
 
+            sql_query += f'''GROUP BY post.id, post.user_id, post.date, post.title, post.caption, post.ingredients,
+            post.tag, post.subtags, post.likes, user.profilepic, user.username, user.fullname LIMIT {limit} OFFSET {index}'''
+            print(sql_query)
             query_with_wildcards = f"%{query.lower()}%"
-            
-            sql_query += "ORDER BY post.id DESC "  # Order by post.id in descending order
-            sql_query += "LIMIT %s OFFSET %s"  # Add LIMIT and OFFSET clauses
 
-            # Append limit and offset values to the parameters
-            cursor.execute(sql_query, (query_with_wildcards, query_with_wildcards, query_with_wildcards, query_with_wildcards, *cuisine, *meal_type, limit, offset))
+            cursor.execute(sql_query, (query_with_wildcards, query_with_wildcards, query_with_wildcards, query_with_wildcards, *cuisine, *meal_type))
 
             results = cursor.fetchall()
 
@@ -497,10 +533,18 @@ class Post(UserMixin):
                 
     
     @classmethod
-    def search_users(cls, query, current_user_id):
+    def search_users(cls, query, current_user_id, index, limit):
         cursor = mysql.connection.cursor(dictionary=True)
-        sql = """SELECT user.id, user.username, user.fullname, user.profilepic, COUNT(follower.id) AS followers_count, EXISTS(SELECT 1 FROM follow WHERE follower = %s AND following = user.id) AS is_following
-                FROM user LEFT JOIN follow AS follower ON user.id = follower.following WHERE user.username LIKE %s OR user.fullname LIKE %s GROUP BY user.id, user.username, user.fullname, user.profilepic;"""
+        sql = """SELECT user.id, user.username, user.fullname, user.profilepic, COUNT(follower.id) AS followers_count, 
+                EXISTS(SELECT 1 FROM follow WHERE follower = %s AND following = user.id) AS is_following
+                FROM user LEFT JOIN follow AS follower ON user.id = follower.following WHERE user.username 
+                LIKE %s OR user.fullname LIKE %s 
+                GROUP BY user.id, user.username, user.fullname, user.profilepic
+                ORDER BY user.username"""
+        
+        sql += f" LIMIT {limit} OFFSET {index};"
+        
+        print(sql)
         cursor.execute(sql, (current_user_id, f"%{query}%", f"%{query}%"))
         users = cursor.fetchall()
         cursor.close()
