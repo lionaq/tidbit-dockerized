@@ -31,7 +31,7 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create.css') }}">
 <section>
 
-  <h1 class = "display-9 fw-bold mt-3">Explore <small class="text-body-secondary fs-6">Looking for something different? The freshest content is served right here!</small></h1>
+  <h1 class = "display-9 fw-bold mt-4">Explore <small class="text-body-secondary fs-6">Looking for something different? The freshest content is served right here!</small></h1>
 
   <div id = "contentContainer" class="row d-flex justify-content-center">
   </div>
@@ -68,7 +68,7 @@
       for (let i =  0; i < data.data.length; i++){
         const curr = data.data[i];
         const grouped_urls = curr.grouped_urls.split(',');
-        console.log(grouped_urls[0].includes('image'))
+        console.log(data)
         page = `
         <div class=" col-md-5 mx-2 my-3 justify-content-center lazy-post">
           <div class = "rounded-4 p-1 px-4" style = "background-color:white;">

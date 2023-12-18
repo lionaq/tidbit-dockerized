@@ -6,242 +6,93 @@
 {% set num = namespace(iter=0)%}
 <!-- User Posts Gallery -->
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create.css') }}">
-<section>
-  <style>
-    body {
-      scroll-behavior: smooth;
-      background-color:#F0F2F5;
+<style>
+  body {
+    scroll-behavior: smooth;
+    background-color:#F0F2F5;
+}
+  .overflow-ellipsis {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
   }
-    .overflow-ellipsis {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .lazy-post {
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .follow{
-      width: 80px;
-      background-color: #D17A5E;
-      transition: all 0.3s ease;
-    }
-    .follow:hover{
-      transform: scale(1.1);
-      background-color: #D17A5E;
-      box-shadow: 0px 0px 10px 0px #D17A5E;
-    }
-    .box {
+  .lazy-post {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .follow{
+    width: 80px;
+    background-color: #D17A5E;
+    transition: all 0.3s ease;
+  }
+  .follow:hover{
+    transform: scale(1.1);
+    background-color: #D17A5E;
+    box-shadow: 0px 0px 10px 0px #D17A5E;
+  }
+  .box {
+    position: relative;
+    margin: 10px;
+    overflow: hidden;
+    border-radius: 10px;
+    background-color: white;
+    cursor: pointer;
+  }
+  .suggestion-box {
       position: relative;
       margin: 10px;
       overflow: hidden;
       border-radius: 10px;
-      background-color: white;
+      box-shadow: 0px 0px 10px 0px #D17A5E;
       cursor: pointer;
-    }
-    .suggestion-box {
-        position: relative;
-        margin: 10px;
-        overflow: hidden;
-        border-radius: 10px;
-        box-shadow: 0px 0px 10px 0px #D17A5E;
-        cursor: pointer;
-        width: 180px;
-        height: 180px;
-    }
-    .suggestion-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .suggestion-title {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      padding: 5px;
-      background: rgba(0, 0, 0, 0.5);
-      color: #ffffff;
-      font-size: 16px;
-      font-weight: bold;
-      text-align: center;
-    }
-    .custom-button
+      width: 180px;
+      height: 180px;
+  }
+  .suggestion-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .suggestion-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+  }
+  .custom-button
 </style>
+<section>
 
-{% if postData or postUser%}
+{% if postData or userData%}
   <div class="row mt-4 justify-content-center">
-    {% if postUser %}
+    {% if userData %}
       <div class="col-12 mb-4 mt-3">
           <h3 style="font-weight: bold;">User Results</h3>
-          <div class="row d-flex justify-content-center">
-              {% for user in postUser %}
-                  <div class="col-lg-3 mx-2 my-3 box ms-4" style="width: 250px; height: 130px;">
-                      <div class="row">
-                          <div class="col-sm-2 me-3 mt-3">
-                              <a href="{{ url_for('profile_bp.profile', username=user.username) }}">
-                                  <img loading="lazy" class="rounded-pill shadow-sm" src="{{ user.profilepic }}" style="height: 53px; width: 53px;">
-                              </a>
-                          </div>
-                          <div class="col-sm-9 ms-1" style="margin-top: 10px;">
-                              <p class="fs-6 fw-semibold m-0 p-0">{{ user.fullname }}</p>
-                              <p class="text-muted" style="font-size: 13px;">
-                                @{{ user.username }} <br>
-                                <span class = "me-1" id = "followers-count-in-search-{{user.id}}">{{ user.followers_count }}</span>followers
-                              </p>
-                          </div>
-                      </div>
-                      <div class="col d-flex align-items-center justify-content-end">
-                          {% if user.id != current_user.id %}
-                              <!-- User is already followed -->
-                              <div class="unfollow-button-{{ user.id }} dropdown" {% if user.is_following %} style="display:block;" {% else %} style="display:none;" {% endif %}>
-                                  <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
-                                      Following
-                                  </button>
-                                  <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                      <button onclick="unfollow({{ user.id }})" class="dropdown-item">Unfollow</button>
-                                  </div>
-                              </div>
-                              <!-- User is not followed, show follow button -->
-                              <button onclick="follow({{ user.id }})" class="follow-button-{{ user.id }} btn btn-sm follow" {% if user.is_following %} style="display:none;" {% else %} style="display:block;" {% endif %}>Follow</button>
-                          {% endif %}
-                      </div>
-                  </div>
-              {% endfor %}
+          <div id = "userResults" class="row d-flex justify-content-center">
+              
           </div>
       </div>
     {% endif %}
     
-    {% if postUser and postData %}
-      <div class="separator-line" style="border-top: 1px solid #7a7d7b; margin: 20px 0;"></div>
+    {% if userData and postData %}
+      <div class="separator-line mb-0 mt-0" style="border-top: 1px solid #7a7d7b;"></div>
     {% endif %}
 
     {% if postData %}
       <div class=" mt-3 col-12 mb-4">
         <h3 style="font-weight: bold;">Post Results</h3>
-        <div class="row d-flex justify-content-center mt-4">
-          {% for post in postData %}
-            <div class="col-lg-5 mx-2 my-3 justify-content-center">
-              <div class = "rounded-4 p-1 px-4" style = "background-color:white;">
-                <div class = "row my-3">
-                  <div class = "col-sm-9">
-                    <div class = "row">
-                      <div class = "col-sm-2 me-3">
-                        <a href="{{ url_for('profile_bp.profile', username=post.username) }}"><img loading="lazy" class="rounded-pill shadow-sm" src="{{ post.profilepic }}" style="height: 53px; width: 53px; "></a>
-                      </div>
-                      <div class = "col-sm-9 ms-1">
-                        <p class = "fs-6 fw-semibold m-0 p-0">{{post.fullname}}</h3>
-                        <p class="fs-6 text-muted">@{{ post.username }}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Inside the loop for posts -->
-                  <div class="col d-flex align-items-center justify-content-end">
-                    {% if post.user_id != current_user.id %}
-                      <!-- User is already followed -->
-                      <div class="unfollow-button-{{post.user_id}} dropdown"  {%if post.user_id not in following%} style = "display:none;" {%else%} style= "display:block;"{%endif%}>
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
-                            Following
-                        </button>
-                        <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <button onclick="unfollow({{post.user_id}})" class="dropdown-item">Unfollow</button>
-                        </div>
-                      </div>              
-                      <!-- User is not followed, show follow button -->
-                      <button onclick="follow({{post.user_id}})"class="follow-button-{{post.user_id}} btn follow" {% if post.user_id in following %} style = "display:none;" {%else%} style= "display:block;"{%endif%}>Follow</button>
-                    {% endif %}
-                  </div>
-                </div>
-                <div id="carousel{{ post.id }}" class="carousel slide shadow-sm">
-                  <div class="carousel-inner rounded-1">
-                    {% set ns.firstItem = 1 %}
-                    {% for cont in postCont %}
-                      {% if cont.post_id == post.id: %}
-                      {% set num.iter = num.iter + 1 %}
-                      <a href="{{url_for('post_bp.view_post',postid=post.id)}}" class="text-dark text-decoration-none">
-                        <div class="carousel-item {% if ns.firstItem == 1 %}active{% endif %}">
-                          {% if cont.type == 'image' %}
-                              <img loading="lazy" src="{{ cont.url }}" class="object-fit-cover" alt="{{ post.title }}" width = "100%" height="280px">
-                          {% elif cont.type == 'video' %}
-                              <video  width="100%" height="280px" class = "object-fit-cover"><source src="{{ cont.url }}" type="video/mp4"></video>
-                          {% endif %}
-                        </div>
-                      </a>
-                        {% set ns.firstItem = 0 %}  
-                      {% endif %}
-                    {% endfor %}
-                  </div>
-                  {% if num.iter > 1%}
-                  <button class="carousel-control-prev" data-bs-target="#carousel{{ post.id }}" type="button" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                  </button>
-                  <button class="carousel-control-next" data-bs-target="#carousel{{ post.id }}" type="button" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                  </button>
-                  {%endif%}
-                </div>
-                {% set num.iter = 0%}
-                <!--Title and caption section-->
-                <div class = "row row-cols-2">
-                  <div class = "col-sm-10">
-                    <h2 class = "fs-3 mt-3 overflow-ellipsis">{{post.title}}</h2>
-                  </div>
-                  <div class = "col-sm-2 d-flex align-items-center justify-content-end">
-                    <a href="#"><img loading="lazy" src="{{url_for('static', filename='img/reportIcon.png')}}" style="height: 40px; width: 40px; opacity: 0.65;" class = "mt-3"></a>
-                  </div>
-                </div>
-                <p class="fs-6 text-muted overflow-ellipsis my-1">{{ post.caption }}</p>
-                
-                <!--Like commends and bookmark section-->
-                <div class = "row row-cols-3 mt-2">
-                  <div class = "col-sm-2 my-2">
-                    <div class = "row row-cols-2">
-                      <div class = "col">
-                        {%if post.id in liked_posts %}
-                          <button onclick = "like({{post.id}})" style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "like-icon-{{post.id}}" class="fa-solid fa-heart fa-xl"style="color: #000000;"></i></button>
-                        {%else%}
-                          <button onclick = "like({{post.id}})" style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "like-icon-{{post.id}}" class="fa-regular fa-heart fa-xl"style="color: #000000;"></i></button>
-                        {%endif%}
-                      </div>
-                      <div class = "col ps-2">
-                        <p class="fs-6" id = "like-count-{{post.id}}">{{ post.likes}}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class = "col-sm-2 my-2">
-                    <div class = "row row-cols-2">
-                      <div class = "col">
-                        <button style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-comment fa-xl " style="color: #000000;"></i></button>
-                      </div>
-                      <div class = "col ps-2">
-                        <p class="fs-6">{{ range(1, 1000) | random }}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class = "col-sm-2 my-2">
-                    <div class = "row row-cols-2">
-                      <div class = "col">
-                        {%if post.id in saved_posts %}
-                          <button onclick = "save({{post.id}})" style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "save-icon-{{post.id}}" class="fa-solid fa-bookmark fa-xl"style="color: #000000;"></i></button>
-                        {%else%}
-                          <button onclick = "save({{post.id}})" style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "save-icon-{{post.id}}" class="fa-regular fa-bookmark fa-xl"style="color: #000000;"></i></button>
-                        {%endif%}
-                      </div>
-                      <div class = "col ps-2">
-                        <p class="fs-6"></p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
+        <div id = "postResults" class="row d-flex justify-content-center mt-4">
         </div>
       </div>
     {% endif %}
   </div>
+
 {% else %}
   <p class="fs-5 mt-5 d-flex justify-content-center">Sorry, we couldn't find any match for this search. Maybe give one of these a try?</p>
   <div class="row d-flex justify-content-center mt-4">
@@ -260,9 +111,221 @@
     {% endfor %}
   </div>
 {% endif %}
+
 </section>
 <script src="{{ url_for('static', filename='js/lazyLoad.js') }}"></script>
 <script src="{{ url_for('static', filename='js/like.js') }}"></script>
 <script src="{{ url_for('static', filename='js/follow.js') }}"></script>
 <script src="{{ url_for('static', filename='js/save.js') }}"></script>
+<script>
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.3
+  };
+  
+  let indexNumPost = 4;
+  let indexNumUser = 4;
+
+  let limitNumPost = 4;
+  let limitNumUser = 4;
+
+  fetchPostContent(0,limitNumPost);
+  fetchUserContent(0,limitNumUser);
+
+
+  $(window).scroll(() => {
+    let current_y = $(window).scrollTop();
+    let window_height = $(window).height();
+    let document_height = $(document).height()
+    //console.log('current_y:',current_y, 'window_height:', window_height, 'document_height:', document_height);
+
+    if (current_y + window_height >= document_height-1){
+      fetchPostContent(indexNumPost, limitNumPost);
+      indexNumPost += 4;
+    }
+  });
+
+  function seeMoreUsers(element){
+    fetchUserContent(indexNumUser,limitNumUser);
+    indexNumUser += 4;
+    element.remove()
+  }
+
+  function fetchUserContent(index, limit){
+    $.get('/search?index='+index+'&limit='+limit, (data) => {
+      for (let i =  0; i < data.userData.length; i++){
+        const curr = data.userData[i];
+        console.log(curr)
+        page = `
+            <div class="col-lg-3 mx-2 my-3 box ms-4 shadow-sm" style="width: 250px; height: 130px;">
+                <div class="row row-cols-2">
+                    <div class="col-2 me-3 mt-3">
+                        <a href="/${curr.username}">
+                            <img loading="lazy" class="rounded-pill shadow-sm" src="${curr.profilepic}" style="height: 53px; width: 53px;">
+                        </a>
+                    </div>
+                    <div class="col-8 ms-1" style="margin-top: 10px;">
+                        <p class="fs-6 fw-semibold m-0 p-0">${curr.fullname}</p>
+                        <p class="text-muted" style="font-size: 13px;">
+                          @${curr.username}<br>
+                          <span class = "me-1" id = "followers-count-in-search-${curr.id}">${curr.followers_count}</span>followers
+                        </p>
+                    </div>
+                </div>
+                <div class = "col d-flex align-items-center justify-content-end">
+                  <!-- User is already followed -->
+                  <div class="unfollow-button-${curr.id} dropdown" style= "display:${curr.is_following ? 'block' : 'none'};">
+                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style=" background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
+                        Following
+                    </button>
+                    <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <button onclick="unfollow(${curr.id})" class="dropdown-item">Unfollow</button>
+                    </div>
+                  </div>              
+                  <!-- User is not followed, show follow button -->
+                  <button onclick="follow(${curr.id})"class="follow-button-${curr.id} btn btn-sm follow" style= "display:${curr.is_following ? 'none' : 'block'};">Follow</button>
+                </div>
+            </div>
+        `;
+        $('#userResults').append(page);
+      }
+      seeMore = `
+      <button class ="btn btn-sm mt-1 w-50 follow rounded-pill shadow-sm" onclick = "seeMoreUsers(this)" style=" background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;"> See More? </button>
+      `;
+
+      if(data.has_next == true){$('#userResults').append(seeMore);}
+
+      const lazyLoadPosts = document.querySelectorAll('.lazy-post');
+      startIntersectionObserver(lazyLoadPosts, observerOptions);
+    });
+
+  }
+  
+  function fetchPostContent(index, limit){
+    $.get('/search?index='+index+'&limit='+limit, (data) => {
+      for (let i =  0; i < data.postData.length; i++){
+        const curr = data.postData[i];
+        const grouped_urls = curr.grouped_urls.split(',');
+        console.log(data)
+        page = `
+        <div class=" col-md-5 mx-2 my-3 justify-content-center lazy-post">
+          <div class = "rounded-4 p-1 px-4" style = "background-color:white;">
+          <div class = "row my-3">
+            <div class = "col-md-9">
+              <div class = "row">
+                <div class = "col-sm-2 me-3">
+                  <a href="/${curr.username}"><img loading="lazy" class="rounded-pill shadow-sm" src="${curr.profilepic}" style="height: 53px; width: 53px; "></a>
+                </div>
+                <div class = "col-sm-9 ms-1">
+                  <p class = "fs-6 fw-semibold m-0 p-0">${curr.fullname}</h3>
+                  <p class="fs-6 text-muted">@${curr.username}</p>
+                </div>
+              </div>
+            </div>
+            <!-- Inside the loop for posts -->
+            <div class = "col-md-3 d-flex align-items-center justify-content-end">
+              <!-- User is already followed -->
+              <div class="unfollow-button-${curr.user_id} dropdown w-100" style= "min-width:94px; display:${curr.followed ? 'block' : 'none'};">
+                <button class="btn dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style=" background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
+                    Following
+                </button>
+                <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <button onclick="unfollow(${curr.user_id})" class="dropdown-item">Unfollow</button>
+                </div>
+              </div>              
+              <!-- User is not followed, show follow button -->
+              <button onclick="follow(${curr.user_id})"class="follow-button-${curr.user_id} btn follow" style= "min-width:94px; display:${curr.followed ? 'none' : 'block'};">Follow</button>
+            </div>
+          </div>
+          <div id="carousel${curr.id}" class="carousel slide shadow-sm">
+            <div class="carousel-inner rounded-1">
+              <a href="/${curr.id}/viewpost" class="text-dark text-decoration-none">
+          `
+          let divItem = '';
+                for (let iter = 0; iter < grouped_urls.length; iter++){
+                  divItem += `<div class="carousel-item ${iter == 0 ? 'active' : ''}">`;
+                  if(grouped_urls[iter].includes('image')){
+                    divItem += `<img loading="lazy" src="${grouped_urls[iter]}" class="object-fit-cover" alt="${curr.title}" width = "100%" height="280px">`;
+                  }else{
+                    divItem +=  `<video  width="100%" height="280px" class = "object-fit-cover"><source src="${grouped_urls[iter]}" type="video/mp4"></video>`;
+                  }
+                  console.log(`POST${curr.id}`,grouped_urls[iter]);
+                  divItem += "</div>";
+                }
+          page += divItem;
+          page2 = 
+          `
+              </a>
+            </div>
+              ${grouped_urls.length > 1 ?
+                `<button class="carousel-control-prev" data-bs-target="#carousel${curr.id}" type="button" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" data-bs-target="#carousel${curr.id}" type="button" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+                 `
+                 :''
+              }
+          </div>
+           <!--Title and caption section-->
+          <div class = "row row-cols-2">
+            <div class = "col-sm-10">
+              <h2 class = "fs-3 mt-3 overflow-ellipsis">${curr.title}</h2>
+            </div>
+            <div class = "col-sm-2 d-flex align-items-center justify-content-end">
+              <a href="#"><img loading="lazy" src="static/img/reportIcon.png" style="height: 40px; width: 40px; opacity: 0.65;" class = "mt-3"></a>
+            </div>
+          </div>
+          <p class="fs-6 text-muted overflow-ellipsis my-1">${curr.caption}</p>
+          
+          <!--Like commends and bookmark section-->
+          <div class = "row row-cols-3 mt-2">
+            <div class = "col-sm-2 my-2">
+              <div class = "row row-cols-2">
+                <div class = "col">
+                  <button onclick = "like(${curr.id})" style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "like-icon-${curr.id}" class="fa-${curr.liked ? 'solid' : 'regular'} fa-heart fa-xl"style="color: #000000;"></i></button>
+                </div>
+                <div class = "col ps-2">
+                  <p class="fs-6" id = "like-count-${curr.id}">${curr.likes}</p>
+                </div>
+              </div>
+            </div>
+            <div class = "col-sm-2 my-2">
+              <div class = "row row-cols-2">
+                <div class = "col">
+                  <a href="/${curr.id}/viewpost/comment"  style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-comment fa-xl" style="color: #000000;"></i></a>
+                </div>
+                <div class = "col ps-2">
+                  <p class="fs-6">${curr.comments}</p>
+                </div>
+              </div>
+            </div>
+            <div class = "col-sm-2 my-2">
+              <div class = "row row-cols-2">
+                <div class = "col">
+                    <button onclick = "save(${curr.id})" style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "save-icon-${curr.id}" class="fa-${curr.saved ? 'solid' : 'regular'} fa-bookmark fa-xl"style="color: #000000;"></i></button>
+                </div>
+                <div class = "col ps-2">
+                  <p class="fs-6"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        `
+        $('#postResults').append(page + page2)
+      }
+      const lazyLoadPosts = document.querySelectorAll('.lazy-post');
+      startIntersectionObserver(lazyLoadPosts, observerOptions);
+    });
+
+  }
+
+
+</script>
 {% endblock %}
