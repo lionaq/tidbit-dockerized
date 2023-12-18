@@ -38,7 +38,7 @@
                         <i class="fa-solid fa-filter me-2"></i>
                     </button>
                     <!-- Filter options inside the dropdown -->
-                    <div class="dropdown-menu ms-2 py-3 w-100 dropdown-menu-end">
+                    <div class="dropdown-menu ms-2 py-3 w-100 dropdown-menu-end filterDropDown">
                       <div class="row ms-4">
                         <label class="fs-6 mb-2" style="font-weight: bold;">Cuisine</label>
                         <div class="col-md-3">
@@ -121,7 +121,7 @@
             <script>
               $(document).ready(function () {
                 // Prevent dropdown menu from closing when clicking inside its container
-                $(".dropdown-menu").on("click", function (e) {
+                $(".filterDropDown").on("click", function (e) {
                   e.stopPropagation();
                 });
               });

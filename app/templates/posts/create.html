@@ -30,7 +30,14 @@
                                 <button class="btn z-5" type="button" id="clearFiles" style="visibility:hidden">&times;</button>
                                 <img id="uploadIcon" src="{{url_for('static', filename='img/UploadIcon.png')}}" style="width:90px; height:90px;" loading="lazy">
                                 <a id="uploadCaption"> Upload images and/or videos here </a>
-                            </label>                        
+                            </label>
+                                {% if form.content.errors %}
+                                        <ul>
+                                            {% for error in form.content.errors %}
+                                                <p class="text-danger fw-bolder">{{ error }}</p>
+                                            {% endfor %}
+                                        </ul>
+                                {% endif %}                        
                         </div>  
                         {{ form.title(class="form-control my-4 fs-4", style = "textFieldBorder", placeholder = "Add Title", style = "font-weight: 600; max-width: 450px;") }}
                         {% if form.title.errors %}

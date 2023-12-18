@@ -2,166 +2,194 @@
 {%block exploreBtn%}"{{ url_for('static', filename='img/exploreIcon_toggled.png') }}"{%endblock%}
 {%block title%}Explore{%endblock%}
 {% block content %}
-{% set ns = namespace(firstItem=0) %}
-{% set num = namespace(iter=0, count=0)%}
 <!-- User Posts Gallery -->
+<style>
+  body {
+    scroll-behavior: smooth;
+    background-color:#F0F2F5;
+}
+  .overflow-ellipsis {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+  }
+  .lazy-post {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .follow{
+    width: 100%;
+    background-color: #D17A5E;
+    transition: all 0.3s ease;
+  }
+  .follow:hover{
+    transform: scale(1.1);
+    background-color: #D17A5E;
+    box-shadow: 0px 0px 10px 0px #D17A5E;
+  }
+</style>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create.css') }}">
 <section>
-  <style>
-    body {
-      scroll-behavior: smooth;
-      background-color:#F0F2F5;
-  }
-    .overflow-ellipsis {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .lazy-post {
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .follow{
-      width: 100%;
-      background-color: #D17A5E;
-      transition: all 0.3s ease;
-    }
-    .follow:hover{
-      transform: scale(1.1);
-      background-color: #D17A5E;
-      box-shadow: 0px 0px 10px 0px #D17A5E;
-    }
-</style>
-  <h1 class = "display-9 fw-bold mt-3">Explore <small class="text-body-secondary fs-6">Looking for something different? The freshest content is served right here!</small></h1>
-  <div class="row d-flex justify-content-center">
-    {% for post in postData %}
-      <div class=" col-md-5 mx-2 my-3 justify-content-center lazy-post">
-        <div class = "rounded-4 p-1 px-4" style = "background-color:white;">
-        <div class = "row my-3">
-          <div class = "col-md-9">
-            <div class = "row">
-              <div class = "col-sm-2 me-3">
-                <a href="{{ url_for('profile_bp.profile', username=post.username) }}"><img loading="lazy" class="rounded-pill shadow-sm" src="{{ post.profilepic }}" style="height: 53px; width: 53px; "></a>
-              </div>
-              <div class = "col-sm-9 ms-1">
-                <p class = "fs-6 fw-semibold m-0 p-0">{{post.fullname}}</h3>
-                <p class="fs-6 text-muted">@{{ post.username }}</p>
-              </div>
-            </div>
-          </div>
-          <!-- Inside the loop for posts -->
-          <div class = "col-md-3 d-flex align-items-center justify-content-end">
-            {% if post.user_id != current_user.id %}
-                    <!-- User is already followed -->
-                    <div class="unfollow-button-{{post.user_id}} dropdown w-100"  {%if post.user_id not in following%} style = "min-width:94px; display:none;" {%else%} style= "min-width:94px; display:block;"{%endif%}>
-                      <button class="btn dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style=" background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
-                          Following
-                      </button>
-                      <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <button onclick="unfollow({{post.user_id}})" class="dropdown-item">Unfollow</button>
-                      </div>
-                    </div>              
-                    <!-- User is not followed, show follow button -->
-                    <button onclick="follow({{post.user_id}})"class="follow-button-{{post.user_id}} btn follow" {% if post.user_id in following %} style = "min-width:94px; display:none;" {%else%} style= "min-width:94px; display:block;"{%endif%}>Follow</button>
-            {% endif %}
-          </div>
-        </div>
-        <div id="carousel{{ post.id }}" class="carousel slide shadow-sm">
-          <div class="carousel-inner rounded-1">
-            {% set ns.firstItem = 1 %}
-            {% for cont in postCont %}
-              {% if cont.post_id == post.id: %}
-              {% set num.iter = num.iter + 1 %}
-              <a href="{{url_for('post_bp.view_post',postid=post.id)}}" class="text-dark text-decoration-none">
-                <div class="carousel-item {% if ns.firstItem == 1 %}active{% endif %}">
-                  {% if cont.type == 'image' %}
-                      <img loading="lazy" src="{{ cont.url }}" class="object-fit-cover" alt="{{ post.title }}" width = "100%" height="280px">
-                  {% elif cont.type == 'video' %}
-                      <video  width="100%" height="280px" class = "object-fit-cover"><source src="{{ cont.url }}" type="video/mp4"></video>
-                  {% endif %}
-                </div>
-              </a>
-                {% set ns.firstItem = 0 %}  
-              {% endif %}
-            {% endfor %}
-          </div>
-          {% if num.iter > 1%}
-          <button class="carousel-control-prev" data-bs-target="#carousel{{ post.id }}" type="button" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" data-bs-target="#carousel{{ post.id }}" type="button" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-          {%endif%}
-        </div>
-        {% set num.iter = 0%}
-         <!--Title and caption section-->
-        <div class = "row row-cols-2">
-          <div class = "col-sm-10">
-            <h2 class = "fs-3 mt-3 overflow-ellipsis">{{post.title}}</h2>
-          </div>
-          <div class = "col-sm-2 d-flex align-items-center justify-content-end">
-            <a href="#"><img loading="lazy" src="{{url_for('static', filename='img/reportIcon.png')}}" style="height: 40px; width: 40px; opacity: 0.65;" class = "mt-3"></a>
-          </div>
-        </div>
-        <p class="fs-6 text-muted overflow-ellipsis my-1">{{ post.caption }}</p>
-        
-        <!--Like commends and bookmark section-->
-        <div class = "row row-cols-3 mt-2">
-          <div class = "col-sm-2 my-2">
-            <div class = "row row-cols-2">
-              <div class = "col">
-                {%if post.id in liked%}
-                  <button onclick = "like({{post.id}})" style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "like-icon-{{post.id}}" class="fa-solid fa-heart fa-xl"style="color: #000000;"></i></button>
-                {%else%}
-                <button onclick = "like({{post.id}})" style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "like-icon-{{post.id}}" class="fa-regular fa-heart fa-xl"style="color: #000000;"></i></button>
-                {%endif%}
-              </div>
-              <div class = "col ps-2">
-                <p class="fs-6" id = "like-count-{{post.id}}">{{ post.likes}}</p>
-              </div>
-            </div>
-          </div>
-          <div class = "col-sm-2 my-2">
-            <div class = "row row-cols-2">
-              <div class = "col">
-                <a href="{{url_for('post_bp.view_post_comment',postid=post.id)}}"  style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-comment fa-xl" style="color: #000000;"></i></a>
-              </div>
-              <div class = "col ps-2">
-                {% set num.count = 0 %}
-                {% for comment in comments %}
-                    {% if comment == post.id %}
-                        {% set num.count = num.count + 1 %}
-                    {% endif %}
-                {% endfor %}
-                <p class="fs-6">{{ num.count }}</p>
-              </div>
-            </div>
-          </div>
-          <div class = "col-sm-2 my-2">
-            <div class = "row row-cols-2">
-              <div class = "col">
-                {%if post.id in saved%}
-                  <button onclick = "save({{post.id}})" style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "save-icon-{{post.id}}" class="fa-solid fa-bookmark fa-xl"style="color: #000000;"></i></button>
-                {%else%}
-                  <button onclick = "save({{post.id}})" style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "save-icon-{{post.id}}" class="fa-regular fa-bookmark fa-xl"style="color: #000000;"></i></button>
-                {%endif%}
-              </div>
-              <div class = "col ps-2">
-                <p class="fs-6"></p>
-              </div>
-            </div>
-          </div>
-        </div>
-        </div>
-      </div>
-    {% endfor %}
+
+  <h1 class = "display-9 fw-bold mt-4">Explore <small class="text-body-secondary fs-6">Looking for something different? The freshest content is served right here!</small></h1>
+
+  <div id = "contentContainer" class="row d-flex justify-content-center">
   </div>
+
 </section>
-<script src="{{ url_for('static', filename='js/lazyLoad.js') }}"></script>
 <script src="{{ url_for('static', filename='js/like.js') }}"></script>
 <script src="{{ url_for('static', filename='js/follow.js') }}"></script>
 <script src="{{ url_for('static', filename='js/save.js') }}"></script>
+<script src="{{ url_for('static', filename='js/lazyLoad.js') }}"></script>
+<script type = "text/javascript">
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.3
+  };
+  
+  let indexNum = 4;
+  fetchContent(0,4);
+
+  $(window).scroll(() => {
+    let current_y = $(window).scrollTop();
+    let window_height = $(window).height();
+    let document_height = $(document).height()
+    //console.log('current_y:',current_y, 'window_height:', window_height, 'document_height:', document_height);
+    if (current_y + window_height >= document_height-1){
+      fetchContent(indexNum,4);
+      indexNum += 4;
+    }
+  });
+
+  function fetchContent(index, limit){
+    $.get('/explore/posts?index='+index+'&limit='+limit, (data) => {
+      for (let i =  0; i < data.data.length; i++){
+        const curr = data.data[i];
+        const grouped_urls = curr.grouped_urls.split(',');
+        console.log(data)
+        page = `
+        <div class=" col-md-5 mx-2 my-3 justify-content-center lazy-post">
+          <div class = "rounded-4 p-1 px-4" style = "background-color:white;">
+          <div class = "row my-3">
+            <div class = "col-md-9">
+              <div class = "row">
+                <div class = "col-sm-2 me-3">
+                  <a href="/${curr.username}"><img loading="lazy" class="rounded-pill shadow-sm" src="${curr.profilepic}" style="height: 53px; width: 53px; "></a>
+                </div>
+                <div class = "col-sm-9 ms-1">
+                  <p class = "fs-6 fw-semibold m-0 p-0">${curr.fullname}</h3>
+                  <p class="fs-6 text-muted">@${curr.username}</p>
+                </div>
+              </div>
+            </div>
+            <!-- Inside the loop for posts -->
+            <div class = "col-md-3 d-flex align-items-center justify-content-end">
+              <!-- User is already followed -->
+              <div class="unfollow-button-${curr.user_id} dropdown w-100" style= "min-width:94px; display:${curr.followed ? 'block' : 'none'};">
+                <button class="btn dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style=" background-color: #ffffff; color: #D17A5E; border: 0.5px solid #D17A5E;">
+                    Following
+                </button>
+                <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <button onclick="unfollow(${curr.user_id})" class="dropdown-item">Unfollow</button>
+                </div>
+              </div>              
+              <!-- User is not followed, show follow button -->
+              <button onclick="follow(${curr.user_id})"class="follow-button-${curr.user_id} btn follow" style= "min-width:94px; display:${curr.followed ? 'none' : 'block'};">Follow</button>
+            </div>
+          </div>
+          <div id="carousel${curr.id}" class="carousel slide shadow-sm">
+            <div class="carousel-inner rounded-1">
+              <a href="/${curr.id}/viewpost" class="text-dark text-decoration-none">
+          `
+          let divItem = '';
+                for (let iter = 0; iter < grouped_urls.length; iter++){
+                  divItem += `<div class="carousel-item ${iter == 0 ? 'active' : ''}">`;
+                  if(grouped_urls[iter].includes('image')){
+                    divItem += `<img loading="lazy" src="${grouped_urls[iter]}" class="object-fit-cover" alt="${curr.title}" width = "100%" height="280px">`;
+                  }else{
+                    divItem +=  `<video  width="100%" height="280px" class = "object-fit-cover"><source src="${grouped_urls[iter]}" type="video/mp4"></video>`;
+                  }
+                  console.log(`POST${curr.id}`,grouped_urls[iter]);
+                  divItem += "</div>";
+                }
+          page += divItem;
+          page2 = 
+          `
+              </a>
+            </div>
+              ${grouped_urls.length > 1 ?
+                `<button class="carousel-control-prev" data-bs-target="#carousel${curr.id}" type="button" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" data-bs-target="#carousel${curr.id}" type="button" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+                 `
+                 :''
+              }
+          </div>
+           <!--Title and caption section-->
+          <div class = "row row-cols-2">
+            <div class = "col-sm-10">
+              <h2 class = "fs-3 mt-3 overflow-ellipsis">${curr.title}</h2>
+            </div>
+            <div class = "col-sm-2 d-flex align-items-center justify-content-end">
+              <a href="#"><img loading="lazy" src="static/img/reportIcon.png" style="height: 40px; width: 40px; opacity: 0.65;" class = "mt-3"></a>
+            </div>
+          </div>
+          <p class="fs-6 text-muted overflow-ellipsis my-1">${curr.caption}</p>
+          
+          <!--Like commends and bookmark section-->
+          <div class = "row row-cols-3 mt-2">
+            <div class = "col-sm-2 my-2">
+              <div class = "row row-cols-2">
+                <div class = "col">
+                  <button onclick = "like(${curr.id})" style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "like-icon-${curr.id}" class="fa-${curr.liked ? 'solid' : 'regular'} fa-heart fa-xl"style="color: #000000;"></i></button>
+                </div>
+                <div class = "col ps-2">
+                  <p class="fs-6" id = "like-count-${curr.id}">${curr.likes}</p>
+                </div>
+              </div>
+            </div>
+            <div class = "col-sm-2 my-2">
+              <div class = "row row-cols-2">
+                <div class = "col">
+                  <a href="/${curr.id}/viewpost/comment"  style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i class="fa-regular fa-comment fa-xl" style="color: #000000;"></i></a>
+                </div>
+                <div class = "col ps-2">
+                  <p class="fs-6">${curr.comments}</p>
+                </div>
+              </div>
+            </div>
+            <div class = "col-sm-2 my-2">
+              <div class = "row row-cols-2">
+                <div class = "col">
+                    <button onclick = "save(${curr.id})" style = "border:none; background-color:white; padding:0px; margin:0px;" type = "button"><i id = "save-icon-${curr.id}" class="fa-${curr.saved ? 'solid' : 'regular'} fa-bookmark fa-xl"style="color: #000000;"></i></button>
+                </div>
+                <div class = "col ps-2">
+                  <p class="fs-6"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        `
+        $('#contentContainer').append(page + page2)
+      }
+      const lazyLoadPosts = document.querySelectorAll('.lazy-post');
+      startIntersectionObserver(lazyLoadPosts, observerOptions);
+    });
+
+  }
+
+</script>
+<script src="{{ url_for('static', filename='js/like.js') }}"></script>
+<script src="{{ url_for('static', filename='js/follow.js') }}"></script>
+<script src="{{ url_for('static', filename='js/save.js') }}"></script>
+<script src="{{ url_for('static', filename='js/lazyLoad.js') }}"></script>
 {% endblock %}

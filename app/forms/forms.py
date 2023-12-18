@@ -1,8 +1,12 @@
 from flask_wtf import FlaskForm
 
-from flask_wtf.file import MultipleFileField, FileAllowed, FileField
+from flask_wtf.file import MultipleFileField, FileAllowed, FileField, FileRequired
 
-from wtforms import validators,StringField,SubmitField,PasswordField, SelectMultipleField, widgets, TextAreaField, URLField, BooleanField
+from wtforms import validators,StringField,SubmitField,PasswordField, SelectMultipleField, widgets, TextAreaField, URLField, BooleanField, ValidationError
+
+from wtforms.widgets import ListWidget
+
+from werkzeug.utils import secure_filename
 
 from app.model.user import User
 
@@ -55,16 +59,47 @@ class EditProfileForm(FlaskForm):
         user = User.check_username(username.data)
         if user and user.id != self.current_user.id:
             raise validators.ValidationError('Username is already taken')
-        
+
 class CreatePost(FlaskForm):
-    content = MultipleFileField('Content', validators=[FileAllowed(['jpg', 'png', 'gif', 'mp4', 'mov']), validators.DataRequired()])
+    def validate_content(self, field):
+        allowed_extensions = {'jpg', 'png', 'gif', 'mp4', 'mov'}
+        max_image_size = 5 * 1024 * 1024  # 5MB for images
+        max_video_size = 100 * 1024 * 1024  # 100MB for videos
+
+        for file_data in field.data:
+            if file_data:
+                filename = secure_filename(file_data.filename.lower())
+                file_extension = filename.rsplit('.', 1)[1] if '.' in filename else None
+
+                if file_extension not in allowed_extensions:
+                    raise validators.ValidationError('Invalid file type. Allowed file types are jpg, png, gif, mp4, mov.')
+
+                file_size = len(file_data.read())
+                file_data.seek(0)  # Reset file cursor after reading
+
+                # Check file size based on file type
+                if file_extension in {'jpg', 'png', 'gif'} and file_size > max_image_size:
+                    raise validators.ValidationError('Image size exceeds the limit of 5 MB.')
+                elif file_extension in {'mp4', 'mov'} and file_size > max_video_size:
+                    raise validators.ValidationError('Video size exceeds the limit of 100 MB.')
+
+                # Move the file type check outside the inner if block
+                if not filename.endswith(('jpg', 'png', 'gif', 'mp4', 'mov')):
+                    raise validators.ValidationError('Invalid file type. Allowed file types are jpg, png, gif, mp4, mov.')
+
+    content = MultipleFileField('Content', validators=[
+        FileAllowed({'jpg', 'png', 'gif', 'mp4', 'mov'}, 'Invalid file type. Allowed file types are jpg, png, gif, mp4, mov.'),
+        validators.DataRequired(),
+        FileRequired()
+    ])
     title = StringField('Title', validators=[validators.DataRequired(), validators.Length(max=255)])
-    caption = TextAreaField('Caption', validators=[validators.DataRequired(), validators.Length(max=255)] )
+    caption = TextAreaField('Caption', validators=[validators.DataRequired(), validators.Length(max=255)])
     ingredients = TextAreaField('Ingredients', [validators.DataRequired()])
     instructions = TextAreaField('Instructions', [validators.DataRequired()])
-    tag =  SelectMultipleField('Tag',  [validators.DataRequired(message="Please choose a tag")], choices=[('American Cuisine', 'American Cuisine'), ('Filipino Cuisine', 'Filipino Cuisine'), ('French Cuisine', 'French Cuisine'), ('Japanese Cuisine', 'Japanese Cuisine'), ('Chinese Cuisine', 'Chinese Cuisine'), ('Greek Cuisine', 'Greek Cuisine'), ('Mexican Cuisine', 'Mexican Cuisine'), ('Indian Cuisine', 'Indian Cuisine'), ('Thai Cuisine', 'Thai Cuisine')], widget=widgets.ListWidget(prefix_label=False))
-    subtag = SelectMultipleField('Subtags', [validators.DataRequired(message="Please choose a subtag")], choices=[('breakfast', 'Breakfast'), ('lunch', 'Lunch'), ('snack', 'Snack'), ('dinner', 'Dinner'), ('dessert', 'Dessert')], option_widget=widgets.CheckboxInput(), widget=widgets.ListWidget(prefix_label=False),)
+    tag = SelectMultipleField('Tag', [validators.DataRequired(message="Please choose a tag")], choices=[('American Cuisine', 'American Cuisine'), ('Filipino Cuisine', 'Filipino Cuisine'), ('French Cuisine', 'French Cuisine'), ('Japanese Cuisine', 'Japanese Cuisine'), ('Chinese Cuisine', 'Chinese Cuisine'), ('Greek Cuisine', 'Greek Cuisine'), ('Mexican Cuisine', 'Mexican Cuisine'), ('Indian Cuisine', 'Indian Cuisine'), ('Thai Cuisine', 'Thai Cuisine')], widget=ListWidget(prefix_label=False))
+    subtag = SelectMultipleField('Subtags', [validators.DataRequired(message="Please choose a subtag")], choices=[('breakfast', 'Breakfast'), ('lunch', 'Lunch'), ('snack', 'Snack'), ('dinner', 'Dinner'), ('dessert', 'Dessert')], option_widget=widgets.CheckboxInput(), widget=ListWidget(prefix_label=False))
     submit = SubmitField('Create Post')
+
 
 class EditPost(FlaskForm):
     content = MultipleFileField('Content', validators=[FileAllowed(['jpg', 'png', 'gif', 'mp4', 'mov']), validators.Optional()])

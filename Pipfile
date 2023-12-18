@@ -16,6 +16,7 @@ cloudinary = "*"
 flask-mail = "*"
 itsdangerous = "*"
 flask-socketio = "*"
+faker = "*"
 
 [dev-packages]
 

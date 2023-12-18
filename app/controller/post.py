@@ -2,7 +2,7 @@ from cloudinary import uploader
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 from flask import Blueprint
-from flask import render_template, request, redirect, flash, url_for, abort
+from flask import render_template, request, redirect, flash, url_for, abort, session
 from flask import jsonify
 from datetime import date
 from flask_login import current_user, login_required
@@ -313,34 +313,64 @@ def save(post):
             return jsonify({"saved": False})
     else:
         abort(400)          
-            
-@post_bp.route('/search', methods=['POST'])
+
+@post_bp.route('/search', methods=['POST', 'GET'])
 def search():
-    query = request.form.get('query')
-    cuisines = request.form.getlist('cuisine')
-    meal_types = request.form.getlist('meal_type')
     
-    selected_cuisines = request.form.getlist('cuisine')
-    selected_meal_types = request.form.getlist('meal_type')
+    if request.method == 'POST':
+
+        session.setdefault('form_data', {})
+        session['form_data'] = {
+            'query': request.form.get('query'),
+            'cuisine': request.form.getlist('cuisine'),
+            'meal_type': request.form.getlist('meal_type'),
+            'selected_cuisines': request.form.getlist('cuisine'),
+            'selected_meal_types': request.form.getlist('meal_type')
+         }
+        
+        query = session['form_data'].get('query', '')
+        cuisines = session['form_data'].get('cuisine', '')
+        meal_types = session['form_data'].get('meal_type', '')
+        selected_cuisines = session['form_data'].get('selected_cuisines')
+        selected_meal_types = session['form_data'].get('selected_meal_types')
+
+        filters_selected = bool(selected_cuisines or selected_meal_types)
+
+        if filters_selected:
+            postData = bool(Post.search_posts(current_user.id, query, cuisines, meal_types, 0, 1))
+            userData = None
+        else:
+            postData = bool(Post.search_posts(current_user.id, query, cuisines, meal_types, 0, 1))
+            userData = bool(Post.search_users(query, current_user.id,  0, 1))
+        
+        if not postData and not userData:
+            print("SUGGESTION")
+            num_of_suggestions = 3
+            user_id = current_user.get_id()
+            suggestions = Post.fetch_random_posts(num_of_suggestions, user_id)
+            return render_template('main/search.html', selected_cuisines=selected_cuisines, selected_meal_types=selected_meal_types, suggestions=suggestions)
+        
+
+    elif  request.method == 'GET':
+
+        index = request.args.get('index', 1, type=int)
+        limit = request.args.get('limit', 1, type=int)
+
+        query = session['form_data'].get('query', '')
+        cuisines = session['form_data'].get('cuisine', '')
+        meal_types = session['form_data'].get('meal_type', '')
+        selected_cuisines = session['form_data'].get('selected_cuisines')
+        selected_meal_types = session['form_data'].get('selected_meal_types')
+
+        filters_selected = bool(selected_cuisines or selected_meal_types)
+
+        if filters_selected:
+            postData = Post.search_posts(current_user.id, query, cuisines, meal_types, index, limit)
+            userData = None
+        else:
+            postData = Post.search_posts(current_user.id, query, cuisines, meal_types, index, limit)
+            userData = Post.search_users(query, current_user.id, index, limit)
+
+        return jsonify(postData=postData, has_next=len(userData) == limit, userData=userData, current_user_id = current_user.id)
     
-    filters_selected = bool(selected_cuisines or selected_meal_types)
-
-    if filters_selected:
-        postData = Post.search_posts(query, cuisines, meal_types)
-        postUser = None
-    else:
-        postData = Post.search_posts(query, cuisines, meal_types)
-        postUser = Post.search_users(query, current_user.id)
-    
-    if not postData and not postUser:
-        num_of_suggestions = 3
-        user_id = current_user.get_id()
-        suggestions = Post.fetch_random_posts(num_of_suggestions, user_id)
-        return render_template('main/search.html', selected_cuisines=selected_cuisines, selected_meal_types=selected_meal_types, suggestions=suggestions)
-
-    following = User.fetch_following_ids(current_user.id)
-    liked_posts = Post.fetch_liked_posts(current_user.id)
-    saved_posts = Post.fetch_saved_posts(current_user.id)
-    cont = Post.fetch_ALL_content(current_user.username)
-
-    return render_template('main/search.html', selected_cuisines=selected_cuisines, selected_meal_types=selected_meal_types, postData=postData, postCont=cont, postUser=postUser, following=following, liked_posts=liked_posts, saved_posts=saved_posts)
+    return render_template('main/search.html', selected_cuisines=selected_cuisines, selected_meal_types=selected_meal_types, postData=postData, userData=userData)
